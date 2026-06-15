@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>AWS Cert Simulator</title>
+<style>
+  :root {
+    --orange: #FF9900;
+    --dark-bg: #1A1A1A;
+    --card-bg: #2D2D2D;
+    --nav-bg: #232F3E;
+    --footer-bg: #0F0F0F;
+    --green: #4CAF50;
+    --red: #F44336;
+    --text: #FFFFFF;
+    --text-muted: #888;
+    --border: #333;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #111;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    padding: 0;
+  }
+
+  /* ─── PHONE SHELL ─── */
+  .app {
+    width: 390px;
+    min-height: 100vh;
+    background: var(--dark-bg);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  @media (max-width: 420px) {
+    .app { width: 100vw; }
+    body { padding: 0; background: var(--dark-bg); }
+  }
+
+  /* ─── HEADER ─── */
+  .header {
+    background: var(--orange);
+    padding: 22px 20px 14px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .header h1 { color: white; font-size: 22px; font-weight: 800; letter-spacing: 0.5px; }
+  .header .subtitle { color: #1A1A1A; font-size: 11px; font-weight: 600; margin: 4px 0 10px; }
+  .badge {
+    display: inline-block;
+    background: #232F3E;
+    color: var(--orange);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 14px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+  }
+
+  /* ─── TOTAL TIMER BAR ─── */
+  .total-timer-bar {
+    background: var(--nav-bg);
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .total-timer-label { color: var(--text-muted); font-size: 10px; font-weight: 600; letter-spacing: 1px; }
+  .total-timer-value { color: var(--orange); font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .total-timer-value.warning { color: #FF5722; }
+  .total-progress { flex: 1; margin: 0 12px; height: 4px; background: #333; border-radius: 2px; }
+  .total-progress-fill { height: 4px; background: var(--orange); border-radius: 2px; transition: width 1s linear; }
+  .total-progress-fill.warning { background: #FF5722; }
+
+  /* ─── SCROLLABLE CONTENT ─── */
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .content::-webkit-scrollbar { width: 3px; }
+  .content::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+
+  /* ─── SCREEN VISIBILITY ─── */
+  .screen { display: none; width: 100%; }
+  .screen.active { display: flex; flex-direction: column; gap: 10px; }
+
+  /* ─── LEVEL SELECT ─── */
+  .welcome-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    border-left: 5px solid var(--orange);
+    padding: 16px;
+  }
+  .welcome-card h2 { color: var(--orange); font-size: 14px; font-weight: 700; letter-spacing: 1px; margin-bottom: 8px; }
+  .welcome-card p { color: var(--text-muted); font-size: 12px; line-height: 1.5; }
+  .welcome-card p strong { color: var(--text); }
+
+  .level-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    border-left: 5px solid var(--orange);
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .level-card:active { transform: scale(0.98); background: #363636; }
+  .level-icon { font-size: 28px; flex-shrink: 0; }
+  .level-info { flex: 1; }
+  .level-name { color: var(--text); font-size: 14px; font-weight: 700; }
+  .level-meta { color: var(--text-muted); font-size: 11px; margin-top: 2px; }
+  .level-badge {
+    background: var(--nav-bg);
+    color: var(--orange);
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    letter-spacing: 1px;
+    flex-shrink: 0;
+  }
+
+  .divider { color: var(--text-muted); font-size: 10px; font-weight: 600; letter-spacing: 2px; text-align: center; padding: 4px 0; }
+
+  /* ─── QUESTION CARD ─── */
+  .question-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    border-left: 5px solid var(--orange);
+    padding: 16px;
+  }
+  .question-label { color: var(--orange); font-size: 10px; font-weight: 700; letter-spacing: 1.5px; margin-bottom: 10px; }
+  .question-text { color: var(--text); font-size: 15px; line-height: 1.55; }
+
+  /* ─── OPTIONS ─── */
+  .options { display: flex; flex-direction: column; gap: 8px; }
+
+  .option {
+    background: var(--nav-bg);
+    border-radius: 10px;
+    border-left: 5px solid var(--orange);
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .option:active { transform: scale(0.99); }
+  .option.correct { background: #1E3A1E; border-left-color: var(--green); box-shadow: 0 0 0 1px rgba(76,175,80,0.3); }
+  .option.wrong { background: #3A1E1E; border-left-color: var(--red); box-shadow: 0 0 0 1px rgba(244,67,54,0.3); }
+  .option.disabled { cursor: default; }
+
+  .option-header { display: flex; align-items: center; gap: 10px; }
+  .option-letter { color: var(--orange); font-weight: 800; font-size: 14px; min-width: 20px; }
+  .option.correct .option-letter { color: var(--green); }
+  .option.wrong .option-letter { color: var(--red); }
+  .option-title { color: var(--text); font-size: 14px; font-weight: 600; }
+  .option-desc { color: var(--text-muted); font-size: 11px; padding-left: 30px; }
+  .option.correct .option-desc, .option.wrong .option-desc { color: #aaa; }
+
+  /* ─── EXPLANATION ─── */
+  .explanation-card {
+    background: #1A2A1A;
+    border-radius: 12px;
+    border-left: 5px solid var(--green);
+    padding: 14px 16px;
+    display: none;
+  }
+  .explanation-card.show { display: block; }
+  .explanation-label { color: var(--green); font-size: 10px; font-weight: 700; letter-spacing: 1.5px; margin-bottom: 8px; }
+  .explanation-text { color: #ccc; font-size: 13px; line-height: 1.55; }
+
+  /* ─── QUESTION TIMER ─── */
+  .q-timer-label {
+    color: var(--text-muted);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .q-timer-secs { color: var(--orange); font-size: 18px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .q-timer-secs.urgent { color: var(--red); animation: pulse 0.5s infinite alternate; }
+  @keyframes pulse { from { opacity: 1; } to { opacity: 0.5; } }
+
+  .timer-bar-bg { background: #333; height: 6px; border-radius: 3px; margin-top: 6px; }
+  .timer-bar-fill { background: var(--orange); height: 6px; border-radius: 3px; transition: width 1s linear, background 0.3s; }
+  .timer-bar-fill.urgent { background: var(--red); }
+
+  /* ─── SCORE CARD ─── */
+  .score-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    border-left: 5px solid var(--orange);
+    padding: 20px 16px;
+    text-align: center;
+  }
+  .score-title { color: var(--orange); font-size: 12px; font-weight: 700; letter-spacing: 1.5px; margin-bottom: 12px; }
+  .score-number { color: var(--text); font-size: 52px; font-weight: 900; line-height: 1; }
+  .score-sub { color: var(--text-muted); font-size: 12px; margin-top: 4px; }
+  .score-pass { color: var(--green); font-size: 20px; font-weight: 800; margin-top: 8px; }
+  .score-fail { color: var(--red); font-size: 20px; font-weight: 800; margin-top: 8px; }
+
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .stat-card {
+    background: var(--card-bg);
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+  }
+  .stat-value { color: var(--text); font-size: 24px; font-weight: 800; }
+  .stat-value.green { color: var(--green); }
+  .stat-value.red { color: var(--red); }
+  .stat-label { color: var(--text-muted); font-size: 10px; font-weight: 600; letter-spacing: 1px; margin-top: 4px; }
+
+  /* ─── BUTTONS ─── */
+  .btn-primary {
+    background: var(--orange);
+    color: #1A1A1A;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    width: 100%;
+    letter-spacing: 0.5px;
+    transition: opacity 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-primary:active { opacity: 0.85; }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--orange);
+    border: 1.5px solid var(--orange);
+    border-radius: 12px;
+    padding: 13px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-secondary:active { background: var(--orange); color: #1A1A1A; }
+
+  .btn-row { display: flex; gap: 8px; }
+  .btn-row .btn-secondary { flex: 1; }
+
+  /* ─── FOOTER NAV ─── */
+  .footer {
+    background: var(--footer-bg);
+    padding: 10px 16px 14px;
+    flex-shrink: 0;
+    border-top: 1px solid #1f1f1f;
+  }
+
+  .pause-btn {
+    background: var(--nav-bg);
+    color: var(--orange);
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .pause-btn:active { background: var(--orange); color: #1A1A1A; }
+  .pause-btn.paused { background: #2a1a00; border-color: var(--orange); color: var(--orange); }
+
+  .footer-row { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+  .footer-info { color: var(--text-muted); font-size: 11px; }
+  .footer-nav { display: flex; gap: 8px; }
+  .nav-btn {
+    background: var(--nav-bg);
+    color: var(--text);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; }
+  .nav-btn:not(:disabled):active { background: var(--orange); color: #1A1A1A; }
+
+  /* ─── PAUSED OVERLAY ─── */
+  .paused-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    z-index: 100;
+  }
+  .paused-overlay.show { display: flex; }
+  .paused-icon { font-size: 56px; }
+  .paused-text { color: var(--orange); font-size: 24px; font-weight: 800; letter-spacing: 2px; }
+  .paused-sub { color: var(--text-muted); font-size: 13px; }
+  .paused-overlay .btn-primary { width: 200px; }
+
+  /* ─── TIMEOUT OVERLAY ─── */
+  .timeout-banner {
+    background: #3A1E1E;
+    border: 1px solid var(--red);
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+  }
+  .timeout-banner.show { display: flex; }
+  .timeout-icon { font-size: 22px; }
+  .timeout-text { color: var(--red); font-size: 13px; font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- HEADER -->
+  <div class="header" id="header">
+    <h1>☁️ AWS Cert Quiz</h1>
+    <p class="subtitle" id="headerSubtitle">Simulador de Certificaciones</p>
+    <span class="badge" id="headerBadge">SIMULATOR</span>
+  </div>
+
+  <!-- TOTAL EXAM TIMER (hidden on level select) -->
+  <div class="total-timer-bar" id="totalTimerBar" style="display:none">
+    <span class="total-timer-label">EXAMEN</span>
+    <div class="total-progress">
+      <div class="total-progress-fill" id="totalProgressFill" style="width:100%"></div>
+    </div>
+    <span class="total-timer-value" id="totalTimerValue">1:30:00</span>
+  </div>
+
+  <!-- SCROLLABLE CONTENT -->
+  <div class="content" id="mainContent">
+
+    <!-- ══════════════ SCREEN: LEVEL SELECT ══════════════ -->
+    <div class="screen active" id="screenLevel">
+      <div class="welcome-card">
+        <h2>BIENVENIDO AL SIMULADOR</h2>
+        <p>Practica con preguntas reales de certificación AWS. <strong>1 minuto por pregunta</strong>, timer pausable. El examen dura máximo <strong>1 hora 30 minutos</strong>.</p>
+      </div>
+      <div class="divider">— ELIGE TU NIVEL —</div>
+      <div id="levelList"></div>
+    </div>
+
+    <!-- ══════════════ SCREEN: QUIZ ══════════════ -->
+    <div class="screen" id="screenQuiz">
+      <!-- Question timer -->
+      <div class="question-card" style="padding:12px 16px">
+        <div class="q-timer-label">
+          <span>TIEMPO POR PREGUNTA</span>
+          <span class="q-timer-secs" id="qTimerSecs">60</span>
+        </div>
+        <div class="timer-bar-bg">
+          <div class="timer-bar-fill" id="qTimerBar" style="width:100%"></div>
+        </div>
+      </div>
+
+      <!-- Timeout banner -->
+      <div class="timeout-banner" id="timeoutBanner">
+        <span class="timeout-icon">⏰</span>
+        <span class="timeout-text">Tiempo agotado — se muestra la respuesta correcta</span>
+      </div>
+
+      <!-- Question -->
+      <div class="question-card">
+        <div class="question-label" id="questionLabel">PREGUNTA 1 DE 10</div>
+        <p class="question-text" id="questionText"></p>
+      </div>
+
+      <!-- Options -->
+      <div class="options" id="optionsList"></div>
+
+      <!-- Explanation -->
+      <div class="explanation-card" id="explanationCard">
+        <div class="explanation-label">EXPLICACIÓN</div>
+        <p class="explanation-text" id="explanationText"></p>
+      </div>
+
+      <!-- Next button (appears after answer) -->
+      <button class="btn-primary" id="btnNext" style="display:none" onclick="nextQuestion()">
+        Siguiente pregunta →
+      </button>
+    </div>
+
+    <!-- ══════════════ SCREEN: RESULTS ══════════════ -->
+    <div class="screen" id="screenResults">
+      <div class="score-card">
+        <div class="score-title">RESULTADO FINAL</div>
+        <div class="score-number" id="scorePercent">0%</div>
+        <div class="score-sub" id="scoreCorrectOf">0 de 0 correctas</div>
+        <div id="scoreVerdict"></div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value green" id="statsCorrect">0</div>
+          <div class="stat-label">CORRECTAS</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value red" id="statsWrong">0</div>
+          <div class="stat-label">INCORRECTAS</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statsTime">--:--</div>
+          <div class="stat-label">TIEMPO USADO</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statsTimeout">0</div>
+          <div class="stat-label">SIN RESPONDER</div>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="restartSameLevel()">Reintentar este nivel</button>
+      <button class="btn-secondary" onclick="goToLevelSelect()">Cambiar nivel</button>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- FOOTER (quiz only) -->
+  <div class="footer" id="quizFooter" style="display:none">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <button class="pause-btn" id="pauseBtn" onclick="togglePause()">⏸ Pausar</button>
+      <button class="btn-secondary" style="width:auto;padding:8px 14px;font-size:12px" onclick="finishEarly()">Finalizar</button>
+    </div>
+    <div class="footer-row">
+      <span class="footer-info" id="footerInfo">Pregunta 1 de 10</span>
+      <div class="footer-nav">
+        <button class="nav-btn" id="btnPrev" onclick="prevQuestion()" disabled>← Ant</button>
+        <button class="nav-btn" id="btnNextNav" onclick="nextQuestion()" disabled>Sig →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAUSED OVERLAY -->
+  <div class="paused-overlay" id="pausedOverlay">
+    <div class="paused-icon">⏸</div>
+    <div class="paused-text">PAUSADO</div>
+    <div class="paused-sub">El tiempo está detenido</div>
+    <button class="btn-primary" onclick="togglePause()">▶ Continuar</button>
+  </div>
+
+</div><!-- /app -->
+
+<script>
+// ─── STATE ───────────────────────────────────────────────
+const EXAM_MAX_SECONDS = 90 * 60;   // 1h 30m
+const Q_MAX_SECONDS    = 60;        // 1 min per question
+const PASS_THRESHOLD   = 0.72;      // 72% to pass
+
+let questions    = [];
+let currentLevel = null;
+let qIndex       = 0;
+let answered     = [];   // { selected: 'A'|null (null = timeout), correct: bool }
+let revealed     = [];   // bool array — whether explanation shown
+
+let qTimerInterval    = null;
+let totalTimerInterval = null;
+let qSecsLeft   = Q_MAX_SECONDS;
+let totalSecsLeft = EXAM_MAX_SECONDS;
+let isPaused    = false;
+let examStarted = false;
+
+// ─── LOAD DATA ───────────────────────────────────────────
+async function loadQuestions() {
+  try {
+    const r = await fetch('questions.json');
+    const data = await r.json();
+    renderLevelSelect(data.levels);
+  } catch(e) {
+    document.getElementById('screenLevel').innerHTML =
+      '<div class="welcome-card"><h2 style="color:var(--red)">ERROR</h2><p style="color:#ccc">No se pudo cargar questions.json. Abre el archivo directamente en el navegador o usa un servidor local (python3 -m http.server).</p></div>';
+  }
+}
+
+// ─── LEVEL SELECT ─────────────────────────────────────────
+const LEVEL_ICONS = {
+  'cloud-practitioner':       '☁️',
+  'ai-practitioner':          '🤖',
+  'developer-associate':      '💻',
+  'solutions-architect-associate': '🏗️'
+};
+
+function renderLevelSelect(levels) {
+  const list = document.getElementById('levelList');
+  list.innerHTML = levels.map(l => `
+    <div class="level-card" onclick="startLevel(${JSON.stringify(l).replace(/"/g, '&quot;')})">
+      <div class="level-icon">${LEVEL_ICONS[l.id] || '🎯'}</div>
+      <div class="level-info">
+        <div class="level-name">${l.name}</div>
+        <div class="level-meta">${l.code} · ${l.questions.length} preguntas</div>
+      </div>
+      <div class="level-badge">${l.badge}</div>
+    </div>
+  `).join('');
+  // Store levels globally for restart
+  window._levels = levels;
+}
+
+// ─── START LEVEL ──────────────────────────────────────────
+function startLevel(level) {
+  currentLevel = level;
+  questions    = shuffle([...level.questions]);
+  qIndex       = 0;
+  answered     = new Array(questions.length).fill(null);
+  revealed     = new Array(questions.length).fill(false);
+  isPaused     = false;
+
+  // Update header
+  document.getElementById('headerSubtitle').textContent = level.name;
+  document.getElementById('headerBadge').textContent    = level.badge + ' · ' + level.code;
+
+  // Show exam timer bar
+  document.getElementById('totalTimerBar').style.display = 'flex';
+  document.getElementById('quizFooter').style.display    = 'block';
+
+  // Reset and start total timer (only once per session, or restart it)
+  resetTotalTimer();
+
+  showScreen('screenQuiz');
+  renderQuestion();
+  startQTimer();
+}
+
+// ─── SHUFFLE ──────────────────────────────────────────────
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// ─── RENDER QUESTION ──────────────────────────────────────
+function renderQuestion() {
+  const q = questions[qIndex];
+  const total = questions.length;
+
+  document.getElementById('questionLabel').textContent = `PREGUNTA ${qIndex + 1} DE ${total}`;
+  document.getElementById('questionText').textContent  = q.text;
+  document.getElementById('footerInfo').textContent    = `Pregunta ${qIndex + 1} de ${total}`;
+
+  // Options
+  const list = document.getElementById('optionsList');
+  list.innerHTML = q.options.map(opt => `
+    <div class="option" id="opt${opt.letter}" onclick="selectOption('${opt.letter}')">
+      <div class="option-header">
+        <span class="option-letter" id="ltr${opt.letter}">${opt.letter}</span>
+        <span class="option-title">${opt.title}</span>
+      </div>
+      <div class="option-desc">${opt.desc}</div>
+    </div>
+  `).join('');
+
+  // Hide timeout banner, explanation, next btn
+  document.getElementById('timeoutBanner').classList.remove('show');
+  document.getElementById('explanationCard').classList.remove('show');
+  document.getElementById('btnNext').style.display = 'none';
+
+  // Restore state if already answered
+  if (answered[qIndex] !== null) {
+    applyAnswerState(qIndex, false);
+    if (revealed[qIndex]) {
+      document.getElementById('explanationCard').classList.add('show');
+      document.getElementById('explanationText').textContent = q.explanation;
+    }
+  }
+
+  // Nav buttons
+  document.getElementById('btnPrev').disabled    = qIndex === 0;
+  document.getElementById('btnNextNav').disabled = answered[qIndex] === null;
+
+  scrollToTop();
+}
+
+// ─── SELECT OPTION ────────────────────────────────────────
+function selectOption(letter) {
+  if (answered[qIndex] !== null) return;   // already answered
+  if (isPaused) return;
+
+  const q = questions[qIndex];
+  const isCorrect = letter === q.correct;
+
+  answered[qIndex] = { selected: letter, correct: isCorrect, timeout: false };
+  revealed[qIndex] = true;
+
+  stopQTimer();
+  applyAnswerState(qIndex, true);
+  showExplanation();
+
+  document.getElementById('btnNext').style.display = 'block';
+  document.getElementById('btnNextNav').disabled = false;
+}
+
+// ─── APPLY VISUAL ANSWER STATE ────────────────────────────
+function applyAnswerState(idx, animate) {
+  const q = questions[idx];
+  const ans = answered[idx];
+  if (!ans) return;
+
+  q.options.forEach(opt => {
+    const el = document.getElementById('opt' + opt.letter);
+    if (!el) return;
+    el.classList.add('disabled');
+    if (opt.letter === q.correct) {
+      el.classList.add('correct');
+      el.querySelector('.option-letter').textContent = opt.letter + ' ✓';
+    } else if (ans.selected === opt.letter && !ans.correct) {
+      el.classList.add('wrong');
+      el.querySelector('.option-letter').textContent = opt.letter + ' ✗';
+    }
+  });
+
+  if (ans.timeout) {
+    document.getElementById('timeoutBanner').classList.add('show');
+  }
+
+  document.getElementById('btnNext').style.display = 'block';
+  document.getElementById('btnNextNav').disabled = false;
+}
+
+function showExplanation() {
+  const q = questions[qIndex];
+  document.getElementById('explanationText').textContent = q.explanation;
+  document.getElementById('explanationCard').classList.add('show');
+}
+
+// ─── NAVIGATION ───────────────────────────────────────────
+function nextQuestion() {
+  if (qIndex < questions.length - 1) {
+    qIndex++;
+    renderQuestion();
+    if (answered[qIndex] === null) startQTimer();
+  } else {
+    showResults();
+  }
+}
+
+function prevQuestion() {
+  if (qIndex > 0) {
+    stopQTimer();
+    qIndex--;
+    renderQuestion();
+    if (answered[qIndex] === null) startQTimer();
+  }
+}
+
+// ─── Q TIMER ──────────────────────────────────────────────
+function startQTimer() {
+  stopQTimer();
+  qSecsLeft = Q_MAX_SECONDS;
+  updateQTimerUI();
+
+  qTimerInterval = setInterval(() => {
+    if (isPaused) return;
+    qSecsLeft--;
+    updateQTimerUI();
+    if (qSecsLeft <= 0) {
+      stopQTimer();
+      handleTimeout();
+    }
+  }, 1000);
+}
+
+function stopQTimer() {
+  clearInterval(qTimerInterval);
+  qTimerInterval = null;
+}
+
+function updateQTimerUI() {
+  const el   = document.getElementById('qTimerSecs');
+  const bar  = document.getElementById('qTimerBar');
+  const pct  = (qSecsLeft / Q_MAX_SECONDS) * 100;
+  const urgent = qSecsLeft <= 10;
+
+  el.textContent  = qSecsLeft;
+  el.className    = 'q-timer-secs' + (urgent ? ' urgent' : '');
+  bar.style.width = pct + '%';
+  bar.className   = 'timer-bar-fill' + (urgent ? ' urgent' : '');
+}
+
+function handleTimeout() {
+  if (answered[qIndex] !== null) return;
+  const q = questions[qIndex];
+  answered[qIndex] = { selected: null, correct: false, timeout: true };
+  revealed[qIndex] = true;
+  applyAnswerState(qIndex, true);
+  showExplanation();
+  document.getElementById('btnNextNav').disabled = false;
+}
+
+// ─── TOTAL TIMER ──────────────────────────────────────────
+function resetTotalTimer() {
+  clearInterval(totalTimerInterval);
+  totalSecsLeft = EXAM_MAX_SECONDS;
+  updateTotalTimerUI();
+  totalTimerInterval = setInterval(() => {
+    if (isPaused) return;
+    totalSecsLeft--;
+    updateTotalTimerUI();
+    if (totalSecsLeft <= 0) {
+      clearInterval(totalTimerInterval);
+      showResults();
+    }
+  }, 1000);
+}
+
+function updateTotalTimerUI() {
+  const h   = Math.floor(totalSecsLeft / 3600);
+  const m   = Math.floor((totalSecsLeft % 3600) / 60);
+  const s   = totalSecsLeft % 60;
+  const str = h > 0
+    ? `${h}:${pad(m)}:${pad(s)}`
+    : `${pad(m)}:${pad(s)}`;
+
+  const el   = document.getElementById('totalTimerValue');
+  const fill = document.getElementById('totalProgressFill');
+  const pct  = (totalSecsLeft / EXAM_MAX_SECONDS) * 100;
+  const warn = totalSecsLeft < 600;   // last 10 min
+
+  el.textContent  = str;
+  el.className    = 'total-timer-value' + (warn ? ' warning' : '');
+  fill.style.width = pct + '%';
+  fill.className   = 'total-progress-fill' + (warn ? ' warning' : '');
+}
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+// ─── PAUSE ────────────────────────────────────────────────
+function togglePause() {
+  isPaused = !isPaused;
+  const btn = document.getElementById('pauseBtn');
+  const overlay = document.getElementById('pausedOverlay');
+  btn.textContent = isPaused ? '▶ Continuar' : '⏸ Pausar';
+  btn.classList.toggle('paused', isPaused);
+  overlay.classList.toggle('show', isPaused);
+}
+
+// ─── RESULTS ──────────────────────────────────────────────
+function showResults() {
+  stopQTimer();
+  clearInterval(totalTimerInterval);
+  isPaused = false;
+  document.getElementById('pausedOverlay').classList.remove('show');
+
+  const correct   = answered.filter(a => a && a.correct).length;
+  const wrong     = answered.filter(a => a && !a.correct && !a.timeout).length;
+  const timeouts  = answered.filter(a => a && a.timeout).length;
+  const total     = questions.length;
+  const pct       = Math.round((correct / total) * 100);
+  const pass      = (correct / total) >= PASS_THRESHOLD;
+  const usedSecs  = EXAM_MAX_SECONDS - totalSecsLeft;
+
+  document.getElementById('scorePercent').textContent  = pct + '%';
+  document.getElementById('scoreCorrectOf').textContent = `${correct} de ${total} correctas`;
+  document.getElementById('scoreVerdict').innerHTML    = pass
+    ? '<div class="score-pass">APROBADO ✓</div>'
+    : '<div class="score-fail">REPROBADO ✗</div>';
+  document.getElementById('statsCorrect').textContent  = correct;
+  document.getElementById('statsWrong').textContent    = wrong;
+  document.getElementById('statsTimeout').textContent  = timeouts;
+
+  const hh = Math.floor(usedSecs / 3600);
+  const mm = Math.floor((usedSecs % 3600) / 60);
+  const ss = usedSecs % 60;
+  document.getElementById('statsTime').textContent = hh > 0
+    ? `${hh}:${pad(mm)}:${pad(ss)}`
+    : `${pad(mm)}:${pad(ss)}`;
+
+  document.getElementById('totalTimerBar').style.display = 'none';
+  document.getElementById('quizFooter').style.display    = 'none';
+  showScreen('screenResults');
+}
+
+function restartSameLevel() {
+  startLevel(currentLevel);
+}
+
+function goToLevelSelect() {
+  stopQTimer();
+  clearInterval(totalTimerInterval);
+  isPaused = false;
+  document.getElementById('pausedOverlay').classList.remove('show');
+  document.getElementById('totalTimerBar').style.display = 'none';
+  document.getElementById('quizFooter').style.display    = 'none';
+  document.getElementById('headerSubtitle').textContent  = 'Simulador de Certificaciones';
+  document.getElementById('headerBadge').textContent     = 'SIMULATOR';
+  showScreen('screenLevel');
+}
+
+function finishEarly() {
+  if (confirm('¿Finalizar el examen ahora?')) showResults();
+}
+
+// ─── SCREEN SWITCH ────────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  scrollToTop();
+}
+
+function scrollToTop() {
+  document.getElementById('mainContent').scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─── INIT ─────────────────────────────────────────────────
+loadQuestions();
+</script>
+</body>
+</html>

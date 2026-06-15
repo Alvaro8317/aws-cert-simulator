@@ -1,0 +1,516 @@
+{
+  "levels": [
+    {
+      "id": "cloud-practitioner",
+      "name": "Cloud Practitioner",
+      "badge": "FOUNDATIONAL",
+      "code": "CLF-C02",
+      "questions": [
+        {
+          "id": "cp001",
+          "text": "¿Qué modelo de responsabilidad describe quién es responsable de la seguridad EN la nube vs. DE la nube en AWS?",
+          "options": [
+            { "letter": "A", "title": "Modelo de Responsabilidad Compartida", "desc": "" },
+            { "letter": "B", "title": "Modelo de Responsabilidad Total de AWS", "desc": "" },
+            { "letter": "C", "title": "Modelo de Responsabilidad del Cliente", "desc": "" },
+            { "letter": "D", "title": "Modelo de Acceso Mínimo", "desc": "" }
+          ],
+          "correct": "A",
+          "explanation": "El Modelo de Responsabilidad Compartida divide: AWS es responsable DE la nube (hardware, instalaciones, red global) y el cliente es responsable EN la nube (datos, IAM, configuración de servicios)."
+        },
+        {
+          "id": "cp002",
+          "text": "¿Cuál de las siguientes es una ventaja del cómputo en la nube sobre la infraestructura on-premises?",
+          "options": [
+            { "letter": "A", "title": "Mayor control físico del hardware", "desc": "" },
+            { "letter": "B", "title": "Cambiar gastos de capital por gastos variables", "desc": "" },
+            { "letter": "C", "title": "Latencia de red más baja garantizada", "desc": "" },
+            { "letter": "D", "title": "Sin necesidad de gestión de usuarios", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "Una ventaja clave de la nube es cambiar CapEx (gastos de capital en hardware) por OpEx (gastos operativos variables), pagando solo por los recursos consumidos."
+        },
+        {
+          "id": "cp003",
+          "text": "Una empresa necesita almacenar objetos de hasta 5 TB con acceso frecuente y baja latencia. ¿Qué servicio de AWS es el más adecuado?",
+          "options": [
+            { "letter": "A", "title": "Amazon EFS", "desc": "" },
+            { "letter": "B", "title": "Amazon S3", "desc": "" },
+            { "letter": "C", "title": "Amazon EBS", "desc": "" },
+            { "letter": "D", "title": "Amazon S3 Glacier", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "Amazon S3 es el servicio de almacenamiento de objetos de AWS, soporta objetos de hasta 5 TB y ofrece acceso de baja latencia. S3 Glacier es para archivado, EBS es block storage para EC2, y EFS es un sistema de archivos NFS."
+        },
+        {
+          "id": "cp004",
+          "text": "¿Qué servicio de AWS permite ejecutar código sin aprovisionar ni gestionar servidores?",
+          "options": [
+            { "letter": "A", "title": "Amazon EC2", "desc": "" },
+            { "letter": "B", "title": "AWS Lambda", "desc": "" },
+            { "letter": "C", "title": "Amazon ECS", "desc": "" },
+            { "letter": "D", "title": "AWS Batch", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "AWS Lambda es el servicio serverless de AWS. Ejecuta código sin necesidad de aprovisionar servidores, escala automáticamente y solo cobras por el tiempo de ejecución."
+        },
+        {
+          "id": "cp005",
+          "text": "¿Cuál es la herramienta de AWS que proporciona recomendaciones en tiempo real para ayudar a seguir las mejores prácticas de AWS?",
+          "options": [
+            { "letter": "A", "title": "AWS Config", "desc": "" },
+            { "letter": "B", "title": "AWS Trusted Advisor", "desc": "" },
+            { "letter": "C", "title": "Amazon Inspector", "desc": "" },
+            { "letter": "D", "title": "AWS CloudTrail", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "AWS Trusted Advisor analiza tu entorno y proporciona recomendaciones en 5 categorías: optimización de costos, seguridad, tolerancia a fallos, rendimiento y límites de servicio."
+        },
+        {
+          "id": "cp006",
+          "text": "¿Qué componente de la infraestructura global de AWS es una ubicación discreta dentro de una región y está conectada a otras zonas mediante redes de baja latencia?",
+          "options": [
+            { "letter": "A", "title": "Región de AWS", "desc": "" },
+            { "letter": "B", "title": "Zona de Disponibilidad", "desc": "" },
+            { "letter": "C", "title": "Punto de presencia (PoP)", "desc": "" },
+            { "letter": "D", "title": "Local Zone", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "Las Zonas de Disponibilidad (AZs) son uno o más data centers discretos dentro de una región. Están aisladas físicamente pero conectadas entre sí con redes de baja latencia, alta capacidad y redundancia."
+        },
+        {
+          "id": "cp007",
+          "text": "¿Qué servicio de AWS se utiliza para gestionar el acceso a los recursos de AWS de forma centralizada?",
+          "options": [
+            { "letter": "A", "title": "AWS IAM", "desc": "" },
+            { "letter": "B", "title": "Amazon Cognito", "desc": "" },
+            { "letter": "C", "title": "AWS SSO", "desc": "" },
+            { "letter": "D", "title": "AWS Directory Service", "desc": "" }
+          ],
+          "correct": "A",
+          "explanation": "AWS IAM (Identity and Access Management) es el servicio principal para gestionar quién puede acceder a qué recursos en AWS, mediante usuarios, grupos, roles y políticas."
+        },
+        {
+          "id": "cp008",
+          "text": "Una startup quiere minimizar costos y solo pagar por la capacidad de cómputo que realmente utiliza. ¿Qué modelo de precios de EC2 es el más adecuado?",
+          "options": [
+            { "letter": "A", "title": "Reserved Instances", "desc": "" },
+            { "letter": "B", "title": "On-Demand", "desc": "" },
+            { "letter": "C", "title": "Spot Instances", "desc": "" },
+            { "letter": "D", "title": "Dedicated Hosts", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "On-Demand es el modelo más flexible: pagas solo por las horas o segundos que usas sin compromisos. Para mayor ahorro con carga predecible se usarían Reserved Instances, y Spot para tolerancia a interrupciones."
+        },
+        {
+          "id": "cp009",
+          "text": "¿Cuál de los siguientes servicios de AWS proporciona una red de distribución de contenido (CDN) global?",
+          "options": [
+            { "letter": "A", "title": "AWS Global Accelerator", "desc": "" },
+            { "letter": "B", "title": "Amazon CloudFront", "desc": "" },
+            { "letter": "C", "title": "Amazon Route 53", "desc": "" },
+            { "letter": "D", "title": "AWS Direct Connect", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "Amazon CloudFront es el CDN de AWS. Distribuye contenido desde edge locations alrededor del mundo, reduciendo la latencia al servir contenido desde la ubicación más cercana al usuario."
+        },
+        {
+          "id": "cp010",
+          "text": "¿Qué plan de soporte de AWS es el mínimo que incluye acceso 24/7 por teléfono, chat y email para soporte técnico?",
+          "options": [
+            { "letter": "A", "title": "Basic", "desc": "" },
+            { "letter": "B", "title": "Developer", "desc": "" },
+            { "letter": "C", "title": "Business", "desc": "" },
+            { "letter": "D", "title": "Enterprise", "desc": "" }
+          ],
+          "correct": "C",
+          "explanation": "El plan Business es el primero en ofrecer soporte 24/7 por teléfono, chat y email. El plan Developer solo ofrece soporte por email en horario laboral."
+        }
+      ]
+    },
+    {
+      "id": "ai-practitioner",
+      "name": "AI Practitioner",
+      "badge": "FOUNDATIONAL",
+      "code": "AIF-C01",
+      "questions": [
+        {
+          "id": "ai001",
+          "text": "¿Qué servicio de AWS permite a los desarrolladores añadir inteligencia artificial a sus aplicaciones sin conocimientos profundos de ML?",
+          "options": [
+            { "letter": "A", "title": "Amazon SageMaker", "desc": "" },
+            { "letter": "B", "title": "AWS AI Services (Rekognition, Comprehend, etc.)", "desc": "" },
+            { "letter": "C", "title": "AWS Glue", "desc": "" },
+            { "letter": "D", "title": "Amazon EMR", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "Los servicios de IA de AWS (como Rekognition para imágenes, Comprehend para NLP, Polly para texto a voz) son APIs preentrenadas que no requieren conocimientos de ML para ser utilizadas."
+        },
+        {
+          "id": "ai002",
+          "text": "¿Cuál es la principal diferencia entre Machine Learning (ML) y Deep Learning (DL)?",
+          "options": [
+            { "letter": "A", "title": "ML usa reglas programadas, DL aprende de datos", "desc": "" },
+            { "letter": "B", "title": "DL usa redes neuronales profundas, ML usa algoritmos estadísticos más simples", "desc": "" },
+            { "letter": "C", "title": "ML requiere más datos que DL", "desc": "" },
+            { "letter": "D", "title": "No hay diferencia significativa entre ambos", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "Deep Learning es un subconjunto de ML que utiliza redes neuronales con múltiples capas ocultas. ML abarca algoritmos más amplios (regresión, árboles de decisión, SVM). DL generalmente requiere MÁS datos y potencia computacional."
+        },
+        {
+          "id": "ai003",
+          "text": "Amazon Bedrock es un servicio que permite:",
+          "options": [
+            { "letter": "A", "title": "Entrenar modelos de ML desde cero", "desc": "" },
+            { "letter": "B", "title": "Acceder a modelos fundacionales de terceros vía API", "desc": "" },
+            { "letter": "C", "title": "Ejecutar inferencias de ML en dispositivos edge", "desc": "" },
+            { "letter": "D", "title": "Almacenar datasets de entrenamiento de forma segura", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "Amazon Bedrock es un servicio serverless que da acceso a modelos fundacionales (FMs) de proveedores como Anthropic (Claude), Meta (Llama), Mistral, Cohere y Amazon (Titan) mediante una sola API."
+        },
+        {
+          "id": "ai004",
+          "text": "¿Qué técnica de IA generativa permite a un modelo usar información externa actualizada sin necesidad de reentrenarlo?",
+          "options": [
+            { "letter": "A", "title": "Fine-tuning", "desc": "" },
+            { "letter": "B", "title": "RAG (Retrieval Augmented Generation)", "desc": "" },
+            { "letter": "C", "title": "Prompt engineering", "desc": "" },
+            { "letter": "D", "title": "Transfer learning", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "RAG (Retrieval Augmented Generation) combina recuperación de información con generación. El modelo consulta una base de conocimiento externa en tiempo real antes de generar la respuesta, sin necesidad de reentrenamiento."
+        },
+        {
+          "id": "ai005",
+          "text": "¿Qué servicio de AWS se utiliza específicamente para detectar, analizar y comparar rostros en imágenes y videos?",
+          "options": [
+            { "letter": "A", "title": "Amazon Textract", "desc": "" },
+            { "letter": "B", "title": "Amazon Rekognition", "desc": "" },
+            { "letter": "C", "title": "Amazon Comprehend", "desc": ")" },
+            { "letter": "D", "title": "Amazon Transcribe", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "Amazon Rekognition es el servicio de visión por computadora de AWS. Puede detectar objetos, escenas, rostros, texto en imágenes y videos, incluyendo comparación y verificación de identidad facial."
+        },
+        {
+          "id": "ai006",
+          "text": "En el contexto de modelos de lenguaje grande (LLM), ¿qué es la 'alucinación'?",
+          "options": [
+            { "letter": "A", "title": "Cuando el modelo genera respuestas muy creativas", "desc": "" },
+            { "letter": "B", "title": "Cuando el modelo genera información incorrecta con alta confianza", "desc": "" },
+            { "letter": "C", "title": "Cuando el modelo tarda demasiado en responder", "desc": "" },
+            { "letter": "D", "title": "Cuando el modelo rechaza responder", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "La alucinación en LLMs ocurre cuando el modelo genera información que suena plausible y convincente pero es factualmente incorrecta o inventada. Es uno de los principales desafíos de la IA generativa actual."
+        },
+        {
+          "id": "ai007",
+          "text": "¿Cuál de los siguientes es el servicio de AWS para construir chatbots y asistentes conversacionales?",
+          "options": [
+            { "letter": "A", "title": "Amazon Polly", "desc": "" },
+            { "letter": "B", "title": "Amazon Lex", "desc": "" },
+            { "letter": "C", "title": "Amazon Connect", "desc": "" },
+            { "letter": "D", "title": "Amazon Kendra", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "Amazon Lex es el servicio de AWS para crear interfaces conversacionales. Usa la misma tecnología de Deep Learning de Alexa, con comprensión de lenguaje natural (NLU) y reconocimiento de voz (ASR)."
+        },
+        {
+          "id": "ai008",
+          "text": "¿Qué concepto describe el sesgo no intencional introducido en modelos de ML debido a datos de entrenamiento no representativos?",
+          "options": [
+            { "letter": "A", "title": "Overfitting", "desc": "" },
+            { "letter": "B", "title": "Sesgo algorítmico (Algorithmic Bias)", "desc": "" },
+            { "letter": "C", "title": "Underfitting", "desc": "" },
+            { "letter": "D", "title": "Data drift", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "El sesgo algorítmico ocurre cuando los datos de entrenamiento reflejan prejuicios históricos o no son representativos de la población real, causando que el modelo tome decisiones discriminatorias o injustas."
+        },
+        {
+          "id": "ai009",
+          "text": "Amazon SageMaker Canvas permite a usuarios de negocio sin experiencia en ML:",
+          "options": [
+            { "letter": "A", "title": "Escribir código Python para entrenar modelos", "desc": "" },
+            { "letter": "B", "title": "Construir modelos de ML sin código mediante interfaz visual", "desc": "" },
+            { "letter": "C", "title": "Desplegar modelos en dispositivos edge", "desc": "" },
+            { "letter": "D", "title": "Monitorear la infraestructura de ML en producción", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "Amazon SageMaker Canvas es una herramienta visual no-code que permite a analistas de negocio construir, entrenar y hacer predicciones con modelos de ML sin escribir código."
+        },
+        {
+          "id": "ai010",
+          "text": "¿Qué principio de IA responsable se refiere a la capacidad de explicar cómo y por qué un modelo tomó una decisión específica?",
+          "options": [
+            { "letter": "A", "title": "Fairness (Equidad)", "desc": "" },
+            { "letter": "B", "title": "Explicabilidad (Explainability)", "desc": "" },
+            { "letter": "C", "title": "Robustez", "desc": "" },
+            { "letter": "D", "title": "Privacidad", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "La explicabilidad (o interpretabilidad) es la capacidad de entender y comunicar cómo un modelo llega a sus predicciones. Es crucial para auditorías, regulaciones (GDPR) y confianza del usuario."
+        }
+      ]
+    },
+    {
+      "id": "developer-associate",
+      "name": "Developer Associate",
+      "badge": "ASSOCIATE",
+      "code": "DVA-C02",
+      "questions": [
+        {
+          "id": "dev001",
+          "text": "Un desarrollador necesita que su aplicación Lambda acceda a una base de datos RDS sin almacenar credenciales en el código. ¿Cuál es la mejor práctica?",
+          "options": [
+            { "letter": "A", "title": "Variables de entorno Lambda", "desc": "" },
+            { "letter": "B", "title": "AWS Secrets Manager con IAM Role", "desc": "" },
+            { "letter": "C", "title": "Hardcoded en el código fuente", "desc": "" },
+            { "letter": "D", "title": "Pasar credenciales en cada invocación", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "La mejor práctica es usar AWS Secrets Manager junto con un IAM Role para la función Lambda. El rol permite recuperar el secreto en tiempo de ejecución sin credenciales hardcodeadas o en variables de entorno en texto plano."
+        },
+        {
+          "id": "dev002",
+          "text": "¿Qué estrategia de despliegue en AWS CodeDeploy permite enrutar un porcentaje del tráfico a la nueva versión antes de hacer el cambio completo?",
+          "options": [
+            { "letter": "A", "title": "In-Place Deployment", "desc": "" },
+            { "letter": "B", "title": "Blue/Green Deployment", "desc": "" },
+            { "letter": "C", "title": "Canary Deployment", "desc": "" },
+            { "letter": "D", "title": "Rolling Deployment", "desc": "" }
+          ],
+          "correct": "C",
+          "explanation": "Canary Deployment envía inicialmente un pequeño porcentaje del tráfico (ej: 10%) a la nueva versión para detectar problemas antes del despliegue completo. Si hay errores, se revierte automáticamente."
+        },
+        {
+          "id": "dev003",
+          "text": "¿Cuál es el propósito del atributo 'MessageGroupId' en Amazon SQS FIFO queues?",
+          "options": [
+            { "letter": "A", "title": "Identificar mensajes duplicados", "desc": "" },
+            { "letter": "B", "title": "Garantizar orden dentro de un grupo de mensajes", "desc": "" },
+            { "letter": "C", "title": "Priorizar mensajes en la cola", "desc": "" },
+            { "letter": "D", "title": "Enrutar mensajes a diferentes consumidores", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "En SQS FIFO, el MessageGroupId garantiza que los mensajes dentro del mismo grupo se procesen en orden estricto FIFO. Diferentes grupos pueden procesarse en paralelo, aumentando el throughput."
+        },
+        {
+          "id": "dev004",
+          "text": "Un desarrollador quiere que su API Gateway devuelva una respuesta en caché cuando el mismo request se repite. ¿Qué debe configurar?",
+          "options": [
+            { "letter": "A", "title": "Lambda Provisioned Concurrency", "desc": "" },
+            { "letter": "B", "title": "API Gateway Stage Cache", "desc": "" },
+            { "letter": "C", "title": "CloudFront Distribution", "desc": "" },
+            { "letter": "D", "title": "ElastiCache para la función Lambda", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "API Gateway tiene capacidad de caché integrada a nivel de Stage. Puedes configurar un TTL (Time-to-Live) y claves de caché basadas en query strings, headers o path parameters."
+        },
+        {
+          "id": "dev005",
+          "text": "¿Qué servicio de AWS permite gestionar el estado de aplicaciones distribuidas usando workflows visuales?",
+          "options": [
+            { "letter": "A", "title": "Amazon SQS", "desc": "" },
+            { "letter": "B", "title": "AWS Step Functions", "desc": "" },
+            { "letter": "C", "title": "Amazon EventBridge", "desc": "" },
+            { "letter": "D", "title": "AWS AppSync", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "AWS Step Functions permite coordinar múltiples servicios AWS en workflows (máquinas de estado). Visualiza el flujo, maneja reintentos, timeouts y errores automáticamente."
+        },
+        {
+          "id": "dev006",
+          "text": "Al usar AWS X-Ray en una aplicación, ¿qué información se captura con un 'trace'?",
+          "options": [
+            { "letter": "A", "title": "Logs de errores de la aplicación", "desc": "" },
+            { "letter": "B", "title": "El recorrido completo de una request a través de los servicios", "desc": "" },
+            { "letter": "C", "title": "Métricas de CPU y memoria", "desc": "" },
+            { "letter": "D", "title": "Historial de despliegues de la aplicación", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "AWS X-Ray captura trazas (traces) que representan el recorrido end-to-end de una request. Cada trace contiene segmentos (servicios) y subsegmentos (operaciones) con tiempos de latencia, errores y metadatos."
+        },
+        {
+          "id": "dev007",
+          "text": "¿Cuál es el límite de tamaño de un item en Amazon DynamoDB?",
+          "options": [
+            { "letter": "A", "title": "1 MB", "desc": "" },
+            { "letter": "B", "title": "400 KB", "desc": "" },
+            { "letter": "C", "title": "64 KB", "desc": "" },
+            { "letter": "D", "title": "Sin límite definido", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "El límite de tamaño de un item en DynamoDB es 400 KB, incluyendo los nombres de los atributos y sus valores. Para datos más grandes se recomienda almacenar en S3 y guardar la referencia en DynamoDB."
+        },
+        {
+          "id": "dev008",
+          "text": "¿Qué tipo de autenticación usa Amazon Cognito User Pools para verificar la identidad del usuario en una API?",
+          "options": [
+            { "letter": "A", "title": "API Keys de IAM", "desc": "" },
+            { "letter": "B", "title": "JWT Tokens (ID Token o Access Token)", "desc": "" },
+            { "letter": "C", "title": "Certificados SSL de cliente", "desc": "" },
+            { "letter": "D", "title": "Sesiones de cookies HTTP", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "Cognito User Pools emite JWT tokens (ID Token, Access Token y Refresh Token). API Gateway puede configurarse para validar estos tokens automáticamente como Authorizer de Cognito."
+        },
+        {
+          "id": "dev009",
+          "text": "Un desarrollador necesita procesar mensajes de SQS en orden estricto. ¿Qué tipo de cola debe usar?",
+          "options": [
+            { "letter": "A", "title": "Cola estándar (Standard Queue)", "desc": "" },
+            { "letter": "B", "title": "Cola FIFO", "desc": "" },
+            { "letter": "C", "title": "Cola de prioridad", "desc": "" },
+            { "letter": "D", "title": "Dead Letter Queue", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "Las colas SQS FIFO garantizan que los mensajes se entreguen en el orden exacto en que fueron enviados y que cada mensaje se procese exactamente una vez (exactly-once processing)."
+        },
+        {
+          "id": "dev010",
+          "text": "Al desplegar con AWS Elastic Beanstalk, ¿qué política de despliegue actualiza las instancias de una en una, manteniendo siempre capacidad mínima disponible?",
+          "options": [
+            { "letter": "A", "title": "All at once", "desc": "" },
+            { "letter": "B", "title": "Rolling", "desc": "" },
+            { "letter": "C", "title": "Rolling with additional batch", "desc": "" },
+            { "letter": "D", "title": "Immutable", "desc": "" }
+          ],
+          "correct": "C",
+          "explanation": "Rolling with additional batch lanza un nuevo lote de instancias antes de actualizar las existentes, garantizando que la capacidad total se mantiene durante el despliegue. Es más costoso pero sin pérdida de capacidad."
+        }
+      ]
+    },
+    {
+      "id": "solutions-architect-associate",
+      "name": "Solutions Architect Associate",
+      "badge": "ASSOCIATE",
+      "code": "SAA-C03",
+      "questions": [
+        {
+          "id": "saa001",
+          "text": "Una aplicación necesita alta disponibilidad y los datos deben replicarse sincrónicamente entre Zonas de Disponibilidad. ¿Qué servicio de base de datos cumple este requisito?",
+          "options": [
+            { "letter": "A", "title": "Amazon RDS Multi-AZ", "desc": "" },
+            { "letter": "B", "title": "Amazon RDS Read Replica", "desc": "" },
+            { "letter": "C", "title": "Amazon DynamoDB Global Tables", "desc": "" },
+            { "letter": "D", "title": "Amazon ElastiCache", "desc": "" }
+          ],
+          "correct": "A",
+          "explanation": "RDS Multi-AZ crea una instancia standby en una AZ diferente con replicación SÍNCRONA. En caso de fallo, el failover automático ocurre en minutos. Las Read Replicas usan replicación ASÍNCRONA y son para escalado de lecturas."
+        },
+        {
+          "id": "saa002",
+          "text": "Una empresa tiene picos de tráfico impredecibles. Quieren escalar automáticamente su flota EC2 basándose en la carga de CPU. ¿Qué solución implementarías?",
+          "options": [
+            { "letter": "A", "title": "Manually scaling EC2 instances", "desc": "" },
+            { "letter": "B", "title": "Auto Scaling Group con política de Target Tracking", "desc": "" },
+            { "letter": "C", "title": "Reserved Instances con capacidad adicional", "desc": "" },
+            { "letter": "D", "title": "Lambda en lugar de EC2", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "Auto Scaling Group con Target Tracking Policy escala automáticamente el número de instancias para mantener una métrica (ej: CPU al 60%) en el valor objetivo. Es el mecanismo de escalado automático de EC2."
+        },
+        {
+          "id": "saa003",
+          "text": "¿Cuál es la diferencia entre un Application Load Balancer (ALB) y un Network Load Balancer (NLB)?",
+          "options": [
+            { "letter": "A", "title": "ALB opera en capa 7 (HTTP/HTTPS), NLB en capa 4 (TCP/UDP)", "desc": "" },
+            { "letter": "B", "title": "ALB es más rápido que NLB", "desc": "" },
+            { "letter": "C", "title": "NLB solo funciona con EC2, ALB con cualquier recurso", "desc": "" },
+            { "letter": "D", "title": "ALB tiene IP estática, NLB tiene IP dinámica", "desc": "" }
+          ],
+          "correct": "A",
+          "explanation": "ALB opera en capa 7 (aplicación) y puede enrutar basándose en path, host, headers y query strings. NLB opera en capa 4 (transporte), tiene latencia ultra baja y soporta IP estáticas/Elastic IPs."
+        },
+        {
+          "id": "saa004",
+          "text": "Una empresa quiere garantizar que sus datos en S3 no sean eliminados accidentalmente, incluso por administradores. ¿Qué funcionalidad de S3 deben activar?",
+          "options": [
+            { "letter": "A", "title": "S3 Versioning", "desc": "" },
+            { "letter": "B", "title": "S3 Object Lock con Compliance Mode", "desc": "" },
+            { "letter": "C", "title": "S3 Bucket Policy restrictiva", "desc": "" },
+            { "letter": "D", "title": "AWS Backup para S3", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "S3 Object Lock en Compliance Mode implementa un modelo WORM (Write Once, Read Many). Nadie, incluyendo el usuario root, puede eliminar o modificar objetos durante el período de retención configurado."
+        },
+        {
+          "id": "saa005",
+          "text": "¿Qué arquitectura VPC permite que instancias EC2 en una subnet privada accedan a internet para descargar actualizaciones, pero sin ser accesibles desde internet?",
+          "options": [
+            { "letter": "A", "title": "Internet Gateway en subnet privada", "desc": "" },
+            { "letter": "B", "title": "NAT Gateway en subnet pública + route en subnet privada", "desc": "" },
+            { "letter": "C", "title": "VPN Site-to-Site", "desc": "" },
+            { "letter": "D", "title": "AWS Direct Connect", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "Un NAT Gateway en una subnet pública permite que instancias en subnets privadas inicien conexiones salientes a internet. El tráfico entrante iniciado desde internet es bloqueado, manteniendo las instancias privadas."
+        },
+        {
+          "id": "saa006",
+          "text": "Una startup quiere reducir costos de EC2 para cargas de trabajo tolerantes a interrupciones que pueden detenerse y reanudarse. ¿Qué tipo de instancia usar?",
+          "options": [
+            { "letter": "A", "title": "Reserved Instances", "desc": "%" },
+            { "letter": "B", "title": "Spot Instances", "desc": "" },
+            { "letter": "C", "title": "On-Demand Instances", "desc": "" },
+            { "letter": "D", "title": "Dedicated Instances", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "Spot Instances ofrecen hasta 90% de descuento sobre el precio On-Demand. Son ideales para cargas tolerantes a interrupciones: batch processing, análisis de datos, CI/CD, y workloads stateless."
+        },
+        {
+          "id": "saa007",
+          "text": "¿Qué servicio de AWS permite conectar múltiples VPCs y redes on-premises mediante un hub central sin crear peerings individuales?",
+          "options": [
+            { "letter": "A", "title": "VPC Peering", "desc": "" },
+            { "letter": "B", "title": "AWS Transit Gateway", "desc": "" },
+            { "letter": "C", "title": "AWS PrivateLink", "desc": "" },
+            { "letter": "D", "title": "AWS Site-to-Site VPN", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "AWS Transit Gateway actúa como un hub de red central. Permite conectar miles de VPCs, VPNs y conexiones Direct Connect sin la complejidad de VPC Peerings individuales (que no son transitivos)."
+        },
+        {
+          "id": "saa008",
+          "text": "Una aplicación web tiene lecturas intensas. La base de datos RDS se satura con consultas SELECT. ¿Cuál es la solución más adecuada?",
+          "options": [
+            { "letter": "A", "title": "Escalar verticalmente la instancia RDS", "desc": "" },
+            { "letter": "B", "title": "Agregar RDS Read Replicas y apuntar lecturas a ellas", "desc": "" },
+            { "letter": "C", "title": "Migrar a DynamoDB", "desc": "" },
+            { "letter": "D", "title": "Habilitar RDS Multi-AZ", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "Las RDS Read Replicas escalan horizontalmente las lecturas. Puedes crear hasta 5 réplicas (15 con Aurora) y apuntar el tráfico de lectura a ellas. Multi-AZ es para failover, no escalado de lecturas."
+        },
+        {
+          "id": "saa009",
+          "text": "¿Qué clase de almacenamiento S3 es más rentable para datos accedidos con poca frecuencia pero que requieren recuperación inmediata?",
+          "options": [
+            { "letter": "A", "title": "S3 Standard", "desc": "" },
+            { "letter": "B", "title": "S3 Standard-IA (Infrequent Access)", "desc": "" },
+            { "letter": "C", "title": "S3 Glacier Instant Retrieval", "desc": "" },
+            { "letter": "D", "title": "S3 Glacier Deep Archive", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "S3 Standard-IA es ideal para datos poco accedidos pero que necesitan recuperación inmediata (milisegundos). Tiene menor costo de almacenamiento que Standard pero cobra por recuperación de datos."
+        },
+        {
+          "id": "saa010",
+          "text": "Una empresa requiere que su aplicación continúe funcionando incluso si una Región de AWS completa falla. ¿Qué estrategia de DR implementar?",
+          "options": [
+            { "letter": "A", "title": "Multi-AZ dentro de una sola región", "desc": "" },
+            { "letter": "B", "title": "Multi-Region Active-Passive con Route 53 failover", "desc": "" },
+            { "letter": "C", "title": "Más instancias EC2 en la misma región", "desc": "" },
+            { "letter": "D", "title": "S3 Cross-Region Replication únicamente", "desc": "" }
+          ],
+          "correct": "B",
+          "explanation": "Para tolerancia a fallos regionales, se implementa una arquitectura Multi-Region. Con Route 53 Health Checks y failover policies, el DNS redirige automáticamente el tráfico a la región secundaria si la primaria falla."
+        }
+      ]
+    }
+  ]
+}
