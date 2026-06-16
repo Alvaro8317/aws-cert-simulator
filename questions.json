@@ -8,31 +8,31 @@
       "questions": [
         {
           "id": "cp001",
-          "text": "¿Qué modelo de responsabilidad describe quién es responsable de la seguridad EN la nube vs. DE la nube en AWS?",
+          "text": "Una empresa de análisis de datos ejecuta una aplicación por lotes en AWS. Cientos de instancias EC2 necesitan acceder simultáneamente al mismo sistema de archivos para añadir datos. ¿Qué servicio de AWS es el más adecuado?",
           "options": [
             {
               "letter": "A",
-              "title": "Modelo de Responsabilidad Compartida",
+              "title": "Instance Store",
               "desc": ""
             },
             {
               "letter": "B",
-              "title": "Modelo de Responsabilidad Total de AWS",
+              "title": "Amazon EBS",
               "desc": ""
             },
             {
               "letter": "C",
-              "title": "Modelo de Responsabilidad del Cliente",
+              "title": "Amazon S3",
               "desc": ""
             },
             {
               "letter": "D",
-              "title": "Modelo de Acceso Mínimo",
+              "title": "Amazon EFS",
               "desc": ""
             }
           ],
-          "correct": "A",
-          "explanation": "El Modelo de Responsabilidad Compartida divide: AWS es responsable DE la nube (hardware, instalaciones, red global) y el cliente es responsable EN la nube (datos, IAM, configuración de servicios)."
+          "correct": "D",
+          "explanation": "Amazon EFS es un sistema de archivos NFS completamente administrado que permite acceso concurrente desde miles de instancias EC2 simultáneamente. EBS solo puede montarse en una instancia a la vez, Instance Store es almacenamiento temporal local, y S3 es almacenamiento de objetos que no soporta operaciones de adición de archivos."
         },
         {
           "id": "cp002",
@@ -120,59 +120,59 @@
         },
         {
           "id": "cp005",
-          "text": "¿Cuál es la herramienta de AWS que proporciona recomendaciones en tiempo real para ayudar a seguir las mejores prácticas de AWS?",
+          "text": "Un becario aprovisionó una instancia EC2 bajo demanda con Linux (facturación por segundos) y la canceló a los 30 segundos. ¿Cuánto tiempo se le facturará?",
           "options": [
             {
               "letter": "A",
-              "title": "AWS Config",
+              "title": "300 segundos",
               "desc": ""
             },
             {
               "letter": "B",
-              "title": "AWS Trusted Advisor",
+              "title": "600 segundos",
               "desc": ""
             },
             {
               "letter": "C",
-              "title": "Amazon Inspector",
+              "title": "30 segundos",
               "desc": ""
             },
             {
               "letter": "D",
-              "title": "AWS CloudTrail",
+              "title": "60 segundos",
               "desc": ""
             }
           ],
-          "correct": "B",
-          "explanation": "AWS Trusted Advisor analiza tu entorno y proporciona recomendaciones en 5 categorías: optimización de costos, seguridad, tolerancia a fallos, rendimiento y límites de servicio."
+          "correct": "D",
+          "explanation": "Hay una carga mínima de un minuto para las instancias EC2 basadas en Linux, por lo que esta es la opción correcta."
         },
         {
           "id": "cp006",
-          "text": "¿Qué componente de la infraestructura global de AWS es una ubicación discreta dentro de una región y está conectada a otras zonas mediante redes de baja latencia?",
+          "text": "Una startup quiere aprovisionar una instancia EC2 al menor costo posible durante un periodo prolongado, garantizando que nunca será interrumpida. ¿Qué opción recomendarías?",
           "options": [
             {
               "letter": "A",
-              "title": "Región de AWS",
+              "title": "Hosts Dedicados",
               "desc": ""
             },
             {
               "letter": "B",
-              "title": "Zona de Disponibilidad",
+              "title": "Instancia Bajo Demanda",
               "desc": ""
             },
             {
               "letter": "C",
-              "title": "Punto de presencia (PoP)",
+              "title": "Instancia Reservada",
               "desc": ""
             },
             {
               "letter": "D",
-              "title": "Local Zone",
+              "title": "Instancia Spot",
               "desc": ""
             }
           ],
-          "correct": "B",
-          "explanation": "Las Zonas de Disponibilidad (AZs) son uno o más data centers discretos dentro de una región. Están aisladas físicamente pero conectadas entre sí con redes de baja latencia, alta capacidad y redundancia."
+          "correct": "C",
+          "explanation": "Las Instancias Reservadas ofrecen hasta un 75% de ahorro frente a On-Demand a cambio de un compromiso de 1 o 3 años, y nunca son interrumpidas. Spot ofrece mayor descuento (hasta 90%) pero puede terminarse en cualquier momento. On-Demand no requiere compromiso pero es más costosa a largo plazo. Los Hosts Dedicados son los más caros y están orientados a cumplimiento de licencias."
         },
         {
           "id": "cp007",
@@ -705,6 +705,314 @@
           ],
           "correct": "B",
           "explanation": "AWS Fargate es el motor de cómputo serverless para contenedores. Permite ejecutar contenedores en ECS o EKS sin aprovisionar ni gestionar instancias EC2. Solo defines los recursos (CPU/RAM) que necesita el contenedor y AWS gestiona el resto. ECR es solo el registro de imágenes."
+        },
+        {
+          "id": "cp026",
+          "text": "El equipo de DevOps de una empresa de e-commerce necesita depurar problemas de rendimiento en su aplicación serverless con arquitectura de microservicios. ¿Qué servicio de AWS recomendarías?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "AWS CloudFormation",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "AWS X-Ray",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Amazon Pinpoint",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "AWS Trusted Advisor",
+              "desc": ""
+            }
+          ],
+          "correct": "B",
+          "explanation": "AWS X-Ray permite analizar y depurar aplicaciones distribuidas y serverless, trazando el recorrido de cada request a través de los microservicios para identificar cuellos de botella y errores. Trusted Advisor da recomendaciones de buenas prácticas generales, Pinpoint es para engagement de usuarios, y CloudFormation es para infraestructura como código."
+        },
+        {
+          "id": "cp027",
+          "text": "¿Qué servicio de AWS permite automatizar el despliegue de código tanto en instancias EC2 como en servidores on-premises?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "AWS CodeCommit",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "AWS CloudFormation",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "AWS CodeDeploy",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "AWS CodePipeline",
+              "desc": ""
+            }
+          ],
+          "correct": "C",
+          "explanation": "AWS CodeDeploy automatiza el despliegue de código en EC2 e instancias on-premises, minimizando tiempo de inactividad y eliminando operaciones manuales. CodePipeline orquesta el pipeline completo pero delega el despliegue real a CodeDeploy. CodeCommit es un repositorio Git y CloudFormation es para infraestructura como código."
+        },
+        {
+          "id": "cp028",
+          "text": "¿Qué servicio de AWS permite aprovisionar la misma infraestructura de forma consistente en múltiples cuentas y regiones con una sola operación?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "AWS CloudFormation",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "AWS CodeDeploy",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "AWS Systems Manager",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "AWS OpsWorks",
+              "desc": ""
+            }
+          ],
+          "correct": "A",
+          "explanation": "AWS CloudFormation permite modelar y aprovisionar infraestructura como código. Su funcionalidad CloudFormation StackSets extiende esto para crear, actualizar o eliminar stacks en múltiples cuentas y regiones con una sola operación. CodeDeploy automatiza despliegues de software, OpsWorks gestiona configuración con Chef/Puppet, y Systems Manager da visibilidad operativa, pero ninguno aprovisiona infraestructura multi-cuenta."
+        },
+        {
+          "id": "cp029",
+          "text": "Una fintech con sede en Nueva York almacena registros financieros anonimizados de clientes en Amazon S3. El CTO quiere asegurarse de que cualquier dato sensible almacenado sea descubierto e identificado automáticamente para prevenir filtraciones. ¿Qué servicio de AWS recomendarías?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Amazon Macie",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "AWS Glue",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "AWS Secrets Manager",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Amazon Polly",
+              "desc": ""
+            }
+          ],
+          "correct": "A",
+          "explanation": "Amazon Macie usa Machine Learning y concordancia de patrones para descubrir y proteger datos sensibles en S3, como información de identificación personal (PII) o datos financieros. AWS Glue es un servicio ETL para procesamiento de datos, Secrets Manager gestiona credenciales y claves de API, y Polly convierte texto en voz."
+        },
+        {
+          "id": "cp030",
+          "text": "Una empresa del sector retail desea reforzar la seguridad de acceso a la consola de AWS tras una auditoría de su equipo de InfoSec, que recomienda implementar MFA mediante un dispositivo físico conectado por USB. ¿Qué mecanismo de autenticación de AWS cumple este requisito?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "MFA basado en SMS",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Dispositivo MFA de hardware",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Clave de seguridad U2F",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Dispositivo MFA virtual",
+              "desc": ""
+            }
+          ],
+          "correct": "C",
+          "explanation": "La clave de seguridad U2F es un dispositivo físico que se conecta por USB. Al iniciar sesión, el usuario toca el dispositivo en lugar de ingresar un código manualmente. El MFA virtual usa una app en el teléfono, el MFA de hardware genera códigos numéricos de seis dígitos sin conexión USB, y el MFA por SMS envía el código al móvil del usuario."
+        },
+        {
+          "id": "cp031",
+          "text": "Una empresa de logística mantiene VPCs separadas para cada unidad de negocio. El equipo de operaciones y el de facturación necesitan intercambiar datos de forma privada sin exponer el tráfico a internet. ¿Cuál es la solución más óptima?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "VPC Peering",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "VPC Endpoint",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "AWS Direct Connect",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "VPN Site-to-Site",
+              "desc": ""
+            }
+          ],
+          "correct": "A",
+          "explanation": "VPC Peering establece una conexión de red privada entre dos VPCs, permitiendo que las instancias se comuniquen como si estuvieran en la misma red. VPN Site-to-Site conecta redes on-premises con AWS pero no interconecta VPCs. Direct Connect es un enlace dedicado desde redes externas a AWS, no entre VPCs. VPC Endpoint conecta una VPC con servicios de AWS, no con otra VPC."
+        },
+        {
+          "id": "cp031",
+          "text": "Una empresa de desarrollo de software quiere que sus developers se enfoquen únicamente en escribir código, sin gestionar servidores, balanceadores ni configuración de infraestructura. El equipo de arquitectura recomienda adoptar una solución PaaS en AWS. ¿Qué servicio cumple este requisito?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "AWS CloudFormation",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Amazon EC2",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "AWS Elastic Beanstalk",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "AWS Lambda",
+              "desc": ""
+            }
+          ],
+          "correct": "C",
+          "explanation": "AWS Elastic Beanstalk es una PaaS: el desarrollador solo sube su código y AWS gestiona automáticamente el aprovisionamiento, balanceo de carga, autoescalado y monitoreo. EC2 es IaaS donde el usuario administra el SO. CloudFormation es Infraestructura como Código. Lambda es serverless orientado a funciones, no a aplicaciones completas."
+        },
+        {
+          "id": "cp032",
+          "text": "Una empresa de e-commerce despliega su aplicación en múltiples Zonas de Disponibilidad para garantizar que siga operando ante fallos de infraestructura. ¿Qué concepto de arquitectura en la nube representa esta estrategia?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Escalado horizontal",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Escalado vertical",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Eficiencia de rendimiento",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Alta disponibilidad",
+              "desc": ""
+            }
+          ],
+          "correct": "D",
+          "explanation": "Desplegar en múltiples AZs es un ejemplo de Alta Disponibilidad: el sistema puede soportar fallos parciales sin dejar de funcionar. El escalado horizontal añade más instancias para aumentar capacidad (Auto Scaling Groups). El escalado vertical añade más recursos a una sola instancia (más CPU/RAM). La eficiencia de rendimiento es un pilar del Well-Architected Framework sobre uso óptimo de recursos."
+        },
+        {
+          "id": "cp033",
+          "text": "El equipo de infraestructura de una empresa manufacturera quiere automatizar la configuración y gestión de sus servidores on-premises usando Chef y Puppet. ¿Qué servicio de AWS les permite integrar estas herramientas?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "AWS CodeDeploy",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "AWS OpsWorks",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "AWS Batch",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "AWS CloudFormation",
+              "desc": ""
+            }
+          ],
+          "correct": "B",
+          "explanation": "AWS OpsWorks es un servicio de gestión de configuración que provee instancias gestionadas de Chef y Puppet, permitiendo automatizar configuración, despliegue y gestión de servidores tanto en EC2 como on-premises. CloudFormation aprovisiona infraestructura como código pero no usa Chef ni Puppet. CodeDeploy automatiza despliegues de código. Batch ejecuta trabajos de cómputo por lotes."
+        },
+        {
+          "id": "cp034",
+          "text": "Una empresa del sector seguros necesita garantizar que toda la actividad en sus cuentas de AWS quede registrada para cumplir con requisitos de auditoría regulatoria y gobernanza interna. ¿Qué servicio de AWS recomendarías?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Amazon CloudWatch",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "AWS CloudTrail",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "AWS Config",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "AWS Trusted Advisor",
+              "desc": ""
+            }
+          ],
+          "correct": "B",
+          "explanation": "AWS CloudTrail registra toda la actividad de la cuenta: acciones realizadas desde la consola, SDK, CLI y servicios de AWS, siendo ideal para auditoría y cumplimiento normativo. Regla general: CloudWatch es para monitoreo de rendimiento y alertas; CloudTrail es para auditoría de actividad de cuenta; Config es para historial de cambios en configuraciones de recursos; Trusted Advisor da recomendaciones de buenas prácticas."
+        },
+        {
+          "id": "cp035",
+          "text": "El equipo de seguridad de una empresa de medios digitales exige acceso shell a sus instancias EC2 sin abrir puertos de entrada ni exponer IPs públicas, cumpliendo con políticas de hardening de red. ¿Qué servicio de AWS cumple este requisito?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Amazon EC2 Instance Connect",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Amazon Route 53",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "AWS Systems Manager Session Manager",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Amazon Inspector",
+              "desc": ""
+            }
+          ],
+          "correct": "C",
+          "explanation": "AWS Systems Manager Session Manager provee acceso interactivo de shell y CLI sin necesidad de abrir puertos de entrada, mantener bastion hosts ni gestionar claves SSH. EC2 Instance Connect requiere el puerto 22 abierto. Inspector evalúa vulnerabilidades de seguridad pero no provee acceso shell. Route 53 es un servicio DNS sin relación con acceso a instancias."
         }
       ]
     },
