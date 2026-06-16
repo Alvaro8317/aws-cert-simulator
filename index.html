@@ -145,9 +145,24 @@
     border-radius: 12px;
     border-left: 5px solid var(--orange);
     padding: 16px;
+    position: relative;
   }
   .question-label { color: var(--orange); font-size: 10px; font-weight: 700; letter-spacing: 1.5px; margin-bottom: 10px; }
   .question-text { color: var(--text); font-size: 15px; line-height: 1.55; }
+  .question-id-badge {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 5px;
+    padding: 2px 7px;
+    user-select: none;
+  }
 
   /* ─── OPTIONS ─── */
   .options { display: flex; flex-direction: column; gap: 8px; }
@@ -327,6 +342,46 @@
   .paused-sub { color: var(--text-muted); font-size: 13px; }
   .paused-overlay .btn-primary { width: 200px; }
 
+  /* ─── MODE SELECT ─── */
+  .mode-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    border-left: 5px solid var(--orange);
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .mode-card:active { transform: scale(0.98); background: #363636; }
+  .mode-icon { font-size: 36px; flex-shrink: 0; }
+  .mode-info { flex: 1; }
+  .mode-name { color: var(--text); font-size: 15px; font-weight: 700; }
+  .mode-desc { color: var(--text-muted); font-size: 12px; margin-top: 4px; line-height: 1.4; }
+
+  /* ─── QUESTION LIST ─── */
+  .q-list-item {
+    background: var(--card-bg);
+    border-radius: 10px;
+    border-left: 5px solid var(--border);
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .q-list-item:active { transform: scale(0.99); }
+  .q-list-item.q-correct { border-left-color: var(--green); }
+  .q-list-item.q-wrong   { border-left-color: var(--red); }
+  .q-list-num  { color: var(--orange); font-size: 13px; font-weight: 800; min-width: 30px; flex-shrink: 0; }
+  .q-list-text { flex: 1; color: var(--text); font-size: 13px; line-height: 1.4;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .q-list-status { font-size: 16px; flex-shrink: 0; }
+  .q-list-progress { color: var(--text-muted); font-size: 11px; margin-top: 4px; }
+
   /* ─── TIMEOUT OVERLAY ─── */
   .timeout-banner {
     background: #3A1E1E;
@@ -374,10 +429,44 @@
       <div id="levelList"></div>
     </div>
 
+    <!-- ══════════════ SCREEN: MODE SELECT ══════════════ -->
+    <div class="screen" id="screenModeSelect">
+      <div class="welcome-card">
+        <h2 id="modeSelectName">CERTIFICACIÓN</h2>
+        <p>Elige cómo quieres practicar.</p>
+      </div>
+      <div class="divider">— MODO DE PRÁCTICA —</div>
+      <div class="mode-card" id="btnModeSimulator">
+        <div class="mode-icon">⏱️</div>
+        <div class="mode-info">
+          <div class="mode-name">Simulador de Examen</div>
+          <div class="mode-desc">Timer por pregunta y timer total. Réplica de las condiciones reales del examen con resultado al finalizar.</div>
+        </div>
+      </div>
+      <div class="mode-card" id="btnModeFree">
+        <div class="mode-icon">📖</div>
+        <div class="mode-info">
+          <div class="mode-name">Modo Libre</div>
+          <div class="mode-desc">Navega el listado de preguntas, responde a tu ritmo y sin presión. Ideal para estudiar.</div>
+        </div>
+      </div>
+      <button class="btn-secondary" id="btnModeBack">← Volver</button>
+    </div>
+
+    <!-- ══════════════ SCREEN: QUESTION LIST ══════════════ -->
+    <div class="screen" id="screenQuestionList">
+      <div class="welcome-card">
+        <h2 id="qListTitle">LISTADO DE PREGUNTAS</h2>
+        <p id="qListSubtitle">Selecciona una pregunta para responderla.</p>
+      </div>
+      <div id="questionListItems"></div>
+      <button class="btn-secondary" id="btnListBack">← Volver</button>
+    </div>
+
     <!-- ══════════════ SCREEN: QUIZ ══════════════ -->
     <div class="screen" id="screenQuiz">
       <!-- Question timer -->
-      <div class="question-card" style="padding:12px 16px">
+      <div class="question-card" id="qTimerCard" style="padding:12px 16px">
         <div class="q-timer-label">
           <span>TIEMPO POR PREGUNTA</span>
           <span class="q-timer-secs" id="qTimerSecs">60</span>
@@ -396,6 +485,7 @@
       <!-- Question -->
       <div class="question-card">
         <div class="question-label" id="questionLabel">PREGUNTA 1 DE 10</div>
+        <span class="question-id-badge" id="questionId"></span>
         <p class="question-text" id="questionText"></p>
       </div>
 
@@ -409,7 +499,7 @@
       </div>
 
       <!-- Next button (appears after answer) -->
-      <button class="btn-primary" id="btnNext" style="display:none" onclick="nextQuestion()">
+      <button class="btn-primary" id="btnNext" style="display:none">
         Siguiente pregunta →
       </button>
     </div>
@@ -442,8 +532,8 @@
         </div>
       </div>
 
-      <button class="btn-primary" onclick="restartSameLevel()">Reintentar este nivel</button>
-      <button class="btn-secondary" onclick="goToLevelSelect()">Cambiar nivel</button>
+      <button class="btn-primary" id="btnRestart">Reintentar este nivel</button>
+      <button class="btn-secondary" id="btnChangeLevel">Cambiar nivel</button>
     </div>
 
   </div><!-- /content -->
@@ -451,14 +541,15 @@
   <!-- FOOTER (quiz only) -->
   <div class="footer" id="quizFooter" style="display:none">
     <div style="display:flex;align-items:center;justify-content:space-between">
-      <button class="pause-btn" id="pauseBtn" onclick="togglePause()">⏸ Pausar</button>
-      <button class="btn-secondary" style="width:auto;padding:8px 14px;font-size:12px" onclick="finishEarly()">Finalizar</button>
+      <button class="pause-btn" id="pauseBtn">⏸ Pausar</button>
+      <button class="btn-secondary" id="btnBackToList" style="display:none;width:auto;padding:8px 14px;font-size:12px">← Listado</button>
+      <button class="btn-secondary" id="btnFinishEarly" style="width:auto;padding:8px 14px;font-size:12px">Finalizar</button>
     </div>
     <div class="footer-row">
       <span class="footer-info" id="footerInfo">Pregunta 1 de 10</span>
       <div class="footer-nav">
-        <button class="nav-btn" id="btnPrev" onclick="prevQuestion()" disabled>← Ant</button>
-        <button class="nav-btn" id="btnNextNav" onclick="nextQuestion()" disabled>Sig →</button>
+        <button class="nav-btn" id="btnPrev" disabled>← Ant</button>
+        <button class="nav-btn" id="btnNextNav" disabled>Sig →</button>
       </div>
     </div>
   </div>
@@ -468,374 +559,11 @@
     <div class="paused-icon">⏸</div>
     <div class="paused-text">PAUSADO</div>
     <div class="paused-sub">El tiempo está detenido</div>
-    <button class="btn-primary" onclick="togglePause()">▶ Continuar</button>
+    <button class="btn-primary" id="btnResume">▶ Continuar</button>
   </div>
 
 </div><!-- /app -->
 
-<script>
-// ─── STATE ───────────────────────────────────────────────
-const EXAM_MAX_SECONDS = 90 * 60;   // 1h 30m
-const Q_MAX_SECONDS    = 60;        // 1 min per question
-const PASS_THRESHOLD   = 0.72;      // 72% to pass
-
-let questions    = [];
-let currentLevel = null;
-let qIndex       = 0;
-let answered     = [];   // { selected: 'A'|null (null = timeout), correct: bool }
-let revealed     = [];   // bool array — whether explanation shown
-
-let qTimerInterval    = null;
-let totalTimerInterval = null;
-let qSecsLeft   = Q_MAX_SECONDS;
-let totalSecsLeft = EXAM_MAX_SECONDS;
-let isPaused    = false;
-let examStarted = false;
-
-// ─── LOAD DATA ───────────────────────────────────────────
-async function loadQuestions() {
-  try {
-    const r = await fetch('questions.json');
-    const data = await r.json();
-    renderLevelSelect(data.levels);
-  } catch(e) {
-    document.getElementById('screenLevel').innerHTML =
-      '<div class="welcome-card"><h2 style="color:var(--red)">ERROR</h2><p style="color:#ccc">No se pudo cargar questions.json. Abre el archivo directamente en el navegador o usa un servidor local (python3 -m http.server).</p></div>';
-  }
-}
-
-// ─── LEVEL SELECT ─────────────────────────────────────────
-const LEVEL_ICONS = {
-  'cloud-practitioner':       '☁️',
-  'ai-practitioner':          '🤖',
-  'developer-associate':      '💻',
-  'solutions-architect-associate': '🏗️'
-};
-
-function renderLevelSelect(levels) {
-  const list = document.getElementById('levelList');
-  list.innerHTML = levels.map(l => `
-    <div class="level-card" onclick="startLevel(${JSON.stringify(l).replace(/"/g, '&quot;')})">
-      <div class="level-icon">${LEVEL_ICONS[l.id] || '🎯'}</div>
-      <div class="level-info">
-        <div class="level-name">${l.name}</div>
-        <div class="level-meta">${l.code} · ${l.questions.length} preguntas</div>
-      </div>
-      <div class="level-badge">${l.badge}</div>
-    </div>
-  `).join('');
-  // Store levels globally for restart
-  window._levels = levels;
-}
-
-// ─── START LEVEL ──────────────────────────────────────────
-function startLevel(level) {
-  currentLevel = level;
-  questions    = shuffle([...level.questions]);
-  qIndex       = 0;
-  answered     = new Array(questions.length).fill(null);
-  revealed     = new Array(questions.length).fill(false);
-  isPaused     = false;
-
-  // Update header
-  document.getElementById('headerSubtitle').textContent = level.name;
-  document.getElementById('headerBadge').textContent    = level.badge + ' · ' + level.code;
-
-  // Show exam timer bar
-  document.getElementById('totalTimerBar').style.display = 'flex';
-  document.getElementById('quizFooter').style.display    = 'block';
-
-  // Reset and start total timer (only once per session, or restart it)
-  resetTotalTimer();
-
-  showScreen('screenQuiz');
-  renderQuestion();
-  startQTimer();
-}
-
-// ─── SHUFFLE ──────────────────────────────────────────────
-function shuffle(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-
-// ─── RENDER QUESTION ──────────────────────────────────────
-function renderQuestion() {
-  const q = questions[qIndex];
-  const total = questions.length;
-
-  document.getElementById('questionLabel').textContent = `PREGUNTA ${qIndex + 1} DE ${total}`;
-  document.getElementById('questionText').textContent  = q.text;
-  document.getElementById('footerInfo').textContent    = `Pregunta ${qIndex + 1} de ${total}`;
-
-  // Options
-  const list = document.getElementById('optionsList');
-  list.innerHTML = q.options.map(opt => `
-    <div class="option" id="opt${opt.letter}" onclick="selectOption('${opt.letter}')">
-      <div class="option-header">
-        <span class="option-letter" id="ltr${opt.letter}">${opt.letter}</span>
-        <span class="option-title">${opt.title}</span>
-      </div>
-      <div class="option-desc">${opt.desc}</div>
-    </div>
-  `).join('');
-
-  // Hide timeout banner, explanation, next btn
-  document.getElementById('timeoutBanner').classList.remove('show');
-  document.getElementById('explanationCard').classList.remove('show');
-  document.getElementById('btnNext').style.display = 'none';
-
-  // Restore state if already answered
-  if (answered[qIndex] !== null) {
-    applyAnswerState(qIndex, false);
-    if (revealed[qIndex]) {
-      document.getElementById('explanationCard').classList.add('show');
-      document.getElementById('explanationText').textContent = q.explanation;
-    }
-  }
-
-  // Nav buttons
-  document.getElementById('btnPrev').disabled    = qIndex === 0;
-  document.getElementById('btnNextNav').disabled = answered[qIndex] === null;
-
-  scrollToTop();
-}
-
-// ─── SELECT OPTION ────────────────────────────────────────
-function selectOption(letter) {
-  if (answered[qIndex] !== null) return;   // already answered
-  if (isPaused) return;
-
-  const q = questions[qIndex];
-  const isCorrect = letter === q.correct;
-
-  answered[qIndex] = { selected: letter, correct: isCorrect, timeout: false };
-  revealed[qIndex] = true;
-
-  stopQTimer();
-  applyAnswerState(qIndex, true);
-  showExplanation();
-
-  document.getElementById('btnNext').style.display = 'block';
-  document.getElementById('btnNextNav').disabled = false;
-}
-
-// ─── APPLY VISUAL ANSWER STATE ────────────────────────────
-function applyAnswerState(idx, animate) {
-  const q = questions[idx];
-  const ans = answered[idx];
-  if (!ans) return;
-
-  q.options.forEach(opt => {
-    const el = document.getElementById('opt' + opt.letter);
-    if (!el) return;
-    el.classList.add('disabled');
-    if (opt.letter === q.correct) {
-      el.classList.add('correct');
-      el.querySelector('.option-letter').textContent = opt.letter + ' ✓';
-    } else if (ans.selected === opt.letter && !ans.correct) {
-      el.classList.add('wrong');
-      el.querySelector('.option-letter').textContent = opt.letter + ' ✗';
-    }
-  });
-
-  if (ans.timeout) {
-    document.getElementById('timeoutBanner').classList.add('show');
-  }
-
-  document.getElementById('btnNext').style.display = 'block';
-  document.getElementById('btnNextNav').disabled = false;
-}
-
-function showExplanation() {
-  const q = questions[qIndex];
-  document.getElementById('explanationText').textContent = q.explanation;
-  document.getElementById('explanationCard').classList.add('show');
-}
-
-// ─── NAVIGATION ───────────────────────────────────────────
-function nextQuestion() {
-  if (qIndex < questions.length - 1) {
-    qIndex++;
-    renderQuestion();
-    if (answered[qIndex] === null) startQTimer();
-  } else {
-    showResults();
-  }
-}
-
-function prevQuestion() {
-  if (qIndex > 0) {
-    stopQTimer();
-    qIndex--;
-    renderQuestion();
-    if (answered[qIndex] === null) startQTimer();
-  }
-}
-
-// ─── Q TIMER ──────────────────────────────────────────────
-function startQTimer() {
-  stopQTimer();
-  qSecsLeft = Q_MAX_SECONDS;
-  updateQTimerUI();
-
-  qTimerInterval = setInterval(() => {
-    if (isPaused) return;
-    qSecsLeft--;
-    updateQTimerUI();
-    if (qSecsLeft <= 0) {
-      stopQTimer();
-      handleTimeout();
-    }
-  }, 1000);
-}
-
-function stopQTimer() {
-  clearInterval(qTimerInterval);
-  qTimerInterval = null;
-}
-
-function updateQTimerUI() {
-  const el   = document.getElementById('qTimerSecs');
-  const bar  = document.getElementById('qTimerBar');
-  const pct  = (qSecsLeft / Q_MAX_SECONDS) * 100;
-  const urgent = qSecsLeft <= 10;
-
-  el.textContent  = qSecsLeft;
-  el.className    = 'q-timer-secs' + (urgent ? ' urgent' : '');
-  bar.style.width = pct + '%';
-  bar.className   = 'timer-bar-fill' + (urgent ? ' urgent' : '');
-}
-
-function handleTimeout() {
-  if (answered[qIndex] !== null) return;
-  const q = questions[qIndex];
-  answered[qIndex] = { selected: null, correct: false, timeout: true };
-  revealed[qIndex] = true;
-  applyAnswerState(qIndex, true);
-  showExplanation();
-  document.getElementById('btnNextNav').disabled = false;
-}
-
-// ─── TOTAL TIMER ──────────────────────────────────────────
-function resetTotalTimer() {
-  clearInterval(totalTimerInterval);
-  totalSecsLeft = EXAM_MAX_SECONDS;
-  updateTotalTimerUI();
-  totalTimerInterval = setInterval(() => {
-    if (isPaused) return;
-    totalSecsLeft--;
-    updateTotalTimerUI();
-    if (totalSecsLeft <= 0) {
-      clearInterval(totalTimerInterval);
-      showResults();
-    }
-  }, 1000);
-}
-
-function updateTotalTimerUI() {
-  const h   = Math.floor(totalSecsLeft / 3600);
-  const m   = Math.floor((totalSecsLeft % 3600) / 60);
-  const s   = totalSecsLeft % 60;
-  const str = h > 0
-    ? `${h}:${pad(m)}:${pad(s)}`
-    : `${pad(m)}:${pad(s)}`;
-
-  const el   = document.getElementById('totalTimerValue');
-  const fill = document.getElementById('totalProgressFill');
-  const pct  = (totalSecsLeft / EXAM_MAX_SECONDS) * 100;
-  const warn = totalSecsLeft < 600;   // last 10 min
-
-  el.textContent  = str;
-  el.className    = 'total-timer-value' + (warn ? ' warning' : '');
-  fill.style.width = pct + '%';
-  fill.className   = 'total-progress-fill' + (warn ? ' warning' : '');
-}
-
-function pad(n) { return String(n).padStart(2, '0'); }
-
-// ─── PAUSE ────────────────────────────────────────────────
-function togglePause() {
-  isPaused = !isPaused;
-  const btn = document.getElementById('pauseBtn');
-  const overlay = document.getElementById('pausedOverlay');
-  btn.textContent = isPaused ? '▶ Continuar' : '⏸ Pausar';
-  btn.classList.toggle('paused', isPaused);
-  overlay.classList.toggle('show', isPaused);
-}
-
-// ─── RESULTS ──────────────────────────────────────────────
-function showResults() {
-  stopQTimer();
-  clearInterval(totalTimerInterval);
-  isPaused = false;
-  document.getElementById('pausedOverlay').classList.remove('show');
-
-  const correct   = answered.filter(a => a && a.correct).length;
-  const wrong     = answered.filter(a => a && !a.correct && !a.timeout).length;
-  const timeouts  = answered.filter(a => a && a.timeout).length;
-  const total     = questions.length;
-  const pct       = Math.round((correct / total) * 100);
-  const pass      = (correct / total) >= PASS_THRESHOLD;
-  const usedSecs  = EXAM_MAX_SECONDS - totalSecsLeft;
-
-  document.getElementById('scorePercent').textContent  = pct + '%';
-  document.getElementById('scoreCorrectOf').textContent = `${correct} de ${total} correctas`;
-  document.getElementById('scoreVerdict').innerHTML    = pass
-    ? '<div class="score-pass">APROBADO ✓</div>'
-    : '<div class="score-fail">REPROBADO ✗</div>';
-  document.getElementById('statsCorrect').textContent  = correct;
-  document.getElementById('statsWrong').textContent    = wrong;
-  document.getElementById('statsTimeout').textContent  = timeouts;
-
-  const hh = Math.floor(usedSecs / 3600);
-  const mm = Math.floor((usedSecs % 3600) / 60);
-  const ss = usedSecs % 60;
-  document.getElementById('statsTime').textContent = hh > 0
-    ? `${hh}:${pad(mm)}:${pad(ss)}`
-    : `${pad(mm)}:${pad(ss)}`;
-
-  document.getElementById('totalTimerBar').style.display = 'none';
-  document.getElementById('quizFooter').style.display    = 'none';
-  showScreen('screenResults');
-}
-
-function restartSameLevel() {
-  startLevel(currentLevel);
-}
-
-function goToLevelSelect() {
-  stopQTimer();
-  clearInterval(totalTimerInterval);
-  isPaused = false;
-  document.getElementById('pausedOverlay').classList.remove('show');
-  document.getElementById('totalTimerBar').style.display = 'none';
-  document.getElementById('quizFooter').style.display    = 'none';
-  document.getElementById('headerSubtitle').textContent  = 'Simulador de Certificaciones';
-  document.getElementById('headerBadge').textContent     = 'SIMULATOR';
-  showScreen('screenLevel');
-}
-
-function finishEarly() {
-  if (confirm('¿Finalizar el examen ahora?')) showResults();
-}
-
-// ─── SCREEN SWITCH ────────────────────────────────────────
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  scrollToTop();
-}
-
-function scrollToTop() {
-  document.getElementById('mainContent').scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// ─── INIT ─────────────────────────────────────────────────
-loadQuestions();
-</script>
+<script type="module" src="src/main.js"></script>
 </body>
 </html>
