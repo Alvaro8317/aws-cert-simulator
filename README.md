@@ -52,7 +52,7 @@ Instala la extensión **Live Server** y haz clic en *Go Live* desde `index.html`
 
 ## Estructura del proyecto
 
-```
+```text
 aws-cert-simulator/
 ├── index.html       # App completa (UI + lógica)
 └── questions.json   # Banco de preguntas por certificación
