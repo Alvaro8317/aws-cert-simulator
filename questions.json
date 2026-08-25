@@ -176,31 +176,31 @@
         },
         {
           "id": "cp007",
-          "text": "¿Qué servicio de AWS se utiliza para gestionar el acceso a los recursos de AWS de forma centralizada?",
+          "text": "El equipo de DevOps de una empresa de logística está intentando depurar problemas de rendimiento en una aplicación serverless construida con una arquitectura de microservicios. Como Cloud Practitioner, ¿qué servicio de AWS recomendarías para abordar este caso de uso?",
           "options": [
             {
               "letter": "A",
-              "title": "AWS IAM",
+              "title": "AWS CloudFormation",
               "desc": ""
             },
             {
               "letter": "B",
-              "title": "Amazon Cognito",
+              "title": "Amazon CloudWatch",
               "desc": ""
             },
             {
               "letter": "C",
-              "title": "AWS SSO",
+              "title": "AWS X-Ray",
               "desc": ""
             },
             {
               "letter": "D",
-              "title": "AWS Directory Service",
+              "title": "Amazon Pinpoint",
               "desc": ""
             }
           ],
-          "correct": "A",
-          "explanation": "AWS IAM (Identity and Access Management) es el servicio principal para gestionar quién puede acceder a qué recursos en AWS, mediante usuarios, grupos, roles y políticas."
+          "correct": "C",
+          "explanation": "AWS X-Ray permite trazar y analizar las solicitudes a medida que atraviesan los distintos componentes de una aplicación distribuida, identificando cuellos de botella y la causa raíz de problemas de rendimiento en arquitecturas de microservicios. Amazon CloudWatch monitorea métricas y logs, pero no ofrece trazabilidad de extremo a extremo entre servicios. AWS CloudFormation es una herramienta de infraestructura como código, y Amazon Pinpoint es un servicio de marketing y engagement con usuarios; ninguno de los dos aborda la depuración de rendimiento."
         },
         {
           "id": "cp008",
@@ -232,31 +232,31 @@
         },
         {
           "id": "cp009",
-          "text": "¿Cuál de los siguientes servicios de AWS proporciona una red de distribución de contenido (CDN) global?",
+          "text": "Una aseguradora con sede en Bogotá almacena datos anonimizados de sus asegurados en Amazon S3. El CTO quiere asegurarse de que cualquier dato sensible presente en S3 sea descubierto e identificado, para prevenir fugas de información sensible. Como Cloud Practitioner, ¿qué servicio de AWS recomendarías para abordar este caso de uso?",
           "options": [
             {
               "letter": "A",
-              "title": "AWS Global Accelerator",
+              "title": "Amazon Polly",
               "desc": ""
             },
             {
               "letter": "B",
-              "title": "Amazon CloudFront",
+              "title": "AWS Secrets Manager",
               "desc": ""
             },
             {
               "letter": "C",
-              "title": "Amazon Route 53",
+              "title": "Amazon Macie",
               "desc": ""
             },
             {
               "letter": "D",
-              "title": "AWS Direct Connect",
+              "title": "Amazon GuardDuty",
               "desc": ""
             }
           ],
-          "correct": "B",
-          "explanation": "Amazon CloudFront es el CDN de AWS. Distribuye contenido desde edge locations alrededor del mundo, reduciendo la latencia al servir contenido desde la ubicación más cercana al usuario."
+          "correct": "C",
+          "explanation": "Amazon Macie es un servicio completamente administrado de seguridad y privacidad de datos que usa machine learning y coincidencia de patrones para descubrir y proteger datos sensibles en AWS. Macie provee automáticamente un inventario de buckets de S3, incluyendo buckets sin cifrar, de acceso público o compartidos fuera de tu AWS Organization, y aplica ML para identificar y alertar sobre datos sensibles como información de identificación personal (PII). Amazon GuardDuty detecta amenazas y comportamiento malicioso en la cuenta, pero no clasifica ni descubre datos sensibles dentro de S3. AWS Secrets Manager gestiona credenciales y secretos, no el contenido almacenado en S3. Amazon Polly convierte texto en voz y no tiene relación con la seguridad de datos."
         },
         {
           "id": "cp010",
@@ -307,44 +307,44 @@
             },
             {
               "letter": "D",
-              "title": "AWS Cost and Usage Report",
+              "title": "Alarmas de facturación de Amazon CloudWatch",
               "desc": ""
             }
           ],
           "correct": "B",
-          "explanation": "AWS Budgets permite definir umbrales de gasto y recibir alertas por email o SNS cuando el costo real o proyectado los supera. AWS Cost Explorer es para analizar gasto histórico, no para alertas proactivas."
+          "explanation": "AWS Budgets permite definir umbrales de gasto (real o proyectado) y recibir alertas por email o SNS cuando se superan, incluyendo presupuestos por servicio, uso, Reserved Instances o Savings Plans. Las alarmas de facturación de CloudWatch también pueden notificar cuando el cargo estimado supera un umbral, pero solo monitorean el total de la cuenta, deben habilitarse primero y son menos flexibles que Budgets. AWS Cost Explorer sirve para analizar gasto histórico, no para alertas proactivas, y AWS Pricing Calculator solo estima costos antes de desplegar recursos."
         },
         {
           "id": "cp012",
-          "text": "Una empresa quiere asegurarse de que ningún usuario de IAM pueda deshabilitar AWS CloudTrail en ninguna cuenta de su organización. ¿Qué mecanismo debe usar?",
+          "text": "¿Qué servicio de AWS permite aplicar políticas de permisos a múltiples cuentas de AWS a la vez de forma centralizada?",
           "options": [
             {
               "letter": "A",
-              "title": "Política de IAM restrictiva en cada cuenta",
+              "title": "AWS Organizations",
               "desc": ""
             },
             {
               "letter": "B",
-              "title": "Service Control Policies (SCPs) en AWS Organizations",
+              "title": "AWS IAM",
               "desc": ""
             },
             {
               "letter": "C",
-              "title": "AWS Config Rule personalizada",
+              "title": "AWS Systems Manager",
               "desc": ""
             },
             {
               "letter": "D",
-              "title": "AWS Shield Advanced",
+              "title": "AWS Control Tower",
               "desc": ""
             }
           ],
-          "correct": "B",
-          "explanation": "Las Service Control Policies (SCPs) en AWS Organizations se aplican a nivel de organización o OU y actúan como límite máximo de permisos para todas las cuentas miembro, incluyendo usuarios root. Ninguna política IAM local puede sobrepasar una SCP."
+          "correct": "A",
+          "explanation": "AWS Organizations permite agrupar varias cuentas de AWS y aplicarles políticas centralizadas, como Service Control Policies (SCPs), además de ofrecer facturación consolidada. AWS IAM gestiona permisos dentro de una sola cuenta, no entre varias. AWS Control Tower se apoya en Organizations para automatizar la creación de un entorno multi-cuenta, pero no es el servicio que aplica las políticas en sí. AWS Systems Manager sirve para administrar y automatizar tareas en instancias y recursos, no para gestionar permisos entre cuentas."
         },
         {
           "id": "cp013",
-          "text": "¿Qué característica de Amazon S3 permite acceder automáticamente a datos en la clase de almacenamiento más económica según su patrón de acceso, sin intervención manual?",
+          "text": "Una empresa de medios digitales almacena en Amazon S3 millones de archivos multimedia (videos, imágenes y documentos), cuyo patrón de acceso es impredecible: algunos objetos se consultan miles de veces al día, mientras que otros no se tocan durante meses. El equipo ya habilitó AWS CloudTrail para auditar los accesos y usa Amazon CloudFront para distribuir el contenido más popular a menor latencia, pero el costo de almacenamiento en S3 sigue creciendo mes a mes. Sin conocer de antemano el patrón de acceso de cada objeto, el equipo de arquitectura busca una característica de Amazon S3 que mueva automáticamente los datos hacia la clase de almacenamiento más económica según su uso real, sin necesidad de definir reglas manuales ni afectar el rendimiento de las aplicaciones. ¿Qué característica deberían utilizar?",
           "options": [
             {
               "letter": "A",
@@ -372,7 +372,7 @@
         },
         {
           "id": "cp014",
-          "text": "¿Cuál de los siguientes servicios de AWS es completamente administrado y se usa para transmitir datos en tiempo real a gran escala, como logs de aplicaciones o eventos de click?",
+          "text": "Una plataforma de e-commerce global quiere analizar en tiempo real los eventos de clic de sus usuarios, que pueden alcanzar millones por segundo durante los picos de tráfico, para detectar patrones de abandono de carrito antes de que el cliente salga del sitio. El equipo de datos ya envía las órdenes completadas a Amazon SQS para desacoplar el procesamiento de pagos, y cada noche carga los datos históricos en Amazon Redshift para generar reportes de ventas. Sin embargo, necesitan un servicio completamente administrado capaz de ingerir y procesar de forma continua estos flujos masivos de eventos de clic apenas se generan, para poder reaccionar en cuestión de segundos. ¿Qué servicio de AWS deberían utilizar?",
           "options": [
             {
               "letter": "A",
@@ -596,31 +596,31 @@
         },
         {
           "id": "cp022",
-          "text": "¿Qué herramienta de AWS permite estimar el costo mensual de una arquitectura antes de implementarla en la nube?",
+          "text": "Una editorial digital planea migrar por primera vez toda su infraestructura de TI a AWS. Aunque el equipo ya usa AWS Budgets para controlar el gasto una vez que los recursos están en producción, la CTO quiere obtener una estimación del costo mensual según los servicios de AWS que planean usar, antes de aprovisionar nada. Como Cloud Practitioner, ¿qué servicio de AWS recomendarías para este caso de uso?",
           "options": [
             {
               "letter": "A",
-              "title": "AWS Cost Explorer",
+              "title": "AWS Cost & Usage Report (AWS CUR)",
               "desc": ""
             },
             {
               "letter": "B",
-              "title": "AWS Budgets",
-              "desc": ""
-            },
-            {
-              "letter": "C",
               "title": "AWS Pricing Calculator",
               "desc": ""
             },
             {
+              "letter": "C",
+              "title": "AWS Budgets",
+              "desc": ""
+            },
+            {
               "letter": "D",
-              "title": "AWS Trusted Advisor",
+              "title": "AWS Cost Explorer",
               "desc": ""
             }
           ],
-          "correct": "C",
-          "explanation": "AWS Pricing Calculator (calculator.aws) permite modelar arquitecturas y calcular el costo estimado mensual antes de aprovisionar recursos. Cost Explorer analiza costos históricos reales, no hace estimaciones prospectivas."
+          "correct": "B",
+          "explanation": "AWS Pricing Calculator permite explorar los servicios de AWS y crear una estimación del costo de tus casos de uso antes de implementarlos. Puedes modelar tus soluciones, explorar los puntos de precio y cálculos detrás de la estimación, y encontrar los tipos de instancia y términos de contrato que se ajusten a tus necesidades, lo que permite tomar decisiones informadas sobre el uso de AWS. AWS Budgets, que el equipo ya usa, define umbrales de gasto y envía alertas una vez que los recursos están desplegados, pero no genera estimaciones previas al despliegue. AWS Cost Explorer analiza el gasto histórico real, y AWS Cost & Usage Report (CUR) es un reporte detallado de uso y costos ya incurridos; ninguno de los dos estima costos antes de implementar la infraestructura."
         },
         {
           "id": "cp023",
@@ -875,34 +875,6 @@
           "explanation": "VPC Peering establece una conexión de red privada entre dos VPCs, permitiendo que las instancias se comuniquen como si estuvieran en la misma red. VPN Site-to-Site conecta redes on-premises con AWS pero no interconecta VPCs. Direct Connect es un enlace dedicado desde redes externas a AWS, no entre VPCs. VPC Endpoint conecta una VPC con servicios de AWS, no con otra VPC."
         },
         {
-          "id": "cp031",
-          "text": "Una empresa de desarrollo de software quiere que sus developers se enfoquen únicamente en escribir código, sin gestionar servidores, balanceadores ni configuración de infraestructura. El equipo de arquitectura recomienda adoptar una solución PaaS en AWS. ¿Qué servicio cumple este requisito?",
-          "options": [
-            {
-              "letter": "A",
-              "title": "AWS CloudFormation",
-              "desc": ""
-            },
-            {
-              "letter": "B",
-              "title": "Amazon EC2",
-              "desc": ""
-            },
-            {
-              "letter": "C",
-              "title": "AWS Elastic Beanstalk",
-              "desc": ""
-            },
-            {
-              "letter": "D",
-              "title": "AWS Lambda",
-              "desc": ""
-            }
-          ],
-          "correct": "C",
-          "explanation": "AWS Elastic Beanstalk es una PaaS: el desarrollador solo sube su código y AWS gestiona automáticamente el aprovisionamiento, balanceo de carga, autoescalado y monitoreo. EC2 es IaaS donde el usuario administra el SO. CloudFormation es Infraestructura como Código. Lambda es serverless orientado a funciones, no a aplicaciones completas."
-        },
-        {
           "id": "cp032",
           "text": "Una empresa de e-commerce despliega su aplicación en múltiples Zonas de Disponibilidad para garantizar que siga operando ante fallos de infraestructura. ¿Qué concepto de arquitectura en la nube representa esta estrategia?",
           "options": [
@@ -1013,6 +985,123 @@
           ],
           "correct": "C",
           "explanation": "AWS Systems Manager Session Manager provee acceso interactivo de shell y CLI sin necesidad de abrir puertos de entrada, mantener bastion hosts ni gestionar claves SSH. EC2 Instance Connect requiere el puerto 22 abierto. Inspector evalúa vulnerabilidades de seguridad pero no provee acceso shell. Route 53 es un servicio DNS sin relación con acceso a instancias."
+        },
+        {
+          "id": "cp036",
+          "text": "¿Cuál de las siguientes es la forma recomendada de otorgar acceso programático a los recursos de AWS?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Usar un grupo de usuarios de IAM para acceder a los recursos de AWS de forma programática",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Crear un nuevo usuario de IAM y compartir el nombre de usuario y la contraseña",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Usar AWS Multi-Factor Authentication (AWS MFA) para acceder a los recursos de AWS de forma programática",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Usar el Access Key ID y el Secret Access Key para acceder a los recursos de AWS de forma programática",
+              "desc": ""
+            }
+          ],
+          "correct": "D",
+          "explanation": "Las claves de acceso (access keys) son credenciales de largo plazo de un usuario de IAM o del usuario raíz de la cuenta de AWS, y se usan para firmar solicitudes programáticas hacia la AWS CLI o la API de AWS, directamente o mediante un SDK. Constan de dos partes, el Access Key ID y el Secret Access Key, que deben usarse juntas para autenticar las solicitudes, de forma análoga a un usuario y una contraseña. El Secret Access Key solo está disponible en el momento de su creación; si se pierde, hay que eliminar la clave y crear una nueva. Un grupo de usuarios de IAM organiza permisos para varios usuarios, pero no es en sí un mecanismo de acceso programático. Compartir nombre de usuario y contraseña nunca es una práctica recomendada, y AWS MFA añade un factor adicional de autenticación pero no reemplaza a las claves de acceso como mecanismo programático."
+        },
+        {
+          "id": "cp037",
+          "text": "Bajo el Modelo de Responsabilidad Compartida de AWS, ¿cuál de las siguientes es una responsabilidad compartida entre AWS y el cliente?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Mantenimiento de la infraestructura de las Zonas de Disponibilidad (AZ)",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Garantizar la separación de datos entre los distintos clientes de AWS",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Gestión de la configuración (Configuration Management)",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Mantenimiento de la infraestructura de los servidores de almacenamiento de Amazon S3",
+              "desc": ""
+            }
+          ],
+          "correct": "C",
+          "explanation": "La seguridad y el cumplimiento son una responsabilidad compartida entre AWS y el cliente. Este modelo ayuda a aliviar la carga operativa del cliente, ya que AWS opera, gestiona y controla los componentes desde el sistema operativo host y la capa de virtualización hasta la seguridad física de las instalaciones donde corre el servicio. Los controles que aplican tanto a la capa de infraestructura como a la capa del cliente, pero desde perspectivas distintas, se llaman controles compartidos. En un control compartido, AWS provee los requisitos de la infraestructura y el cliente debe implementar su propio control dentro de su uso de los servicios de AWS. La gestión de la configuración forma parte de los controles compartidos: AWS mantiene la configuración de sus dispositivos de infraestructura, pero el cliente es responsable de configurar sus propios sistemas operativos invitados, bases de datos y aplicaciones. El mantenimiento de la infraestructura física (AZs, servidores de S3) y la separación de datos entre clientes son responsabilidad exclusiva de AWS."
+        },
+        {
+          "id": "cp038",
+          "text": "Una empresa de desarrollo de software quiere que sus developers se enfoquen únicamente en escribir código, sin gestionar servidores, balanceadores ni configuración de infraestructura. El equipo de arquitectura recomienda adoptar una solución PaaS en AWS. ¿Qué servicio cumple este requisito?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "AWS CloudFormation",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Amazon EC2",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "AWS Elastic Beanstalk",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "AWS Lambda",
+              "desc": ""
+            }
+          ],
+          "correct": "C",
+          "explanation": "AWS Elastic Beanstalk es una PaaS: el desarrollador solo sube su código y AWS gestiona automáticamente el aprovisionamiento, balanceo de carga, autoescalado y monitoreo. EC2 es IaaS donde el usuario administra el SO. CloudFormation es Infraestructura como Código. Lambda es serverless orientado a funciones, no a aplicaciones completas."
+        },
+        {
+          "id": "cp039",
+          "text": "¿Cuáles de las siguientes afirmaciones sobre la infraestructura global de AWS son correctas? (Selecciona dos)",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Cada Región de AWS consta de un mínimo de tres Zonas de Disponibilidad (AZ)",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Cada Región de AWS consta de un mínimo de dos Zonas de Disponibilidad (AZ)",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Cada Zona de Disponibilidad (AZ) consta de uno o más centros de datos discretos",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Cada Zona de Disponibilidad (AZ) consta de dos o más centros de datos discretos",
+              "desc": ""
+            },
+            {
+              "letter": "E",
+              "title": "Cada Región de AWS consta de dos o más Edge Locations",
+              "desc": ""
+            }
+          ],
+          "correct": ["A", "C"],
+          "explanation": "AWS tiene el concepto de Región, una ubicación física en el mundo donde AWS agrupa sus centros de datos. A cada grupo de centros de datos lógicos se le llama Zona de Disponibilidad (AZ). Cada Región de AWS consta de un mínimo de tres AZs, aisladas y físicamente separadas dentro de un área geográfica, cada una con energía, refrigeración y seguridad física independientes, conectadas mediante redes redundantes de ultra baja latencia. Una AZ es, a su vez, uno o más centros de datos discretos con energía, redes y conectividad redundantes dentro de una Región. Todas las AZs de una Región están interconectadas mediante redes de alto ancho de banda y baja latencia sobre fibra metropolitana dedicada y totalmente redundante. Las Edge Locations pertenecen a la red de Amazon CloudFront, no a la definición de una Región."
         }
       ]
     },
@@ -1877,6 +1966,34 @@
           ],
           "correct": "B",
           "explanation": "Para tolerancia a fallos regionales, se implementa una arquitectura Multi-Region. Con Route 53 Health Checks y failover policies, el DNS redirige automáticamente el tráfico a la región secundaria si la primaria falla."
+        },
+        {
+          "id": "saa011",
+          "text": "Una empresa quiere asegurarse de que ningún usuario de IAM pueda deshabilitar AWS CloudTrail en ninguna cuenta de su organización. ¿Qué mecanismo debe usar?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Política de IAM restrictiva en cada cuenta",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Service Control Policies (SCPs) en AWS Organizations",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "AWS Config Rule personalizada",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "AWS Shield Advanced",
+              "desc": ""
+            }
+          ],
+          "correct": "B",
+          "explanation": "Las Service Control Policies (SCPs) en AWS Organizations se aplican a nivel de organización o OU y actúan como límite máximo de permisos para todas las cuentas miembro, incluyendo usuarios root. Ninguna política IAM local puede sobrepasar una SCP."
         }
       ]
     }

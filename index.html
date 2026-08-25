@@ -96,10 +96,16 @@
         <div class="question-label" id="questionLabel">PREGUNTA 1 DE 10</div>
         <span class="question-id-badge" id="questionId"></span>
         <p class="question-text" id="questionText"></p>
+        <p class="multi-hint" id="multiHint" style="display:none"></p>
       </div>
 
       <!-- Options -->
       <div class="options" id="optionsList"></div>
+
+      <!-- Confirm button for multi-select questions -->
+      <button class="btn-secondary" id="btnConfirmMulti" style="display:none" disabled>
+        Confirmar respuesta
+      </button>
 
       <!-- Explanation -->
       <div class="explanation-card" id="explanationCard">

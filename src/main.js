@@ -1,7 +1,7 @@
 import { loadQuestions } from './data.js';
 import { togglePause } from './ui.js';
 import { setTimerCallbacks } from './timer.js';
-import { nextQuestion, prevQuestion, selectOption, handleTimeout, setQuizCallbacks } from './quiz.js';
+import { nextQuestion, prevQuestion, selectOption, confirmMultiAnswer, handleTimeout, setQuizCallbacks } from './quiz.js';
 import { goToQuestionList, openFreeQuestion } from './list.js';
 import { startSimulatorMode, startFreeMode, goToModeSelect } from './modes.js';
 import { showResults, restartSameLevel, goToLevelSelect, finishEarly } from './results.js';
@@ -24,6 +24,7 @@ document.getElementById('btnModeBack').addEventListener('click', goToLevelSelect
 document.getElementById('btnListBack').addEventListener('click', goToModeSelect);
 document.getElementById('btnRestart').addEventListener('click', restartSameLevel);
 document.getElementById('btnChangeLevel').addEventListener('click', goToLevelSelect);
+document.getElementById('btnConfirmMulti').addEventListener('click', confirmMultiAnswer);
 
 // ─── DELEGATED LISTENERS ──────────────────────────────────
 document.getElementById('optionsList').addEventListener('click', e => {

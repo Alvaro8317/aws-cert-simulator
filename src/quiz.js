@@ -10,15 +10,26 @@ export function setQuizCallbacks({ onShowResults, onGoToList }) {
   _onGoToList    = onGoToList;
 }
 
+function isMultiSelect(q) {
+  return Array.isArray(q.correct);
+}
+
 export function renderQuestion() {
   const q      = state.questions[state.qIndex];
   const total  = state.questions.length;
   const isLast = state.qIndex === total - 1;
+  const multi  = isMultiSelect(q);
+
+  state.pendingSelection = [];
 
   document.getElementById('questionLabel').textContent = `PREGUNTA ${state.qIndex + 1} DE ${total}`;
   document.getElementById('questionId').textContent    = q.id ?? '';
   document.getElementById('questionText').textContent  = q.text;
   document.getElementById('footerInfo').textContent    = `Pregunta ${state.qIndex + 1} de ${total}`;
+
+  const multiHint = document.getElementById('multiHint');
+  multiHint.textContent  = multi ? `Selecciona ${q.correct.length} opciones` : '';
+  multiHint.style.display = multi ? 'block' : 'none';
 
   document.getElementById('optionsList').innerHTML = q.options.map(opt => `
     <div class="option" id="opt${opt.letter}" data-letter="${opt.letter}">
@@ -37,6 +48,10 @@ export function renderQuestion() {
   btnNext.style.display = 'none';
   btnNext.textContent   = (state.freeMode && isLast) ? 'Volver al listado →' : 'Siguiente pregunta →';
 
+  const btnConfirmMulti = document.getElementById('btnConfirmMulti');
+  btnConfirmMulti.style.display = 'none';
+  btnConfirmMulti.disabled      = true;
+
   if (state.answered[state.qIndex] !== null) {
     applyAnswerState(state.qIndex);
     if (state.revealed[state.qIndex]) {
@@ -44,6 +59,8 @@ export function renderQuestion() {
       document.getElementById('explanationText').textContent = q.explanation;
     }
     btnNext.style.display = 'block';
+  } else if (multi) {
+    btnConfirmMulti.style.display = 'block';
   }
 
   document.getElementById('btnPrev').disabled    = state.qIndex === 0;
@@ -56,7 +73,13 @@ export function selectOption(letter) {
   if (state.answered[state.qIndex] !== null) return;
   if (state.isPaused) return;
 
-  const q         = state.questions[state.qIndex];
+  const q = state.questions[state.qIndex];
+
+  if (isMultiSelect(q)) {
+    toggleMultiSelection(letter, q);
+    return;
+  }
+
   const isCorrect = letter === q.correct;
   state.answered[state.qIndex] = { selected: letter, correct: isCorrect, timeout: false };
   state.revealed[state.qIndex] = true;
@@ -69,19 +92,57 @@ export function selectOption(letter) {
   document.getElementById('btnNextNav').disabled   = false;
 }
 
+function toggleMultiSelection(letter, q) {
+  const idx = state.pendingSelection.indexOf(letter);
+  if (idx === -1) state.pendingSelection.push(letter);
+  else state.pendingSelection.splice(idx, 1);
+
+  const el = document.getElementById('opt' + letter);
+  if (el) el.classList.toggle('selected', state.pendingSelection.includes(letter));
+
+  document.getElementById('btnConfirmMulti').disabled = state.pendingSelection.length !== q.correct.length;
+}
+
+export function confirmMultiAnswer() {
+  if (state.answered[state.qIndex] !== null) return;
+
+  const q = state.questions[state.qIndex];
+  if (!isMultiSelect(q)) return;
+  if (state.pendingSelection.length !== q.correct.length) return;
+
+  const selected  = [...state.pendingSelection].sort();
+  const correct   = [...q.correct].sort();
+  const isCorrect = selected.length === correct.length && selected.every((l, i) => l === correct[i]);
+
+  state.answered[state.qIndex] = { selected, correct: isCorrect, timeout: false };
+  state.revealed[state.qIndex] = true;
+
+  stopQTimer();
+  document.getElementById('btnConfirmMulti').style.display = 'none';
+  applyAnswerState(state.qIndex);
+  showExplanation();
+
+  document.getElementById('btnNext').style.display = 'block';
+  document.getElementById('btnNextNav').disabled   = false;
+}
+
 export function applyAnswerState(idx) {
   const q   = state.questions[idx];
   const ans = state.answered[idx];
   if (!ans) return;
 
+  const correctSet  = isMultiSelect(q) ? q.correct : [q.correct];
+  const selectedSet = Array.isArray(ans.selected) ? ans.selected : (ans.selected ? [ans.selected] : []);
+
   q.options.forEach(opt => {
     const el = document.getElementById('opt' + opt.letter);
     if (!el) return;
+    el.classList.remove('selected');
     el.classList.add('disabled');
-    if (opt.letter === q.correct) {
+    if (correctSet.includes(opt.letter)) {
       el.classList.add('correct');
       el.querySelector('.option-letter').textContent = opt.letter + ' ✓';
-    } else if (ans.selected === opt.letter && !ans.correct) {
+    } else if (selectedSet.includes(opt.letter) && !ans.correct) {
       el.classList.add('wrong');
       el.querySelector('.option-letter').textContent = opt.letter + ' ✗';
     }
@@ -102,6 +163,7 @@ export function handleTimeout() {
   if (state.answered[state.qIndex] !== null) return;
   state.answered[state.qIndex] = { selected: null, correct: false, timeout: true };
   state.revealed[state.qIndex] = true;
+  document.getElementById('btnConfirmMulti').style.display = 'none';
   applyAnswerState(state.qIndex);
   showExplanation();
   document.getElementById('btnNextNav').disabled = false;

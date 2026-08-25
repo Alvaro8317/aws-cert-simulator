@@ -4,6 +4,7 @@ export const state = {
   qIndex:       0,
   answered:     [],
   revealed:     [],
+  pendingSelection: [],
   freeMode:     false,
   isPaused:     false,
   qSecsLeft:    60,

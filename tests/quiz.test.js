@@ -14,7 +14,7 @@ vi.mock('../src/ui.js', () => ({
 }));
 
 import { state } from '../src/state.js';
-import { selectOption, handleTimeout, nextQuestion, prevQuestion, setQuizCallbacks } from '../src/quiz.js';
+import { selectOption, confirmMultiAnswer, handleTimeout, nextQuestion, prevQuestion, setQuizCallbacks } from '../src/quiz.js';
 
 const QUESTIONS = [
   {
@@ -36,6 +36,18 @@ const QUESTIONS = [
     ],
   },
 ];
+
+const MULTI_QUESTION = {
+  text: 'Select two AWS compute services.',
+  correct: ['A', 'C'],
+  explanation: 'EC2 and Lambda are compute services.',
+  options: [
+    { letter: 'A', title: 'EC2', desc: '' },
+    { letter: 'B', title: 'S3', desc: '' },
+    { letter: 'C', title: 'Lambda', desc: '' },
+    { letter: 'D', title: 'Route 53', desc: '' },
+  ],
+};
 
 function makeEl() {
   const cls = new Set();
@@ -66,6 +78,7 @@ beforeEach(() => {
   state.qIndex    = 0;
   state.answered  = new Array(QUESTIONS.length).fill(null);
   state.revealed  = new Array(QUESTIONS.length).fill(false);
+  state.pendingSelection = [];
   state.freeMode  = false;
   state.isPaused  = false;
   setQuizCallbacks({ onShowResults: null, onGoToList: null });
@@ -102,6 +115,67 @@ describe('selectOption', () => {
   it('marks the question as revealed', () => {
     selectOption('A');
     expect(state.revealed[0]).toBe(true);
+  });
+});
+
+describe('multi-select questions', () => {
+  beforeEach(() => {
+    state.questions = [{ ...MULTI_QUESTION, options: [...MULTI_QUESTION.options] }];
+    state.qIndex    = 0;
+    state.answered  = [null];
+    state.revealed  = [false];
+    state.pendingSelection = [];
+  });
+
+  it('toggles a letter into pendingSelection without answering the question', () => {
+    selectOption('A');
+    expect(state.pendingSelection).toEqual(['A']);
+    expect(state.answered[0]).toBeNull();
+  });
+
+  it('toggles a letter back out of pendingSelection when clicked again', () => {
+    selectOption('A');
+    selectOption('A');
+    expect(state.pendingSelection).toEqual([]);
+  });
+
+  it('does nothing when the game is paused', () => {
+    state.isPaused = true;
+    selectOption('A');
+    expect(state.pendingSelection).toEqual([]);
+  });
+
+  it('confirmMultiAnswer does nothing until the required number of options is selected', () => {
+    selectOption('A');
+    confirmMultiAnswer();
+    expect(state.answered[0]).toBeNull();
+  });
+
+  it('confirmMultiAnswer records a correct answer when the exact correct set is selected', () => {
+    selectOption('C');
+    selectOption('A');
+    confirmMultiAnswer();
+    expect(state.answered[0]).toEqual({ selected: ['A', 'C'], correct: true, timeout: false });
+  });
+
+  it('confirmMultiAnswer records a wrong answer when the selection does not match exactly', () => {
+    selectOption('A');
+    selectOption('B');
+    confirmMultiAnswer();
+    expect(state.answered[0]).toEqual({ selected: ['A', 'B'], correct: false, timeout: false });
+  });
+
+  it('marks the question as revealed after confirming', () => {
+    selectOption('A');
+    selectOption('C');
+    confirmMultiAnswer();
+    expect(state.revealed[0]).toBe(true);
+  });
+
+  it('does nothing when the question is already answered', () => {
+    state.answered[0] = { selected: ['A', 'C'], correct: true, timeout: false };
+    selectOption('B');
+    expect(state.answered[0].selected).toEqual(['A', 'C']);
   });
 });
 
