@@ -316,6 +316,29 @@ body {
 .nav-btn:disabled { opacity: 0.3; cursor: default; }
 .nav-btn:not(:disabled):active { background: var(--orange); color: #1A1A1A; }
 
+/* ─── SITE FOOTER (signature) ─── */
+.site-footer {
+  flex-shrink: 0;
+  background: var(--footer-bg);
+  border-top: 1px solid #1f1f1f;
+  padding: 10px 16px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.site-footer-text { color: var(--text-muted); font-size: 11px; letter-spacing: 0.3px; }
+.site-footer-text strong { color: var(--orange); }
+.site-footer-links { display: flex; align-items: center; gap: 16px; }
+.social-link {
+  color: var(--text-muted);
+  display: inline-flex;
+  transition: color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.social-link:hover, .social-link:active { color: var(--orange); }
+.social-link svg { width: 18px; height: 18px; display: block; }
+
 /* ─── PAUSED OVERLAY ─── */
 .paused-overlay {
   position: absolute;
@@ -468,6 +491,9 @@ body {
   .btn-secondary { font-size: 14px; padding: 15px; border-radius: 14px; }
   .footer { padding: 12px 24px 18px; }
   .footer-info { font-size: 12px; }
+  .site-footer { padding: 12px 24px 18px; }
+  .site-footer-text { font-size: 12px; }
+  .social-link svg { width: 20px; height: 20px; }
   .nav-btn { padding: 10px 18px; font-size: 13px; }
   .pause-btn { padding: 10px 20px; font-size: 13px; }
   .paused-text { font-size: 28px; }
