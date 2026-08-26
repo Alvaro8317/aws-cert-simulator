@@ -26,6 +26,7 @@ vi.mock('../src/list.js', () => ({
 
 import { state } from '../src/state.js';
 import { selectLevel, startSimulatorMode, startFreeMode, initLevel } from '../src/modes.js';
+import { EXAM_MAX_QUESTIONS } from '../src/constants.js';
 
 const LEVEL = {
   id: 'cloud-practitioner',
@@ -37,6 +38,16 @@ const LEVEL = {
     { text: 'Q2', correct: 'B', options: [], explanation: '' },
     { text: 'Q3', correct: 'C', options: [], explanation: '' },
   ],
+};
+
+const BIG_LEVEL = {
+  id: 'cloud-practitioner',
+  name: 'Cloud Practitioner',
+  code: 'CLF-C02',
+  badge: '☁️',
+  questions: Array.from({ length: 90 }, (_, i) => ({
+    text: `Q${i + 1}`, correct: 'A', options: [], explanation: '',
+  })),
 };
 
 function makeEl() {
@@ -82,10 +93,27 @@ describe('initLevel', () => {
     expect(state.questions).toEqual(LEVEL.questions);
   });
 
-  it('contains all questions when doShuffle is true', () => {
+  it('contains all questions when doShuffle is true and level has fewer than the exam max', () => {
     initLevel(true);
     expect(state.questions).toHaveLength(LEVEL.questions.length);
     expect(state.questions).toEqual(expect.arrayContaining(LEVEL.questions));
+  });
+
+  it('caps shuffled questions at EXAM_MAX_QUESTIONS when the level has more', () => {
+    state.currentLevel = BIG_LEVEL;
+    initLevel(true);
+    expect(state.questions).toHaveLength(EXAM_MAX_QUESTIONS);
+    const ids = new Set(state.questions.map(q => q.text));
+    expect(ids.size).toBe(EXAM_MAX_QUESTIONS);
+    for (const q of state.questions) {
+      expect(BIG_LEVEL.questions).toContainEqual(q);
+    }
+  });
+
+  it('does not cap questions when doShuffle is false, even above the exam max', () => {
+    state.currentLevel = BIG_LEVEL;
+    initLevel(false);
+    expect(state.questions).toHaveLength(BIG_LEVEL.questions.length);
   });
 
   it('resets qIndex to 0', () => {

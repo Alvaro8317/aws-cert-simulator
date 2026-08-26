@@ -4,6 +4,7 @@ import { showScreen, setHeader, applyQuizFooter, hideQuizFooter } from './ui.js'
 import { startQTimer, stopQTimer, resetTotalTimer } from './timer.js';
 import { renderQuestion } from './quiz.js';
 import { renderQuestionList } from './list.js';
+import { EXAM_MAX_QUESTIONS } from './constants.js';
 
 export function selectLevel(level) {
   state.currentLevel = level;
@@ -38,7 +39,9 @@ export function startFreeMode() {
 
 export function initLevel(doShuffle) {
   const level = state.currentLevel;
-  state.questions = doShuffle ? shuffle([...level.questions]) : [...level.questions];
+  state.questions = doShuffle
+    ? shuffle([...level.questions]).slice(0, EXAM_MAX_QUESTIONS)
+    : [...level.questions];
   state.qIndex    = 0;
   state.answered  = new Array(state.questions.length).fill(null);
   state.revealed  = new Array(state.questions.length).fill(false);

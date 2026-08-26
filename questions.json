@@ -708,31 +708,31 @@
         },
         {
           "id": "cp026",
-          "text": "El equipo de DevOps de una empresa de e-commerce necesita depurar problemas de rendimiento en su aplicación serverless con arquitectura de microservicios. ¿Qué servicio de AWS recomendarías?",
+          "text": "¿Qué servicio de AWS es una base de datos completamente administrada, optimizada para almacenar y consultar datos altamente conectados en forma de graficos?",
           "options": [
             {
               "letter": "A",
-              "title": "AWS CloudFormation",
+              "title": "Amazon QuickSight",
               "desc": ""
             },
             {
               "letter": "B",
-              "title": "AWS X-Ray",
+              "title": "Amazon Neptune",
               "desc": ""
             },
             {
               "letter": "C",
-              "title": "Amazon Pinpoint",
+              "title": "Amazon Redshift",
               "desc": ""
             },
             {
               "letter": "D",
-              "title": "AWS Trusted Advisor",
+              "title": "Amazon Athena",
               "desc": ""
             }
           ],
           "correct": "B",
-          "explanation": "AWS X-Ray permite analizar y depurar aplicaciones distribuidas y serverless, trazando el recorrido de cada request a través de los microservicios para identificar cuellos de botella y errores. Trusted Advisor da recomendaciones de buenas prácticas generales, Pinpoint es para engagement de usuarios, y CloudFormation es para infraestructura como código."
+          "explanation": "Amazon Neptune es un servicio de base de datos de grafos completamente administrado, diseñado para almacenar y navegar relaciones altamente conectadas (nodos y aristas) con baja latencia, ideal para casos como redes sociales, sistemas de recomendación o detección de fraude. Amazon QuickSight es un servicio de Business Intelligence para crear visualizaciones y dashboards interactivos, no una base de datos. Amazon Redshift es un data warehouse para analítica a gran escala mediante SQL, y Amazon Athena permite ejecutar consultas SQL interactivas directamente sobre datos almacenados en Amazon S3; ninguno de los dos es una base de datos de grafos."
         },
         {
           "id": "cp027",
@@ -848,31 +848,39 @@
         },
         {
           "id": "cp031",
-          "text": "Una empresa de logística mantiene VPCs separadas para cada unidad de negocio. El equipo de operaciones y el de facturación necesitan intercambiar datos de forma privada sin exponer el tráfico a internet. ¿Cuál es la solución más óptima?",
+          "text": "Una empresa de servicios financieros con sede en Medellín está evaluando el Modelo de Responsabilidad Compartida de AWS antes de migrar sus cargas de trabajo críticas. El equipo de seguridad sabe que la nube divide las responsabilidades entre AWS y el cliente, pero necesita clarificar exactamente qué tareas recaen sobre AWS ('seguridad DE la nube') para documentar el resto como responsabilidades internas ('seguridad EN la nube'). Durante la revisión, el equipo identifica varias tareas candidatas: administrar el hardware físico que soporta Amazon EC2, operar la capa de infraestructura, el sistema operativo y la plataforma de servicios abstraídos como Amazon S3, crear roles de IAM para acceder a instancias EC2, definir políticas de bucket de S3 para el acceso de usuarios, y habilitar MFA en las cuentas de la organización. Según el Modelo de Responsabilidad Compartida de AWS, ¿cuáles de las siguientes tareas son responsabilidad de AWS? (Selecciona dos)",
           "options": [
             {
               "letter": "A",
-              "title": "VPC Peering",
+              "title": "Reemplazar el hardware defectuoso de las instancias Amazon EC2",
               "desc": ""
             },
             {
               "letter": "B",
-              "title": "VPC Endpoint",
+              "title": "Operar la capa de infraestructura, el sistema operativo y la plataforma del servicio Amazon S3",
               "desc": ""
             },
             {
               "letter": "C",
-              "title": "AWS Direct Connect",
+              "title": "Crear roles de IAM para acceder a instancias Amazon EC2",
               "desc": ""
             },
             {
               "letter": "D",
-              "title": "VPN Site-to-Site",
+              "title": "Definir políticas de bucket de Amazon S3 para el acceso adecuado de usuarios",
+              "desc": ""
+            },
+            {
+              "letter": "E",
+              "title": "Habilitar Multi-Factor Authentication (MFA) en las cuentas de AWS de la organización",
               "desc": ""
             }
           ],
-          "correct": "A",
-          "explanation": "VPC Peering establece una conexión de red privada entre dos VPCs, permitiendo que las instancias se comuniquen como si estuvieran en la misma red. VPN Site-to-Site conecta redes on-premises con AWS pero no interconecta VPCs. Direct Connect es un enlace dedicado desde redes externas a AWS, no entre VPCs. VPC Endpoint conecta una VPC con servicios de AWS, no con otra VPC."
+          "correct": [
+            "A",
+            "B"
+          ],
+          "explanation": "Según el Modelo de Responsabilidad Compartida de AWS, AWS es responsable de la 'seguridad DE la nube', lo que incluye la infraestructura física, el hardware, el software de virtualización y las instalaciones que soportan los servicios. Reemplazar el hardware defectuoso de las instancias EC2 es una tarea de mantenimiento de infraestructura y corresponde a AWS. Para servicios abstraídos como Amazon S3, AWS también opera la capa de infraestructura, el sistema operativo y la plataforma subyacente, mientras el cliente solo gestiona sus datos y la configuración de acceso. En cambio, crear roles de IAM, definir políticas de bucket de S3 y habilitar MFA en las cuentas son tareas de 'seguridad EN la nube', responsabilidad exclusiva del cliente."
         },
         {
           "id": "cp032",
@@ -904,31 +912,31 @@
         },
         {
           "id": "cp033",
-          "text": "El equipo de infraestructura de una empresa manufacturera quiere automatizar la configuración y gestión de sus servidores on-premises usando Chef y Puppet. ¿Qué servicio de AWS les permite integrar estas herramientas?",
+          "text": "Una empresa de tecnología en salud con presencia en varios países de LATAM tiene múltiples cargas de trabajo distribuidas en distintas VPCs y necesita que sus aplicaciones consuman servicios de AWS compatibles (como Amazon S3 o Amazon DynamoDB) sin que el tráfico atraviese la red pública de internet, cumpliendo con estrictos requisitos regulatorios de protección de datos de pacientes. El equipo de arquitectura evalúa distintas alternativas de conectividad y necesita identificar cuál habilita esta conectividad privada entre las VPCs y los servicios de AWS soportados, sin requerir un Internet Gateway, un dispositivo NAT, una VPN ni una conexión de AWS Direct Connect. ¿Qué servicio de AWS deberían utilizar?",
           "options": [
             {
               "letter": "A",
-              "title": "AWS CodeDeploy",
+              "title": "Amazon Connect",
               "desc": ""
             },
             {
               "letter": "B",
-              "title": "AWS OpsWorks",
+              "title": "AWS Transit Gateway",
               "desc": ""
             },
             {
               "letter": "C",
-              "title": "AWS Batch",
+              "title": "AWS Internet Gateway",
               "desc": ""
             },
             {
               "letter": "D",
-              "title": "AWS CloudFormation",
+              "title": "AWS PrivateLink",
               "desc": ""
             }
           ],
-          "correct": "B",
-          "explanation": "AWS OpsWorks es un servicio de gestión de configuración que provee instancias gestionadas de Chef y Puppet, permitiendo automatizar configuración, despliegue y gestión de servidores tanto en EC2 como on-premises. CloudFormation aprovisiona infraestructura como código pero no usa Chef ni Puppet. CodeDeploy automatiza despliegues de código. Batch ejecuta trabajos de cómputo por lotes."
+          "correct": "D",
+          "explanation": "AWS PrivateLink permite establecer conectividad privada entre VPCs, cuentas de AWS y servicios de AWS compatibles (o servicios de socios) sin que el tráfico atraviese la red pública de internet, sin necesitar un Internet Gateway, un dispositivo NAT, una VPN ni una conexión de Direct Connect. AWS Transit Gateway conecta múltiples VPCs y redes on-premises entre sí a través de un hub central, pero no está pensado específicamente para el consumo privado de servicios de AWS punto a punto. El Internet Gateway habilita la comunicación entre una VPC e internet, justo lo que se quiere evitar en este caso. Amazon Connect es un servicio de centro de contacto en la nube y no tiene relación con la conectividad de red."
         },
         {
           "id": "cp034",
@@ -1100,8 +1108,865 @@
               "desc": ""
             }
           ],
-          "correct": ["A", "C"],
+          "correct": [
+            "A",
+            "C"
+          ],
           "explanation": "AWS tiene el concepto de Región, una ubicación física en el mundo donde AWS agrupa sus centros de datos. A cada grupo de centros de datos lógicos se le llama Zona de Disponibilidad (AZ). Cada Región de AWS consta de un mínimo de tres AZs, aisladas y físicamente separadas dentro de un área geográfica, cada una con energía, refrigeración y seguridad física independientes, conectadas mediante redes redundantes de ultra baja latencia. Una AZ es, a su vez, uno o más centros de datos discretos con energía, redes y conectividad redundantes dentro de una Región. Todas las AZs de una Región están interconectadas mediante redes de alto ancho de banda y baja latencia sobre fibra metropolitana dedicada y totalmente redundante. Las Edge Locations pertenecen a la red de Amazon CloudFront, no a la definición de una Región."
+        },
+        {
+          "id": "cp040",
+          "text": "Una empresa necesita ayuda para integrar sus aplicaciones on-premises con sistemas de terceros sobre AWS, más allá del soporte básico de facturación y cuenta que ya recibe. ¿Cuáles de los siguientes planes de soporte de AWS ofrecen acceso a orientación, configuración y resolución de problemas de interoperabilidad de AWS con software de terceros? (Selecciona dos)",
+          "options": [
+            {
+              "letter": "A",
+              "title": "AWS Corporate Support",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "AWS Developer Support",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "AWS Basic Support",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "AWS Enterprise Support",
+              "desc": ""
+            },
+            {
+              "letter": "E",
+              "title": "AWS Business Support",
+              "desc": ""
+            }
+          ],
+          "correct": [
+            "D",
+            "E"
+          ],
+          "explanation": "AWS Enterprise Support ofrece un servicio de tipo conserje enfocado en ayudar al cliente a lograr sus objetivos en la nube: soporte técnico 24x7 con ingenieros de alta calidad, herramientas para gestionar automáticamente la salud del entorno, orientación arquitectónica consultiva en el contexto de tus aplicaciones y casos de uso, y un Technical Account Manager (TAM) dedicado. Incluye acceso a orientación, configuración y resolución de problemas de interoperabilidad de AWS con sistemas operativos, plataformas y componentes de terceros comunes. AWS Business Support está pensado para cargas de trabajo en producción y ofrece acceso 24x7 por teléfono, correo y chat a soporte técnico y orientación arquitectónica en el contexto de tus casos de uso, además de acceso completo a las verificaciones de AWS Trusted Advisor. También incluye acceso a orientación, configuración y resolución de problemas de interoperabilidad con software de terceros. AWS Basic Support solo incluye soporte de cuenta y facturación, sin acceso técnico. AWS Developer Support ofrece soporte técnico solo en horario laboral y está pensado para pruebas, no para interoperabilidad en producción. 'AWS Corporate Support' no existe como plan de soporte de AWS. Alerta de examen: repasa bien las diferencias entre los planes AWS Developer, AWS Business, AWS Enterprise On-Ramp y AWS Enterprise Support, ya que suelen aparecer varias preguntas sobre esto en el examen."
+        },
+        {
+          "id": "cp041",
+          "text": "Un equipo de cómputo forense ha detectado que direcciones IP propiedad de AWS están siendo utilizadas para llevar a cabo ataques maliciosos. Dado que esto constituye un uso prohibido de los servicios de AWS, ¿cuál es la solución correcta para atender este problema?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Contactar a los moderadores del foro de desarrolladores de AWS",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Contactar al equipo de AWS Abuse",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Contactar a AWS Support",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Escribir un correo directamente al CEO de Amazon con los detalles del incidente",
+              "desc": ""
+            }
+          ],
+          "correct": "B",
+          "explanation": "El equipo de AWS Abuse puede ayudarte cuando los recursos de AWS se están utilizando para llevar a cabo comportamientos abusivos, como ataques maliciosos, spam, escaneo de puertos, distribución de malware o cualquier otro uso prohibido de los servicios de AWS. Puedes reportar este tipo de incidentes a través del formulario de AWS Abuse. Contactar a AWS Support no es la vía correcta, ya que ese canal está pensado para consultas técnicas y de cuenta, no para reportar uso indebido de recursos de AWS. Los moderadores del foro de desarrolladores tampoco gestionan este tipo de incidentes, ya que su alcance se limita a la comunidad del foro. Escribir directamente al CEO de Amazon es un distractor: no es un canal formal de atención y no garantiza ninguna respuesta ni acción sobre el incidente."
+        },
+        {
+          "id": "cp042",
+          "text": "¿Cuál de las siguientes afirmaciones es CORRECTA respecto a eliminar una cuenta de AWS de AWS Organizations?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Se debe abrir un ticket de soporte con AWS Support para eliminar la cuenta",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "La cuenta de AWS puede eliminarse desde AWS Systems Manager",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "La cuenta de AWS debe poder operar como una cuenta independiente (standalone). Solo entonces puede eliminarse de AWS Organizations",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "La cuenta de AWS no debe tener ninguna Service Control Policy (SCP) asociada. Solo entonces puede eliminarse de AWS Organizations",
+              "desc": ""
+            }
+          ],
+          "correct": "C",
+          "explanation": "Solo puedes eliminar una cuenta de tu organización si dicha cuenta cuenta con la información necesaria para operar como una cuenta independiente. Para que una cuenta pueda volverse independiente, debe aceptar el AWS Customer Agreement, elegir un plan de soporte, proporcionar y verificar la información de contacto requerida, y contar con un método de pago vigente. AWS utiliza ese método de pago para cobrar cualquier actividad facturable (fuera del AWS Free Tier) que ocurra mientras la cuenta no esté vinculada a una organización. No existe un proceso para eliminar una cuenta abriendo un ticket con AWS Support, ni desde AWS Systems Manager, que es un servicio de administración operativa de recursos y no gestiona la membresía de cuentas en Organizations. Tampoco es un requisito eliminar las SCPs asociadas antes de retirar la cuenta."
+        },
+        {
+          "id": "cp043",
+          "text": "Un gerente de proyecto que está liderando un nuevo proyecto en una fintech, está trabajando por primera vez con AWS, está confundido sobre cómo se aplican los créditos en la cuenta. La cuenta tiene dos créditos disponibles. El crédito uno es de $100, vence en julio de 2026, y puede usarse tanto para Amazon S3 como para Amazon EC2. El crédito dos es de $50, vence en diciembre de 2026, y solo puede usarse para Amazon EC2. La cuenta ha generado dos cargos: $1000 de Amazon EC2 y $500 de Amazon S3. Antes de revisar los créditos, el gerente también considera contactar a AWS Support para pedir una condonación de deuda (debt forgiveness), pensando que eso podría reducir el cargo total. ¿Cuál será el resultado en la factura total una vez aplicados los créditos? (Selecciona dos)",
+          "options": [
+            {
+              "letter": "A",
+              "title": "El crédito dos se aplica a los $900 restantes de uso de Amazon EC2",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Solo se puede usar un crédito por ciclo de facturación y el cliente puede elegir cuál de los disponibles usar",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "El crédito dos se aplica a los $500 de uso de Amazon S3",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "El crédito uno, que vence en julio, se aplica al cargo de Amazon EC2, dejando un cargo de $900 de Amazon EC2 y $500 de Amazon S3",
+              "desc": ""
+            },
+            {
+              "letter": "E",
+              "title": "El crédito uno, que vence en julio, se aplica al uso de Amazon S3, dejando un cargo de $1000 de Amazon EC2 y $400 de Amazon S3",
+              "desc": ""
+            }
+          ],
+          "correct": [
+            "A",
+            "D"
+          ],
+          "explanation": "Los créditos se aplican en el siguiente orden: primero el que vence más pronto, luego el que aplica al menor número de productos, y por último el más antiguo. Para este caso, el crédito uno (vence en julio, aplicable a EC2 y S3) se aplica primero al cargo de Amazon EC2, dejando un cargo de $900 de Amazon EC2 y $500 de Amazon S3. Luego, el crédito dos (solo aplicable a EC2) se aplica a los $900 restantes de Amazon EC2. Al final quedan $850 por pagar de Amazon EC2 y $500 de Amazon S3, y los créditos quedan agotados. No es posible solicitar una condonación de deuda a AWS Support por cargos ya generados; los créditos se aplican automáticamente según las reglas anteriores, no existe un límite de un crédito por ciclo de facturación, y el crédito dos no puede aplicarse a Amazon S3 porque solo es válido para Amazon EC2."
+        },
+        {
+          "id": "cp044",
+          "text": "El equipo de plataforma de una empresa de comercio electrónico tiene instancias EC2 en subredes privadas dentro de una VPC, sin acceso a internet. Estas instancias necesitan comunicarse de forma privada, y sin costo adicional de procesamiento por hora, con dos servicios específicos de AWS que soportan un tipo particular de VPC Endpoint conocido como 'Gateway Endpoint', el cual se configura como un destino en la tabla de rutas de la VPC en lugar de usar una interfaz de red elástica. El equipo de arquitectura necesita identificar cuáles de los siguientes servicios de AWS son compatibles con este tipo de VPC Endpoint. (Selecciona dos)",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Amazon Simple Notification Service (SNS)",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Amazon Simple Queue Service (SQS)",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Amazon Simple Storage Service (Amazon S3)",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Amazon Elastic Compute Cloud (Amazon EC2)",
+              "desc": ""
+            },
+            {
+              "letter": "E",
+              "title": "Amazon DynamoDB",
+              "desc": ""
+            }
+          ],
+          "correct": [
+            "C",
+            "E"
+          ],
+          "explanation": "Un VPC Gateway Endpoint es un tipo de VPC Endpoint que se configura como un destino en la tabla de rutas de la VPC, sin usar una interfaz de red elástica ni generar cargos por hora. Actualmente, únicamente Amazon S3 y Amazon DynamoDB son compatibles con Gateway Endpoints. El resto de servicios de AWS que soportan VPC Endpoints (como SQS, SNS o las APIs de EC2) lo hacen mediante Interface Endpoints, que sí utilizan una interfaz de red elástica con una IP privada y están basados en la tecnología AWS PrivateLink."
+        },
+        {
+          "id": "cp045",
+          "text": "¿Cuál de los siguientes servicios de AWS se debe usar para distribuir automáticamente el tráfico entrante entre varios destinos?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "AWS Auto Scaling",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "AWS Elastic Load Balancing (ELB)",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "AWS Elastic Beanstalk",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Amazon OpenSearch Service",
+              "desc": ""
+            }
+          ],
+          "correct": "B",
+          "explanation": "Elastic Load Balancing (ELB) se usa para distribuir automáticamente el tráfico entrante de tu aplicación entre todas las instancias EC2 que estés ejecutando, optimizando el enrutamiento para que ninguna instancia se sobrecargue. Tu balanceador de carga actúa como punto único de contacto para todo el tráfico web entrante hacia tu aplicación. Cuando se añade una instancia, debe registrarse en el balanceador o no recibirá tráfico; cuando se elimina, debe darse de baja o seguirá recibiendo tráfico. AWS Elastic Beanstalk es un servicio para desplegar y escalar aplicaciones web fácilmente, pero no se usa para distribuir tráfico entre destinos. Amazon OpenSearch Service permite realizar análisis de logs, monitoreo de aplicaciones en tiempo real y búsqueda en sitios web, sin relación con el balanceo de tráfico. AWS Auto Scaling ajusta automáticamente la capacidad de tus recursos para mantener un rendimiento estable al menor costo posible, y suele usarse junto con ELB, pero por sí solo no distribuye el tráfico entrante."
+        },
+        {
+          "id": "cp046",
+          "text": "Una fintech unicornio está construyendo un centro de atención al cliente basado en un asistente de voz. La aplicación debe recibir consultas de los usuarios habladas en tiempo real, analizarlas para generar una respuesta y luego comunicar el resultado también mediante voz. Como Cloud Practitioner, ¿qué solución recomendarías para este caso de uso?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Usar Amazon Translate para convertir voz a texto y analizarlo. Luego usar Amazon Polly para comunicar el resultado mediante voz",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Usar Amazon Transcribe para convertir voz a texto y analizarlo. Luego usar Amazon Polly para comunicar el resultado mediante voz",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Usar Amazon Polly para convertir voz a texto y analizarlo. Luego usar Amazon Translate para comunicar el resultado mediante voz",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Usar Amazon Polly para convertir voz a texto y analizarlo. Luego usar Amazon Transcribe para comunicar el resultado mediante voz",
+              "desc": ""
+            }
+          ],
+          "correct": "B",
+          "explanation": "Amazon Transcribe permite añadir capacidad de conversión de voz a texto a tus aplicaciones, usando un proceso de deep learning llamado reconocimiento automático del habla (ASR) para transcribir voz a texto de forma rápida y precisa. Se usa comúnmente para transcribir llamadas de servicio al cliente, generar subtítulos automáticos y crear metadatos para contenido multimedia. Amazon Polly, por su parte, convierte texto en voz natural mediante tecnologías avanzadas de deep learning, permitiendo crear aplicaciones que 'hablan'. Amazon Translate es un servicio de traducción automática de texto entre idiomas, no de conversión de voz a texto, por lo que no cumple la función requerida en ninguna de las opciones incorrectas."
+        },
+        {
+          "id": "cp047",
+          "text": "Una startup está definiendo qué servicios de almacenamiento de AWS puede aprovechar para distintos casos de uso de su nueva plataforma. ¿Cuáles de los siguientes son servicios de almacenamiento ofrecidos por AWS Cloud? (Selecciona dos)",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Amazon S3",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Amazon EC2",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Amazon EFS",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Amazon SQS",
+              "desc": ""
+            },
+            {
+              "letter": "E",
+              "title": "Amazon SNS",
+              "desc": ""
+            }
+          ],
+          "correct": [
+            "A",
+            "C"
+          ],
+          "explanation": "Amazon S3 es un servicio de almacenamiento de objetos con alta escalabilidad, disponibilidad y rendimiento. Amazon EFS es un sistema de archivos NFS elástico y completamente administrado que crece y se reduce automáticamente. Amazon EC2 es un servicio de cómputo (servidores virtuales), no de almacenamiento. Amazon SQS y Amazon SNS son servicios de mensajería (colas y notificaciones pub/sub) para desacoplar aplicaciones, no servicios de almacenamiento."
+        },
+        {
+          "id": "cp048",
+          "text": "Una tienda en línea tiene desplegada su base de datos en Amazon RDS en una sola Zona de Disponibilidad (AZ). El equipo de ingeniería quiere garantizar que, ante una interrupción de la AZ, la base de datos siga operando en el mismo endpoint sin intervención administrativa manual. ¿Qué solución resuelve este caso de uso?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Aprovisionar la base de datos mediante AWS CloudFormation",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Configurar la base de datos en modo de réplica de lectura (read replica) con conmutación automática al standby",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Configurar la base de datos en modo de implementación Multi-AZ de RDS con conmutación automática al standby",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Desplegar la base de datos mediante AWS Elastic Beanstalk",
+              "desc": ""
+            }
+          ],
+          "correct": "C",
+          "explanation": "Al aprovisionar una instancia RDS Multi-AZ, Amazon RDS crea automáticamente una instancia primaria y replica los datos de forma síncrona a una instancia standby en otra Zona de Disponibilidad. Ante una falla de infraestructura, RDS realiza una conmutación (failover) automática hacia el standby, y como el endpoint de la base de datos no cambia, la aplicación puede reanudar operaciones sin intervención manual. Las réplicas de lectura no cuentan con un standby: ante una falla deben promoverse manualmente a instancia independiente, lo que cambia el endpoint. CloudFormation permite aprovisionar la base de datos, pero no ofrece recuperación automática ante desastres. Elastic Beanstalk está diseñado para desplegar aplicaciones completas, no bases de datos de forma aislada."
+        },
+        {
+          "id": "cp049",
+          "text": "El equipo directivo de una empresa manufacturera está evaluando los beneficios de migrar a la nube frente a mantener su infraestructura on-premises. ¿Cuáles de las siguientes son ventajas del cómputo en la nube? (Selecciona tres)",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Gastar dinero en construir y mantener centros de datos propios",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Ir global en minutos y desplegar aplicaciones en múltiples regiones alrededor del mundo con solo unos clics",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Cambiar el gasto variable por gasto de capital",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Dedicar varios meses de planificación para las necesidades de capacidad de infraestructura",
+              "desc": ""
+            },
+            {
+              "letter": "E",
+              "title": "Cambiar el gasto de capital por gasto variable",
+              "desc": ""
+            },
+            {
+              "letter": "F",
+              "title": "Beneficiarse de economías de escala masivas",
+              "desc": ""
+            }
+          ],
+          "correct": [
+            "B",
+            "E",
+            "F"
+          ],
+          "explanation": "El cómputo en la nube ofrece, entre otras, estas ventajas: (1) economías de escala masivas, ya que el proveedor agrega el uso de cientos de miles de clientes, reduciendo el costo por unidad; (2) cambiar gasto de capital (CapEx) por gasto variable (OpEx), pagando solo por los recursos consumidos; y (3) la capacidad de desplegar aplicaciones en múltiples regiones del mundo en minutos, reduciendo la latencia y mejorando la experiencia de los usuarios globales. No es necesario invertir en construir y mantener centros de datos propios, ni dedicar meses de planificación de capacidad, ya que la nube permite escalar en minutos según demanda real."
+        },
+        {
+          "id": "cp050",
+          "text": "El equipo de cumplimiento de una entidad bancaria necesita identificar cuál de los siguientes servicios de AWS cifra sus datos de forma automática, sin que el usuario deba habilitar ninguna configuración adicional. ¿Cuál de los siguientes servicios de AWS tiene el cifrado habilitado por defecto?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Amazon Elastic Block Store (Amazon EBS)",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Amazon Elastic File System (Amazon EFS)",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Los registros (logs) de AWS CloudTrail",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Amazon Relational Database Service (Amazon RDS)",
+              "desc": ""
+            }
+          ],
+          "correct": "C",
+          "explanation": "AWS CloudTrail cifra por defecto los archivos de registro que entrega a tu bucket de S3 mediante cifrado del lado del servidor con claves administradas por S3 (SSE-S3), sin que el usuario deba configurar nada adicional. En cambio, Amazon EBS, Amazon EFS y Amazon RDS sí soportan cifrado en reposo y en tránsito, pero es una característica opcional que el usuario debe habilitar explícitamente."
+        },
+        {
+          "id": "cp051",
+          "text": "Una startup quiere migrar sus datos y aplicaciones desde su centro de datos on-premises hacia AWS Cloud, y necesita apoyo experto más allá de lo que ofrece el soporte técnico básico. ¿Cuáles de las siguientes opciones puede utilizar la startup para apoyar esta migración? (Selecciona dos)",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Utilizar la Red de Partners de AWS (APN) para construir una solución personalizada para esta migración de infraestructura",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Abrir un ticket con AWS Support para asistencia adicional",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Consultar a los moderadores de los foros de desarrolladores de AWS",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Usar AWS Trusted Advisor para automatizar la migración de infraestructura",
+              "desc": ""
+            },
+            {
+              "letter": "E",
+              "title": "Aprovechar AWS Professional Services para acelerar la migración de infraestructura",
+              "desc": ""
+            }
+          ],
+          "correct": [
+            "A",
+            "E"
+          ],
+          "explanation": "AWS Professional Services es un equipo global de expertos que ayuda a las organizaciones a lograr sus objetivos de negocio en la nube, aportando experiencia especializada para acelerar migraciones complejas. La Red de Partners de AWS (APN) conecta a las empresas con partners tecnológicos y de consultoría que pueden construir soluciones personalizadas para su migración. AWS Support no está diseñado para ejecutar migraciones de infraestructura complejas, los foros de desarrolladores no ofrecen soporte oficial, y AWS Trusted Advisor solo brinda recomendaciones de buenas prácticas, sin automatizar migraciones."
+        },
+        {
+          "id": "cp052",
+          "text": "El equipo de DBA de una aseguradora está evaluando Amazon Aurora como motor de base de datos y necesita entender el modelo de responsabilidad de mantenimiento. ¿Quién se encarga de aplicar los parches al sistema operativo subyacente de las instancias de Amazon Aurora?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "El equipo de AWS, de forma automática",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "El cliente, mediante AWS Systems Manager Patch Manager",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "El cliente, conectándose por SSH a la instancia",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Un partner certificado de AWS, bajo solicitud del cliente",
+              "desc": ""
+            }
+          ],
+          "correct": "A",
+          "explanation": "Amazon Aurora es un servicio de base de datos relacional completamente administrado. AWS se encarga de forma automática del aprovisionamiento, parcheo del sistema operativo subyacente, copias de seguridad, recuperación y mantenimiento de la infraestructura, siguiendo el Modelo de Responsabilidad Compartida, donde los servicios administrados abstraen la gestión de la plataforma. El cliente no tiene acceso SSH al sistema operativo de las instancias de Aurora ni necesita usar Patch Manager para este propósito, a diferencia de lo que ocurriría si gestionara sus propias bases de datos sobre instancias EC2."
+        },
+        {
+          "id": "cp053",
+          "text": "Una empresa ejecuta su aplicación sobre una flota de instancias EC2 y quiere automatizar las evaluaciones periódicas de vulnerabilidades del sistema operativo, en lugar de hacerlo de forma manual. Como Cloud Practitioner, ¿qué servicio recomendarías para este caso de uso?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "AWS Shield",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Amazon Macie",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Amazon Inspector",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Amazon GuardDuty",
+              "desc": ""
+            }
+          ],
+          "correct": "C",
+          "explanation": "Amazon Inspector es un servicio de evaluación de seguridad automatizado que analiza las instancias EC2 en busca de vulnerabilidades de exposición y desviaciones de buenas prácticas, generando hallazgos priorizados por nivel de severidad. Amazon GuardDuty analiza eventos a nivel de cuenta (CloudTrail, VPC Flow Logs, DNS) para detectar amenazas, pero no evalúa vulnerabilidades del sistema operativo de instancias específicas. Amazon Macie está enfocado en descubrir datos sensibles, y AWS Shield protege contra ataques DDoS; ninguno de los dos realiza evaluaciones de vulnerabilidades de SO."
+        },
+        {
+          "id": "cp054",
+          "text": "El equipo de seguridad perimetral de una plataforma de streaming necesita mitigar ataques de Denegación de Servicio Distribuido (DDoS) que podrían afectar la disponibilidad de su aplicación. ¿Qué servicio de AWS deberían utilizar?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "AWS Key Management Service (AWS KMS)",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Amazon CloudWatch",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "AWS Shield",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "AWS Systems Manager",
+              "desc": ""
+            }
+          ],
+          "correct": "C",
+          "explanation": "AWS Shield es un servicio administrado de protección contra ataques de Denegación de Servicio Distribuido (DDoS) que ofrece detección continua y mitigación automática en línea. AWS Shield Standard protege de forma gratuita a todos los clientes contra los ataques DDoS más comunes de red y transporte (capas 3 y 4), mientras que AWS Shield Advanced ofrece protección adicional para ataques más sofisticados. Amazon CloudWatch monitorea métricas y logs, AWS Systems Manager gestiona operativamente la infraestructura, y AWS KMS administra claves criptográficas; ninguno de estos mitiga ataques DDoS."
+        },
+        {
+          "id": "cp055",
+          "text": "Una empresa de servicios legales quiere tener control total sobre la creación, rotación y políticas de las claves de cifrado que protegen sus datos en distintos servicios de AWS. ¿Qué tipo de clave de AWS KMS deberían utilizar para este caso de uso?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "AWS Secrets Manager",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Clave administrada por el cliente (customer managed key, CMK)",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Clave administrada por AWS (AWS managed key)",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Clave propiedad de AWS (AWS owned key)",
+              "desc": ""
+            }
+          ],
+          "correct": "B",
+          "explanation": "Las claves administradas por el cliente (customer managed keys) son claves de AWS KMS que el cliente crea, posee y administra directamente, con control total sobre sus políticas de clave, políticas de IAM, habilitación/deshabilitación, rotación y eliminación programada. Las claves administradas por AWS son creadas y gestionadas en nombre del cliente por un servicio integrado con KMS, y las claves propiedad de AWS son gestionadas íntegramente por AWS sin visibilidad para el cliente. AWS Secrets Manager gestiona secretos como credenciales y API keys, pero no es un mecanismo para crear claves de cifrado."
+        },
+        {
+          "id": "cp056",
+          "text": "Un estudio de arquitectura necesita almacenar planos digitales de proyectos antiguos que se consultan con poca frecuencia, pero que deben estar disponibles con acceso rápido cuando algún cliente los solicita. ¿Qué clase de almacenamiento de Amazon S3 es la MÁS rentable para este caso de uso?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Amazon S3 Intelligent-Tiering",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Amazon S3 Standard",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Amazon S3 Standard-Infrequent Access (S3 Standard-IA)",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Amazon S3 Glacier",
+              "desc": ""
+            }
+          ],
+          "correct": "C",
+          "explanation": "Amazon S3 Standard-IA está diseñado para datos de acceso poco frecuente que requieren disponibilidad rápida cuando se necesitan. Ofrece la misma durabilidad, alto throughput y baja latencia que S3 Standard, pero con un costo de almacenamiento por GB más bajo y un cargo por recuperación, lo que la hace ideal para backups y almacenamiento a largo plazo con acceso ocasional. S3 Standard resultaría más costoso para este patrón de acceso, S3 Intelligent-Tiering añade costos de monitoreo que no se justifican si el patrón ya se conoce, y S3 Glacier no ofrece recuperación rápida."
+        },
+        {
+          "id": "cp057",
+          "text": "Una empresa agroindustrial necesita conectar su centro de datos on-premises con su VPC en AWS, sin que el tráfico atraviese la red pública de internet, y está dispuesta a esperar el tiempo necesario para establecer una conexión física dedicada. ¿Qué servicio de AWS deberían utilizar?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "VPC Endpoint",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "AWS Site-to-Site VPN",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Internet Gateway",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "AWS Direct Connect",
+              "desc": ""
+            }
+          ],
+          "correct": "D",
+          "explanation": "AWS Direct Connect establece una conexión de red dedicada y privada entre las instalaciones del cliente y AWS, sin atravesar la red pública de internet, ofreciendo mayor ancho de banda y consistencia que una conexión por VPN. Su aprovisionamiento físico puede tardar semanas o meses. AWS Site-to-Site VPN también conecta on-premises con AWS de forma segura, pero el tráfico viaja cifrado sobre la red pública de internet. Un VPC Endpoint conecta una VPC con servicios de AWS, no con un centro de datos on-premises, y un Internet Gateway habilita la comunicación entre una VPC e internet."
+        },
+        {
+          "id": "cp058",
+          "text": "Una startup de salud digital necesita revisar los informes de cumplimiento normativo de AWS respecto a la ley HIPAA antes de almacenar información médica de pacientes en la nube. ¿Qué servicio de AWS les permite acceder a estos informes de cumplimiento bajo demanda?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "AWS Trusted Advisor",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "AWS Artifact",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "AWS Systems Manager",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "AWS Secrets Manager",
+              "desc": ""
+            }
+          ],
+          "correct": "B",
+          "explanation": "AWS Artifact es un portal de autoservicio sin costo que brinda acceso bajo demanda a los informes de seguridad y cumplimiento de AWS, incluyendo reportes SOC, PCI y certificaciones de distintas verticales regulatorias, además de acuerdos como el Business Associate Addendum (BAA) requerido para cumplir con HIPAA. AWS Trusted Advisor ofrece recomendaciones de buenas prácticas, AWS Secrets Manager gestiona secretos, y AWS Systems Manager administra operativamente la infraestructura; ninguno provee documentación de cumplimiento normativo."
+        },
+        {
+          "id": "cp059",
+          "text": "Un arquitecto en formación está estudiando el pilar de Confiabilidad (Reliability) del AWS Well-Architected Framework, específicamente el principio de diseño de Escalado (Scaling). ¿Cuál de las siguientes afirmaciones sobre el escalado es INCORRECTA?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "La tolerancia a fallos se logra mediante una operación de escalado horizontal (scale out)",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Una operación de escalado vertical (scale up) implica añadir más potencia (CPU, RAM) a la máquina o nodo existente",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "La tolerancia a fallos se logra mediante una operación de escalado vertical (scale up)",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Una operación de escalado horizontal (scale out) implica añadir más instancias al conjunto de recursos existente",
+              "desc": ""
+            }
+          ],
+          "correct": "C",
+          "explanation": "Una operación de escalado vertical (scale up) está limitada a ejecutarse en un único servidor: la única forma de aumentar el rendimiento es agregar más CPU, memoria o almacenamiento a esa misma máquina. Como depende de una sola instancia, no ofrece tolerancia a fallos, ya que esa instancia sigue siendo un punto único de falla. En cambio, el escalado horizontal (scale out) añade más instancias al conjunto existente, de forma que si una instancia falla, las demás asumen la carga, lo que sí ofrece tolerancia a fallos. Por lo tanto, la afirmación de que la tolerancia a fallos se logra mediante scale up es incorrecta."
+        },
+        {
+          "id": "cp060",
+          "text": "Un desarrollador independiente está comparando los planes de soporte de AWS y quiere identificar cuáles ofrecen acceso únicamente a las verificaciones esenciales (core checks) de AWS Trusted Advisor, sin el conjunto completo de verificaciones de buenas prácticas. ¿Cuáles de los siguientes planes de soporte de AWS cumplen esta condición? (Selecciona dos)",
+          "options": [
+            {
+              "letter": "A",
+              "title": "AWS Business Support",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "AWS Enterprise Support",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "AWS Basic Support",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "AWS Enterprise On-Ramp Support",
+              "desc": ""
+            },
+            {
+              "letter": "E",
+              "title": "AWS Developer Support",
+              "desc": ""
+            }
+          ],
+          "correct": [
+            "C",
+            "E"
+          ],
+          "explanation": "El plan AWS Basic Support solo incluye acceso a las verificaciones esenciales (core checks) de AWS Trusted Advisor. El plan AWS Developer Support también se limita a las verificaciones esenciales de cuotas de servicio y seguridad básica, pensado para quienes están probando o desarrollando en AWS. Los planes AWS Business Support, AWS Enterprise On-Ramp Support y AWS Enterprise Support incluyen acceso completo a todas las verificaciones de buenas prácticas de AWS Trusted Advisor."
+        },
+        {
+          "id": "cp061",
+          "text": "Durante una capacitación introductoria a la nube, el instructor pregunta a los asistentes qué modelo de cómputo en la nube representa Amazon EC2, dado que otorga control total sobre el sistema operativo, la configuración de red virtual y el almacenamiento. ¿Qué tipo de cómputo en la nube representa Amazon EC2?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Software as a Service (SaaS)",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Platform as a Service (PaaS)",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Infrastructure as a Service (IaaS)",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Network as a Service (NaaS)",
+              "desc": ""
+            }
+          ],
+          "correct": "C",
+          "explanation": "Amazon EC2 es un ejemplo de Infraestructura como Servicio (IaaS), ya que otorga al usuario control total sobre el sistema operativo, la configuración de red virtual, el almacenamiento, los datos y las aplicaciones, ofreciendo el mayor nivel de flexibilidad y control administrativo sobre los recursos de TI. PaaS abstrae la gestión de infraestructura para que el usuario solo se enfoque en el código, y SaaS entrega una aplicación completamente funcional lista para usar. NaaS no es una de las categorías estándar de cómputo en la nube."
+        },
+        {
+          "id": "cp062",
+          "text": "Una empresa de telecomunicaciones está evaluando qué áreas de gasto disminuirán al migrar su infraestructura on-premises hacia AWS Cloud. ¿Cuáles de las siguientes áreas de gasto generarían ahorros de costos al realizar esta migración? (Selecciona dos)",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Salario del gerente de proyecto",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Cuota de licencia de aplicaciones SaaS",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Gasto en infraestructura de hardware del centro de datos",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Gasto en seguridad física del centro de datos",
+              "desc": ""
+            },
+            {
+              "letter": "E",
+              "title": "Salario de los desarrolladores",
+              "desc": ""
+            }
+          ],
+          "correct": [
+            "C",
+            "D"
+          ],
+          "explanation": "Al migrar a AWS, la empresa deja de necesitar inversión en hardware de cómputo propio y en la seguridad física de su centro de datos, ya que AWS asume esa responsabilidad como parte de la infraestructura de la nube. El gasto en licencias de aplicaciones SaaS, y los salarios de desarrolladores y del gerente de proyecto se mantienen prácticamente igual, ya que no dependen de dónde se aloja la infraestructura."
+        },
+        {
+          "id": "cp063",
+          "text": "Una empresa de manufactura con sede en Barranquilla necesita realizar una migración única de 100 TB de datos históricos desde su centro de datos on-premises hacia Amazon S3, antes de decomisionar el hardware legado. La empresa cuenta con una conexión dedicada a internet de 500 Mbps que estará disponible exclusivamente para esta transferencia durante los próximos 20 días, tras los cuales el enlace será reasignado a otro proyecto. El equipo de infraestructura estima que, reservando un margen de ancho de banda para otras cargas críticas, la transferencia por la línea dedicada tomaría aproximadamente 23 días, superando la ventana disponible. Como Cloud Practitioner, ¿qué solución recomendarías para completar la migración dentro del plazo, sin saturar el enlace de red existente?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Aumentar el ancho de banda de la conexión dedicada mediante AWS Direct Connect",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Solicitar uno o más dispositivos de AWS Snowball Edge para transferir los datos de forma física",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Habilitar Amazon S3 Transfer Acceleration para acelerar la carga sobre la conexión existente",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Dividir la transferencia en múltiples cuentas de AWS para paralelizar la carga",
+              "desc": ""
+            }
+          ],
+          "correct": "B",
+          "explanation": "AWS Snowball Edge es un dispositivo físico de transferencia de datos diseñado para migraciones masivas cuando el ancho de banda de red disponible es insuficiente o poco práctico frente al volumen y al plazo requerido. Un dispositivo Snowball Edge Storage Optimized ofrece hasta 80 TB de capacidad utilizable, por lo que para 100 TB bastarían dos dispositivos; el ciclo completo (solicitud, envío, copia local e ingesta en AWS) toma típicamente alrededor de una semana, muy por debajo de los 20 días disponibles y de los 23 días que tomaría la transferencia por red. AWS Direct Connect no resuelve el problema porque su aprovisionamiento toma semanas o meses, tiempo que la empresa no tiene. S3 Transfer Acceleration mejora la velocidad de carga a través de las Edge Locations, pero sigue limitado por el ancho de banda físico de los 500 Mbps disponibles. Dividir la transferencia en varias cuentas no aumenta el ancho de banda físico del enlace, que es la restricción real del problema."
+        },
+        {
+          "id": "cp064",
+          "text": "Una aseguradora está ejecutando una migración a gran escala hacia AWS y su equipo, apoyado por AWS Professional Services, clasifica cada aplicación según el marco de las 6 R's de migración. La Aplicación 1 es un sistema de nómina construido a la medida hace diez años, que la empresa decide mover tal cual a instancias EC2 sin modificar el código, para migrar rápido y optimizar después. La Aplicación 2 es un sistema interno de tickets de soporte que la empresa decide reemplazar por una suscripción a una solución SaaS equivalente ya existente en el mercado. La Aplicación 3 es un sistema de reportes legado que ya nadie utiliza, por lo que el equipo decide simplemente darlo de baja sin migrarlo. ¿Qué estrategias de migración representan, respectivamente, las Aplicaciones 1, 2 y 3?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "App 1: Refactor, App 2: Replatform, App 3: Retain",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "App 1: Rehost, App 2: Repurchase, App 3: Retire",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "App 1: Replatform, App 2: Repurchase, App 3: Retain",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "App 1: Rehost, App 2: Refactor, App 3: Retire",
+              "desc": ""
+            }
+          ],
+          "correct": "B",
+          "explanation": "Rehost ('lift-and-shift') traslada la aplicación tal cual a la nube sin cambios de código, ideal para migrar con rapidez y optimizar después: describe la Aplicación 1. Repurchase implica reemplazar la aplicación existente por un producto SaaS equivalente en lugar de mantenerla o reescribirla: describe la Aplicación 2. Retire consiste en dar de baja aplicaciones que ya no se usan, sin migrarlas: describe la Aplicación 3. Refactor implica rediseñar la arquitectura para aprovechar capacidades nativas de la nube, más allá de solo mover el código. Replatform aplica optimizaciones menores sin cambiar la arquitectura central. Retain implica mantener la aplicación on-premises sin migrarla, lo cual no corresponde a ninguna de las tres aplicaciones descritas."
+        },
+        {
+          "id": "cp065",
+          "text": "La Empresa A (cuenta de AWS 111122223333) necesita otorgar a un equipo de análisis de datos que trabaja en la cuenta de AWS de un socio externo, la Empresa B (cuenta 444455556666), acceso de solo lectura a un bucket específico de Amazon S3 dentro de la cuenta de la Empresa A, sin crear usuarios de IAM para el equipo de la Empresa B dentro de la cuenta de la Empresa A. ¿Qué tipo de política de IAM permite otorgar este acceso entre cuentas directamente sobre el recurso, sin necesidad de crear un usuario o rol de IAM en la cuenta que otorga el acceso?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Una política basada en identidad (identity-based policy) adjunta a un rol de IAM",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Una política basada en recursos (resource-based policy), como una bucket policy de Amazon S3",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Una Service Control Policy (SCP) de AWS Organizations",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Un límite de permisos (permissions boundary) de IAM",
+              "desc": ""
+            }
+          ],
+          "correct": "B",
+          "explanation": "Las políticas basadas en recursos (resource-based policies), como las bucket policies de Amazon S3, se adjuntan directamente al recurso y pueden especificar como principal a una cuenta, usuario o rol de otra cuenta de AWS, otorgando acceso entre cuentas sin necesidad de crear un usuario o rol de IAM para la parte externa. Las políticas basadas en identidad se adjuntan a un usuario, grupo o rol de IAM y otorgan permisos a esa identidad, pero no permiten por sí solas el acceso de una identidad externa sin un mecanismo adicional. Las SCPs solo establecen límites máximos de permisos dentro de una organización, no otorgan acceso a cuentas externas. Un permissions boundary limita los permisos máximos de una identidad de IAM, pero tampoco otorga acceso a terceros."
+        },
+        {
+          "id": "cp066",
+          "text": "Una empresa de logística tiene una carga de trabajo de cómputo estable proyectada para los próximos 3 años, pero su equipo de arquitectura anticipa que podría necesitar cambiar el tipo de instancia EC2 (por ejemplo, de familia M5 a C5) o incluso migrar parte de la carga hacia AWS Fargate o AWS Lambda a medida que optimizan la aplicación, sin perder el descuento por compromiso ya contratado. ¿Qué opción de compra de AWS ofrece un descuento por compromiso de uso a largo plazo, similar al de una Reserved Instance, sin atarlo a una familia, tamaño de instancia o región de EC2 específica?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Reserved Instances Estándar (Standard RIs)",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Reserved Instances Convertibles (Convertible RIs)",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Compute Savings Plans",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Instancias Spot con Capacity Reservations",
+              "desc": ""
+            }
+          ],
+          "correct": "C",
+          "explanation": "Los Compute Savings Plans ofrecen el mayor nivel de flexibilidad entre las opciones de descuento por compromiso: el descuento se aplica automáticamente a cualquier uso de cómputo EC2, sin importar familia, tamaño de instancia, sistema operativo o región, y también cubre AWS Fargate y AWS Lambda, a cambio de un compromiso de gasto por hora durante 1 o 3 años. Las Reserved Instances Estándar están atadas a una familia y región de instancia específicas, con descuentos algo mayores pero sin esta flexibilidad. Las Reserved Instances Convertibles permiten cambiar el tipo de instancia contratado, pero no cubren Fargate ni Lambda como sí lo hacen los Savings Plans. Las instancias Spot no ofrecen un descuento garantizado por compromiso a largo plazo y están sujetas a interrupción."
+        },
+        {
+          "id": "cp067",
+          "text": "Una empresa de streaming de video opera su aplicación en instancias EC2 desplegadas en tres regiones de AWS (us-east-1, eu-west-1 y ap-southeast-1) para atender a usuarios de todo el mundo. El equipo de arquitectura quiere que Amazon Route 53 dirija automáticamente a cada usuario hacia la región de AWS que le ofrezca el menor tiempo de respuesta posible, basándose en mediciones reales de latencia de red entre las regiones de AWS y los distintos puntos del mundo desde donde se originan las solicitudes DNS. ¿Qué política de enrutamiento de Amazon Route 53 deberían configurar?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Enrutamiento ponderado (Weighted routing)",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Enrutamiento de conmutación por error (Failover routing)",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Enrutamiento basado en latencia (Latency-based routing)",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Enrutamiento geográfico (Geolocation routing)",
+              "desc": ""
+            }
+          ],
+          "correct": "C",
+          "explanation": "El enrutamiento basado en latencia de Route 53 dirige a los usuarios hacia la región de AWS que históricamente ofrece la menor latencia de red medida, en lugar de basarse en su ubicación física, por lo que es la opción ideal cuando el objetivo es minimizar el tiempo de respuesta. El enrutamiento geográfico dirige el tráfico según la ubicación geográfica real del usuario, útil para restricciones de contenido o cumplimiento regulatorio, pero no necesariamente hacia el recurso de menor latencia. El enrutamiento ponderado distribuye el tráfico según porcentajes definidos manualmente, típico de pruebas A/B o despliegues graduales. El enrutamiento de conmutación por error dirige el tráfico hacia un recurso de respaldo solo cuando el recurso primario falla, orientado a disponibilidad, no a optimizar la latencia en condiciones normales."
         }
       ]
     },
@@ -1994,6 +2859,90 @@
           ],
           "correct": "B",
           "explanation": "Las Service Control Policies (SCPs) en AWS Organizations se aplican a nivel de organización o OU y actúan como límite máximo de permisos para todas las cuentas miembro, incluyendo usuarios root. Ninguna política IAM local puede sobrepasar una SCP."
+        },
+        {
+          "id": "saa012",
+          "text": "Una empresa de logística mantiene VPCs separadas para cada unidad de negocio. El equipo de operaciones y el de facturación necesitan intercambiar datos de forma privada sin exponer el tráfico a internet. ¿Cuál es la solución más óptima?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "VPC Peering",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "VPC Endpoint",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "AWS Direct Connect",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "VPN Site-to-Site",
+              "desc": ""
+            }
+          ],
+          "correct": "A",
+          "explanation": "VPC Peering establece una conexión de red privada entre dos VPCs, permitiendo que las instancias se comuniquen como si estuvieran en la misma red. VPN Site-to-Site conecta redes on-premises con AWS pero no interconecta VPCs. Direct Connect es un enlace dedicado desde redes externas a AWS, no entre VPCs. VPC Endpoint conecta una VPC con servicios de AWS, no con otra VPC."
+        },
+        {
+          "id": "saa013",
+          "text": "El equipo de infraestructura de una empresa manufacturera quiere automatizar la configuración y gestión de sus servidores on-premises usando Chef y Puppet. ¿Qué servicio de AWS les permite integrar estas herramientas?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "AWS CodeDeploy",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "AWS OpsWorks",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "AWS Batch",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "AWS CloudFormation",
+              "desc": ""
+            }
+          ],
+          "correct": "B",
+          "explanation": "AWS OpsWorks es un servicio de gestión de configuración que provee instancias gestionadas de Chef y Puppet, permitiendo automatizar configuración, despliegue y gestión de servidores tanto en EC2 como on-premises. CloudFormation aprovisiona infraestructura como código pero no usa Chef ni Puppet. CodeDeploy automatiza despliegues de código. Batch ejecuta trabajos de cómputo por lotes."
+        },
+        {
+          "id": "saa014",
+          "text": "Un grupo de investigación geológico quiere usar instancias EC2 para ejecutar una aplicación de cómputo científico que ya cuenta con una arquitectura tolerante a fallos. La aplicación necesita discos de hardware de alto rendimiento que ofrezcan un I/O rápido, y el equipo está evaluando si conviene migrar primero a instancias con procesadores Graviton para mejorar el rendimiento antes de decidir el almacenamiento. Como Cloud Practitioner, ¿cuál de las siguientes opciones de almacenamiento recomendarías como la solución MÁS rentable?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Amazon Simple Storage Service (Amazon S3)",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Instance Store",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Amazon Elastic Block Store (Amazon EBS)",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Amazon Elastic File System (Amazon EFS)",
+              "desc": ""
+            }
+          ],
+          "correct": "B",
+          "explanation": "Un Instance Store ofrece almacenamiento temporal a nivel de bloque para tu instancia, ubicado en discos físicamente conectados al equipo host. Es una buena opción cuando necesitas almacenamiento con latencia muy baja, sin requerir que los datos persistan al terminar la instancia, o cuando puedes aprovechar una arquitectura tolerante a fallos, como en este caso, donde la propia aplicación de cómputo puede manejar automáticamente cualquier fallo de los volúmenes de Instance Store. Como los volúmenes de Instance Store están incluidos dentro del costo de uso de la instancia, esta es la opción más rentable. La decisión sobre el tipo de procesador (como Graviton) es independiente de la elección de almacenamiento y no resuelve el requisito de I/O de alto rendimiento a bajo costo. Amazon S3 y Amazon EFS no ofrecen almacenamiento de bloque de baja latencia como el que requiere esta aplicación, y Amazon EBS, aunque ofrece buen rendimiento, tiene un costo adicional al de la instancia, por lo que no es la opción más económica en este escenario."
         }
       ]
     }
