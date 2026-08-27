@@ -8,4 +8,5 @@ export const LEVEL_ICONS = {
   'ai-practitioner':               '🤖',
   'developer-associate':           '💻',
   'solutions-architect-associate': '🏗️',
+  'data-engineer-associate':       '🗄️',
 };
