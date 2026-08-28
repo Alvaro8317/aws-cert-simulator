@@ -3555,6 +3555,67 @@
             "D"
           ],
           "explanation": "Un valor alto de IteratorAgeMilliseconds indica que el último registro leído del stream cada vez tiene más antigüedad, es decir, que los datos no se están procesando con la suficiente rapidez, algo típico cuando varios consumidores comparten el throughput del stream o cuando hay pocos shards o poco paralelismo por shard. Registrar la función Lambda como consumidor con enhanced fan-out le otorga capacidad de throughput dedicada sobre el stream, en vez de compartirla con otros consumidores. Aumentar el parallelization factor permite que varias invocaciones de Lambda procesen en paralelo los registros de un mismo shard. Y aumentar el número de shards (hacer resharding) también incrementa la cantidad de invocaciones concurrentes de Lambda, ya que por defecto se crea una instancia concurrente por shard. En cambio, aumentar la concurrencia aprovisionada o la concurrencia reservada de la función no ayuda aquí, porque el escalado de Lambda con Kinesis depende del número de shards y del parallelization factor, no de esas configuraciones de concurrencia, y el escenario no menciona haber alcanzado ningún límite de concurrencia. Y cambiar el stream a modo de capacidad aprovisionada tampoco es adecuado, porque con un volumen tan variable e impredecible el modo on-demand se adapta mejor y ofrece mejor rendimiento."
+        },
+        {
+          "id": "de021",
+          "text": "Un ingeniero de datos de una agencia de marketing digital creó un pipeline que ingiere datos de campañas publicitarias, los procesa con Amazon EMR y los almacena en Amazon Redshift. El ingeniero debe monitorear ese pipeline de datos.\n\n¿Qué solución cumple este requisito de la manera MÁS eficiente operativamente?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Monitorear la salud del clúster de Amazon EMR usando los logs de sistema de las instancias EC2",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Usar Amazon Macie para detectar automáticamente actividades anómalas en Amazon Redshift",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Configurar alarmas de Amazon CloudWatch para monitorear y recibir notificaciones de problemas de rendimiento o fallos en el pipeline",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Implementar Amazon CloudWatch Logs Insights para analizar los logs y monitorear el pipeline de datos",
+              "desc": ""
+            }
+          ],
+          "correct": "C",
+          "explanation": "Amazon CloudWatch es el servicio de monitoreo pensado justamente para vigilar el rendimiento y la salud operativa de los recursos de AWS; configurar alarmas sobre los distintos componentes del pipeline permite detectar a tiempo problemas de rendimiento o fallos y recibir notificaciones automáticas, sin necesidad de revisar manualmente cada componente. Los logs de sistema de las instancias EC2 solo dan visibilidad de la infraestructura subyacente del clúster de EMR, no del pipeline completo con todos sus servicios. Amazon Macie está pensado para descubrir y clasificar datos sensibles en S3, no para detectar actividad anómala en Redshift. Y CloudWatch Logs Insights es una herramienta muy útil para analizar logs en profundidad y diagnosticar un problema puntual ya detectado, pero no reemplaza un mecanismo directo de monitoreo y alertado como las alarmas de CloudWatch."
+        },
+        {
+          "id": "de022",
+          "text": "Un ingeniero de datos de una cadena de restaurantes debe configurar la replicación de datos desde un servidor MySQL on-premises hacia una base de datos MySQL en Amazon RDS. La solución debe migrar los datos existentes y además asegurar que los cambios futuros también se repliquen. El ingeniero planea usar AWS Database Migration Service (AWS DMS) para montar esta solución.\n\n¿Qué combinación de pasos cumplirá estos requisitos con el MENOR esfuerzo? (Selecciona DOS)",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Crear una tarea de replicación continua de tipo full load plus change data capture (CDC)",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Crear una tarea de replicación continua de tipo change data capture (CDC) only",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Crear una conexión de destino de AWS DMS hacia Amazon S3 y programar una función de AWS Lambda que mueva los datos hacia la base de datos MySQL de destino",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Habilitar el registro transaccional (transactional logging) adecuado en la base de datos de origen",
+              "desc": ""
+            },
+            {
+              "letter": "E",
+              "title": "Crear una tarea de full load única para migrar los datos existentes",
+              "desc": ""
+            }
+          ],
+          "correct": ["A", "D"],
+          "explanation": "AWS DMS puede capturar los cambios continuos del origen mientras migra los datos existentes: el tipo de tarea full load plus CDC migra primero los datos ya existentes y después actualiza el destino según los cambios que ocurran en el origen, cumpliendo ambos requisitos en un solo paso. Para leer esos cambios continuos, DMS usa acciones específicas del motor de base de datos que leen los transaction logs del origen, por lo que también hace falta habilitar el registro transaccional adecuado en la base de datos on-premises. Usar únicamente una tarea de tipo CDC only solo replicaría los cambios futuros, dejando fuera la migración de los datos existentes, que habría que hacer aparte. Crear una tarea de full load única solo migra los datos existentes, y aparte habría que configurar otra tarea para capturar los cambios futuros, lo que suma esfuerzo innecesario. Y usar S3 como destino intermedio de DMS junto con una función Lambda programada para mover los datos hacia MySQL agrega complejidad de desarrollo y mantenimiento que no es necesaria."
         }
       ]
     }
