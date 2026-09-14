@@ -3,7 +3,8 @@
   "type": "module",
   "scripts": {
     "test": "vitest",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "validate:questions": "node scripts/validate-questions.js"
   },
   "devDependencies": {
     "vitest": "^2.0.0"
