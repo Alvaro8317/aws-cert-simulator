@@ -2150,7 +2150,7 @@
           "options": [
             {
               "letter": "A",
-              "title": "Amazon Polly",
+              "title": "Amazon Bedrock",
               "desc": ""
             },
             {
@@ -2255,6 +2255,62 @@
           ],
           "correct": "B",
           "explanation": "La explicabilidad (o interpretabilidad) es la capacidad de entender y comunicar cómo un modelo llega a sus predicciones. Es crucial para auditorías, regulaciones (GDPR) y confianza del usuario."
+        },
+        {
+          "id": "ai011",
+          "text": "Una agencia de noticias digital quiere mejorar el rendimiento de un modelo fundacional (FM) en Amazon Bedrock para tareas de resumen que ejecuta de forma frecuente. El equipo dispone de un conjunto de datos etiquetado con textos de ejemplo específicos de esas tareas de resumen. ¿Qué solución cumple con estos requisitos?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Fine-tuning (ajuste fino)",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Continued pre-training (preentrenamiento continuo)",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Ingeniería de prompts",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Retrieval Augmented Generation (RAG)",
+              "desc": ""
+            }
+          ],
+          "correct": "A",
+          "explanation": "El fine-tuning en Amazon Bedrock adapta el modelo fundacional a una tarea concreta usando un conjunto de datos etiquetado y relativamente pequeño, aprovechando el conocimiento adquirido durante el preentrenamiento; es la opción más efectiva para producir un modelo especializado en resumen que se mejorará de forma recurrente. El continued pre-training no encaja porque en Bedrock trabaja con datos sin etiquetar para ampliar el conocimiento general del dominio, no con un dataset etiquetado orientado a una tarea. La ingeniería de prompts solo refina las salidas mediante distintas instrucciones, pero no entrena al modelo ni le permite aprender del conjunto de datos disponible. RAG añade contexto recuperado de una fuente externa para fundamentar las respuestas, pero no mejora la capacidad intrínseca del modelo para resumir texto."
+        },
+        {
+          "id": "ai012",
+          "text": "Una cadena de gimnasios está desarrollando un modelo de ML para predecir la cancelación de membresías de sus socios. El modelo obtiene muy buenos resultados sobre el conjunto de entrenamiento, pero falla al predecir la cancelación con datos nuevos. ¿Qué solución resuelve este problema?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Aumentar el parámetro de regularización para reducir la complejidad del modelo",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Entrenar el modelo durante más épocas (epochs)",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Disminuir el parámetro de regularización para aumentar la complejidad del modelo",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Añadir más features a los datos de entrada",
+              "desc": ""
+            }
+          ],
+          "correct": "A",
+          "explanation": "Que el modelo funcione bien en entrenamiento pero mal con datos nuevos es un síntoma claro de overfitting: el modelo ha memorizado el conjunto de entrenamiento en lugar de aprender patrones generalizables. Aumentar el parámetro de regularización penaliza la complejidad del modelo, lo restringe y mejora su capacidad de generalización, por lo que es la solución correcta. Entrenar más épocas agravaría el sobreajuste al seguir adaptando el modelo a los datos de entrenamiento. Disminuir la regularización hace justo lo contrario de lo necesario, ya que incrementa la complejidad y empeora el overfitting. Añadir más features también tiende a aumentar la complejidad y facilita que el modelo memorice el entrenamiento en vez de generalizar."
         }
       ]
     },
@@ -3616,6 +3672,604 @@
           ],
           "correct": ["A", "D"],
           "explanation": "AWS DMS puede capturar los cambios continuos del origen mientras migra los datos existentes: el tipo de tarea full load plus CDC migra primero los datos ya existentes y después actualiza el destino según los cambios que ocurran en el origen, cumpliendo ambos requisitos en un solo paso. Para leer esos cambios continuos, DMS usa acciones específicas del motor de base de datos que leen los transaction logs del origen, por lo que también hace falta habilitar el registro transaccional adecuado en la base de datos on-premises. Usar únicamente una tarea de tipo CDC only solo replicaría los cambios futuros, dejando fuera la migración de los datos existentes, que habría que hacer aparte. Crear una tarea de full load única solo migra los datos existentes, y aparte habría que configurar otra tarea para capturar los cambios futuros, lo que suma esfuerzo innecesario. Y usar S3 como destino intermedio de DMS junto con una función Lambda programada para mover los datos hacia MySQL agrega complejidad de desarrollo y mantenimiento que no es necesaria."
+        },
+        {
+          "id": "de023",
+          "text": "Una aseguradora tiene un clúster de Amazon Redshift sin cifrar. Nuevas normativas de seguridad exigen que el clúster se cifre con una clave de AWS Key Management Service (AWS KMS). Además, la clave de cifrado debe rotarse cada 6 meses.\n\n¿Qué solución cumplirá estos requisitos con el MENOR esfuerzo?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Crear un clúster de Redshift nuevo cifrado con una clave de AWS KMS administrada por el cliente. Copiar los datos existentes al clúster nuevo. Rotar la clave según sea necesario desde la consola de Redshift",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Modificar el clúster de Redshift existente. Cifrar el clúster con una clave de AWS KMS administrada por el cliente. Rotar la clave según sea necesario desde la consola de Redshift",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Crear un clúster de Redshift nuevo cifrado con la clave de AWS KMS predeterminada de Redshift. Copiar los datos existentes al clúster nuevo. Rotar la clave según sea necesario desde la consola de Redshift",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Modificar el clúster de Redshift existente. Cifrar el clúster con la clave de AWS KMS predeterminada de Redshift. Rotar la clave según sea necesario desde la consola de Redshift",
+              "desc": ""
+            }
+          ],
+          "correct": "D",
+          "explanation": "Redshift permite aplicar el cifrado a un clúster ya existente modificándolo directamente, sin necesidad de crear un clúster nuevo ni copiar los datos, por lo que las opciones que provisionan un clúster adicional y migran la información suman un esfuerzo innecesario. Además, la clave de AWS KMS predeterminada de Redshift se puede rotar bajo demanda desde la consola, lo que cubre el requisito de rotación cada 6 meses sin tener que gestionar una clave administrada por el cliente. Por eso, modificar el clúster existente para cifrarlo con la clave predeterminada de KMS y rotar esa clave cuando corresponda es la alternativa que menos trabajo implica; usar una clave administrada por el cliente cumpliría igualmente el objetivo técnico, pero añade administración adicional que el escenario no exige."
+        },
+        {
+          "id": "de024",
+          "text": "Un bufete de abogados ejecuta una aplicación on-premises que recibe cargas de archivos en un servidor web y luego los guarda en un servidor de archivos. Cada noche, una tarea programada en el servidor de archivos invoca una función de AWS Lambda una vez por cada archivo subido ese día. El bufete quiere empezar a procesar los archivos poco después de recibirlos y desmantelar la tarea nocturna.\n\n¿Qué solución cumplirá estos requisitos con el MENOR esfuerzo?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Migrar el servidor de archivos a Amazon Elastic File System (Amazon EFS). Redirigir el destino de almacenamiento del servidor web del servidor de archivos on-premises hacia Amazon EFS. Modificar la función Lambda para que consulte continuamente Amazon EFS en busca de cambios en el sistema de archivos",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Crear una regla en Amazon EventBridge y especificar la función Lambda como destino de esa regla. Modificar la tarea del servidor de archivos para que se ejecute cada minuto y use la API PutEvents para publicar un evento en el bus de eventos de EventBridge cuando se haya subido un archivo nuevo",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Crear una API en Amazon API Gateway con una integración de proxy hacia un nuevo bucket de Amazon S3. Redirigir el destino de almacenamiento del servidor web del servidor de archivos on-premises hacia el bucket de S3. Crear una notificación de eventos de S3 que tenga como destino la función Lambda",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Crear una cola estándar en Amazon Simple Queue Service (Amazon SQS) y especificar la función Lambda como consumidora de la cola. Modificar la tarea del servidor de archivos para que se ejecute cada minuto y use la API ReceiveMessage de Amazon SQS para que SQS envíe el mensaje a Lambda cuando se haya subido un archivo nuevo",
+              "desc": ""
+            }
+          ],
+          "correct": "B",
+          "explanation": "Tanto Lambda como EventBridge reciben eventos en forma de un JSON, así que el cambio más pequeño es reescribir la tarea del servidor de archivos para que, en lugar de llamar a InvokeFunction con ese JSON, llame a PutEvents con el mismo JSON, y apuntar una regla de EventBridge a la función Lambda como destino; ejecutando la tarea cada minuto los archivos se procesan casi de inmediato y la tarea nocturna desaparece. Migrar a Amazon EFS es un rediseño grande: EFS hay que montarlo en un servidor, el servidor web no puede escribir directamente en él y Lambda no puede sondear EFS en busca de cambios. Usar API Gateway como proxy de S3 también elimina el servidor de archivos por completo y obliga a rehacer la lógica de evento/invocación como cargas de objetos (con multipart según el tamaño) y a revisar la conectividad y el firewall hacia AWS. Y la opción de SQS es incorrecta de base: SQS no empuja mensajes hacia los consumidores, y la tarea tendría que usar SendMessage, no ReceiveMessage."
+        },
+        {
+          "id": "de025",
+          "text": "Un fabricante de motocicletas recibe órdenes de entrega como mensajes JSON en una cola de Amazon Simple Queue Service (Amazon SQS). La empresa usa un flujo de trabajo de AWS Step Functions para gestionar los pedidos. Un ingeniero de datos debe crear una solución que reenvíe las órdenes desde la cola hacia el flujo de trabajo, descartando las órdenes de menos de 20 motocicletas.\n\n¿Qué solución cumplirá estos requisitos con el MENOR esfuerzo de desarrollo?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Desplegar una aplicación en Amazon EC2 que lea las órdenes de la cola de SQS. Habilitar Amazon EC2 Auto Scaling en función de la longitud de la cola de SQS. En la aplicación, aplicar el filtrado e invocar el flujo de trabajo de gestión",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Registrar una nueva función de AWS Lambda que se invoque a partir de las nuevas órdenes en la cola de SQS. En la nueva función, aplicar el filtrado e invocar el flujo de trabajo de gestión",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Usar Amazon EventBridge y crear un nuevo pipe con EventBridge Pipes. Seleccionar la cola de SQS como origen. Añadir un patrón de eventos para filtrar las órdenes. Seleccionar el flujo de trabajo de gestión como destino",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Editar el flujo de trabajo de Step Functions para insertar una llamada a una nueva función de AWS Lambda que lea de la cola de SQS y aplique el filtrado. Programar el flujo de trabajo completo para que se ejecute de forma periódica mediante Amazon EventBridge",
+              "desc": ""
+            }
+          ],
+          "correct": "C",
+          "explanation": "EventBridge Pipes crea integraciones punto a punto entre un origen y un destino sin escribir código: admite una cola de SQS como origen y un flujo de trabajo de Step Functions como destino, y permite añadir un patrón de filtrado que descarte las órdenes con menos de 20 motocicletas antes de reenviarlas. Por eso es la opción con menos esfuerzo de desarrollo. Las alternativas basadas en una aplicación en EC2 con Auto Scaling o en una función Lambda invocada desde SQS también funcionan, pero obligan a programar la lógica de lectura de la cola, el filtrado y la invocación de Step Functions con el SDK. Insertar en el propio flujo de trabajo una Lambda que lea de la cola y filtrar de forma programada añade igualmente código personalizado y complica el diseño. Todas ellas requieren desarrollo que EventBridge Pipes evita."
+        },
+        {
+          "id": "de026",
+          "text": "Un banco regional almacena en Amazon Redshift el historial de transacciones de pagos de sus clientes. Los datos deben estar disponibles para los analistas internos, pero cierta información sensible debe enmascararse cuando la consultan socios comerciales externos. Esa información sensible puede ser una columna completa o solo celdas individuales, según los valores de otras columnas. Los analistas internos comparten sus propias consultas SQL con los socios externos para que estos las ejecuten.\n\n¿Qué solución cumplirá estos requisitos?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Definir un job en AWS Glue Studio que lea desde Amazon Redshift, enmascare los datos sensibles y escriba el resultado en tablas nuevas en Amazon Redshift. Programar el job para que se ejecute cada hora. Denegar a los socios externos el acceso de lectura a las tablas originales",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Crear políticas de enmascaramiento dinámico de datos (DDM) de Amazon Redshift para columnas y datos específicos. Asociar las políticas de enmascaramiento a los roles de los socios comerciales externos",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Desarrollar funciones definidas por el usuario (UDF) en Amazon Redshift para enmascarar los datos sensibles. Pedir a los socios comerciales externos que modifiquen sus sentencias SELECT para usar esas funciones",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Usar el editor de consultas de Amazon Redshift para seleccionar, filtrar, enmascarar y copiar datos específicos hacia tablas nuevas. Denegar a los socios externos el acceso de lectura a las tablas originales",
+              "desc": ""
+            }
+          ],
+          "correct": "B",
+          "explanation": "El enmascaramiento dinámico de datos (DDM) de Amazon Redshift aplica el ofuscamiento en el momento de ejecutar la consulta, sin tocar los datos originales, y permite definir distintos niveles de enmascaramiento según el rol que ejecute la consulta, incluyendo reglas complejas basadas en los valores de otras columnas; además, como las políticas se aplican sobre las tablas originales, los analistas internos pueden seguir compartiendo sus consultas SQL tal cual con los socios externos. Duplicar los datos con un job de Glue Studio o con el editor de consultas de Redshift obliga a crear tablas nuevas con otro nombre, así que las consultas que comparten los analistas internos dejarían de funcionar para los socios externos, y ambas soluciones además exigen reprocesar y sincronizar los datos periódicamente. Las UDF sí pueden enmascarar valores, pero no hay forma de obligar a los socios externos a reescribir sus SELECT para usarlas, por lo que no garantizan que los datos sensibles queden protegidos."
+        },
+        {
+          "id": "de027",
+          "text": "Una red de hospitales almacena en Amazon S3 los registros de admisión de pacientes en formato CSV. Un job de AWS Glue puebla un AWS Glue Data Catalog para generar las tablas y definir el esquema. Luego, un segundo job de AWS Glue procesa los datos de esas tablas y los transfiere a las tablas correspondientes en Amazon Redshift. Un ingeniero de datos revisa las tablas de Redshift y detecta registros duplicados.\n\n¿Cómo puede el ingeniero de datos diseñar una solución para eliminar los registros duplicados?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Usar la transformación integrada ResolveChoice de AWS Glue para seleccionar los datos más recientes y eliminar los registros duplicados",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Crear una tabla de staging dentro del primer job de AWS Glue. Cargar los datos en la tabla de staging. Combinar (merge) los datos de la tabla de staging con los datos de Amazon Redshift",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "En el segundo job de AWS Glue, insertar los datos previos en una base de datos MySQL. Usar el comando COPY para cargar los datos hacia Amazon Redshift",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Usar la API dropDuplicates() de DataFrame antes de persistir los datos nuevos para eliminar los registros duplicados",
+              "desc": ""
+            }
+          ],
+          "correct": "B",
+          "explanation": "Crear una tabla de staging en el primer job, cargar allí los datos nuevos y luego hacer un merge (combinando actualizaciones e inserciones) contra las tablas de Redshift es el patrón recomendado para incorporar datos sin generar duplicados, ya que permite comparar los registros entrantes con los ya existentes antes de escribirlos de forma definitiva. ResolveChoice no sirve para este propósito: es una transformación pensada para resolver conflictos de tipo de dato dentro de una columna de un DynamicFrame, no para deduplicar registros. Insertar los datos previos en una base MySQL y luego usar COPY tampoco funciona, porque el comando COPY de Redshift no puede leer directamente desde una base de datos MySQL; solo carga datos desde archivos en Amazon S3, desde una tabla de DynamoDB o desde la salida de texto de hosts remotos. Y aplicar dropDuplicates() sobre el DataFrame antes de persistir solo elimina duplicados dentro de los datos nuevos que se están cargando (o dentro de la tabla de staging), pero no afecta a los duplicados que ya existen en las tablas de Redshift, que seguirán intactos tras el merge."
+        },
+        {
+          "id": "de028",
+          "text": "Una aseguradora reunió un gran conjunto de datos de sus clientes en Amazon S3. La empresa quiere ejecutar análisis usando servicios de AWS. Antes de correr los análisis, necesita asegurarse de que toda la información del conjunto de datos esté completa y no contenga campos vacíos.\n\n¿Cómo puede un ingeniero de datos construir una solución que garantice la completitud de los datos con el MENOR esfuerzo operativo?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Configurar un crawler de AWS Glue para catalogar los datos en el AWS Glue Data Catalog. Consultar las tablas creadas en el catálogo con Amazon Athena para hacer agregaciones que identifiquen y filtren los registros con campos vacíos. Crear tablas nuevas con los datos depurados. Crear y ejecutar un crawler de AWS Glue para inferir el esquema de los datos ingeridos en Amazon S3",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Usar una función de AWS Lambda para analizar e identificar los registros que contienen campos vacíos. Invocar la función Lambda para procesar y eliminar del conjunto de datos en Amazon S3 los registros que contienen campos vacíos",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Crear y ejecutar un crawler de AWS Glue para inferir el esquema de los datos ingeridos en Amazon S3. Implementar un job de AWS Glue que transforme y depure los datos filtrando los registros con campos vacíos. Guardar la salida del job en Amazon S3",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Enviar un job de Apache Spark a Amazon EMR Serverless. Transformar los datos para filtrar los registros con campos vacíos. Guardar los datos depurados en Amazon S3",
+              "desc": ""
+            }
+          ],
+          "correct": "C",
+          "explanation": "Usar un crawler de AWS Glue para inferir el esquema y luego un job de AWS Glue que aproveche sus transformaciones integradas (como el filtrado de registros con campos vacíos) para depurar los datos y volver a guardarlos en Amazon S3 es la solución con menos esfuerzo operativo, porque AWS Glue ya resuelve la detección de esquema y el filtrado sin que el ingeniero tenga que escribir ni mantener lógica de procesamiento desde cero. Usar Athena para consultar el catálogo obliga a escribir SQL a medida para detectar los campos vacíos y luego ejecutar consultas adicionales para generar el conjunto de datos limpio, lo que añade pasos manuales. Escribir una función Lambda para detectar y eliminar los registros vacíos exige desarrollar, desplegar y mantener código propio, además de manejar errores, registro y monitoreo de las invocaciones. Y enviar un job de Spark a EMR Serverless también implica escribir y mantener scripts personalizados de ingestión y transformación, incluso siendo un servicio administrado. En todos esos casos el esfuerzo de desarrollo y mantenimiento es mayor que el de aprovechar las transformaciones nativas de AWS Glue."
+        },
+        {
+          "id": "de029",
+          "text": "Una empresa de comercio electrónico opera un pipeline de datos con un proceso ETL de AWS Glue. En el pipeline, primero un bucket de Amazon S3 almacena los datos crudos de ventas. Luego, AWS Glue transforma los datos y los carga en un data warehouse de Amazon Redshift. Los analistas consultan Amazon Redshift mediante SQL para elaborar sus reportes.\n\nLa empresa quiere implementar una lógica de negocio específica que calcule el porcentaje de ganancia sobre ciertas columnas de la tabla de ventas por artículo. La solución debe permitir a los analistas elaborar mejores reportes.\n\n¿Qué combinación de pasos cumplirá estos requisitos con el MENOR esfuerzo operativo? (Selecciona DOS)",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Crear un procedimiento almacenado en Amazon Redshift para encapsular la lógica de negocio",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Crear una consulta en Scala de AWS Glue para encapsular la lógica de negocio",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Crear un flujo de trabajo de AWS Step Functions para encapsular la lógica de negocio",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Indicar a los analistas que usen el procedimiento almacenado SQL de Amazon Redshift",
+              "desc": ""
+            },
+            {
+              "letter": "E",
+              "title": "Indicar a los analistas que usen AWS Glue para hacer las consultas",
+              "desc": ""
+            }
+          ],
+          "correct": [
+            "A",
+            "D"
+          ],
+          "explanation": "Los procedimientos almacenados de Amazon Redshift permiten encapsular lógica de negocio (como el cálculo del porcentaje de ganancia) directamente dentro de la base de datos, y al quedar guardados allí están disponibles para cualquier usuario con privilegios suficientes; por eso basta con crear el procedimiento almacenado e indicar a los analistas que lo usen, sin añadir componentes ni servicios adicionales al pipeline existente. Escribir la lógica como una consulta en Scala dentro de un job de AWS Glue funcionaría, pero exige programar y mantener código ETL adicional fuera del flujo habitual de los analistas. Construir un flujo de Step Functions también podría orquestar la lógica, pero obliga a configurar y mantener un servicio nuevo que no formaba parte de la solución original. Y pedir a los analistas que usen AWS Glue para consultar los datos no es viable, porque Glue está pensado para tareas de integración y transformación ETL, no para que los usuarios ejecuten consultas de análisis directamente."
+        },
+        {
+          "id": "de030",
+          "text": "Una aerolínea está construyendo un nuevo data warehouse en la nube usando Amazon Redshift. La empresa usará el data warehouse para analizar las tendencias semanales de ingresos por rutas de vuelo. Por motivos de cumplimiento normativo, la empresa quiere implementar una solución de auditoría y trazabilidad que monitoree y registre la actividad dentro de Amazon Redshift. La empresa necesita capturar las consultas SQL, las interacciones de los usuarios y los cambios realizados en las bases de datos y sus objetos.\n\n¿Qué solución cumplirá estos requisitos con el MENOR esfuerzo operativo?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Configurar Amazon CloudWatch Logs para capturar las consultas SQL de Amazon Redshift. Usar alarmas de Amazon CloudWatch y notificaciones de Amazon Simple Notification Service (Amazon SNS) para alertar sobre actividad inusual",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Crear una función de AWS Lambda que analice los registros de Amazon CloudWatch Logs generados por el clúster de Redshift. Almacenar los detalles relevantes de los registros en Amazon OpenSearch Service para su análisis",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Exportar los datos de las tablas del sistema de Amazon Redshift hacia Amazon S3. Usar Amazon Athena para consultar y analizar los datos extraídos en Amazon S3",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Habilitar el registro de auditoría (audit logging) de Amazon Redshift en el clúster. Crear y configurar un nuevo trail en AWS CloudTrail para capturar y monitorear las llamadas a la API de Amazon Redshift",
+              "desc": ""
+            }
+          ],
+          "correct": "D",
+          "explanation": "Habilitar el registro de auditoría nativo de Amazon Redshift captura las consultas SQL ejecutadas contra el clúster, con detalles como el usuario, el texto de la consulta y la marca de tiempo, mientras que un trail de CloudTrail registra las llamadas a la API de Redshift, incluida la creación, modificación o eliminación de objetos de base de datos y la identidad de quien las realizó; juntas, ambas capacidades nativas cubren todo lo pedido sin necesidad de construir ni mantener infraestructura adicional. Usar CloudWatch Logs con alarmas y SNS solo sirve para detectar anomalías de rendimiento (uso de CPU, tiempo de ejecución, estado del clúster), pero no ofrece un registro detallado de las consultas SQL ni de los cambios sobre los objetos de la base de datos. Procesar esos mismos logs de CloudWatch con una función Lambda para almacenarlos en OpenSearch Service sí permitiría analizarlos, pero obliga a desarrollar y mantener la función, el pipeline de parsing y el dominio de OpenSearch. Y exportar periódicamente las tablas del sistema de Redshift a S3 para consultarlas con Athena exige programar la exportación recurrente y mantener el proceso de extracción y las tablas de Athena, lo que añade esfuerzo operativo frente a activar las funciones de auditoría ya integradas en Redshift y CloudTrail."
+        },
+        {
+          "id": "de031",
+          "text": "Una empresa de logística tiene un data lake en Amazon S3. Los empleados pueden acceder a los datos de todos los departamentos. La empresa extrae información del data lake mediante Amazon Athena. Un ingeniero de datos quiere implementar una capa de seguridad que restrinja el acceso a cierta información sensible, como los números de cuenta de los clientes corporativos. Las reglas de seguridad deben implementarse directamente en el catálogo de metadatos de las tablas.\n\n¿Qué solución cumplirá estos requisitos?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Usar AWS Lake Formation para gestionar los controles de acceso del data lake. Configurar las políticas de seguridad del data lake",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Usar AWS Lambda para escribir código personalizado que cifre en reposo los datos sensibles del data lake y restrinja el acceso según los roles y permisos de los usuarios",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Usar AWS Glue para crear una tabla separada para los datos sensibles. Aplicar control de acceso detallado mediante políticas de IAM",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Usar Amazon Redshift Spectrum para crear un esquema separado para los datos sensibles. Aplicar controles de acceso mediante permisos de usuarios y grupos de Redshift",
+              "desc": ""
+            }
+          ],
+          "correct": "A",
+          "explanation": "AWS Lake Formation está diseñado justamente para centralizar la gestión de permisos sobre un data lake y aplicar la seguridad (incluido el control a nivel de columna para ocultar campos sensibles) directamente sobre el catálogo de metadatos de las tablas, que es exactamente lo que pide el requisito. Cifrar los datos con una función Lambda personalizada puede proteger la información en reposo y restringir el acceso por rol, pero esa lógica vive fuera del catálogo de metadatos, no dentro de él. Crear una tabla separada en AWS Glue y proteger su acceso con políticas de IAM tampoco aplica seguridad dentro del catálogo: Glue cataloga y orquesta ETL, pero no impone reglas de seguridad sobre los metadatos, e IAM por sí solo no llega a ese nivel de detalle. Y usar Redshift Spectrum con un esquema separado y permisos de usuarios y grupos de Redshift protege el acceso desde el motor de consultas de Redshift, pero de nuevo deja las reglas de seguridad fuera del catálogo de metadatos de las tablas."
+        },
+        {
+          "id": "de032",
+          "text": "Una empresa de telecomunicaciones usa Amazon Redshift en una cuenta de AWS centralizada que funciona como data warehouse corporativo. Un nuevo proyecto requiere que un ingeniero de datos desarrolle un pipeline de analítica sobre parte de los datos almacenados en ese data warehouse. El proyecto se construirá en una cuenta de AWS separada, destinada al equipo de analistas de datos. Varias columnas de las tablas del clúster contienen información de identificación personal (PII) de los abonados. Durante la fase de desarrollo del proyecto en la cuenta de analistas, no se debe otorgar acceso a esa PII.\n\n¿Qué solución cumplirá estos requisitos con el MENOR esfuerzo operativo?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Crear un nuevo clúster de Redshift en la cuenta de analistas de datos. Usar AWS Lake Formation para crear un datashare administrado entre cuentas con las columnas sin PII, desde el clúster original de Redshift hacia el nuevo clúster",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Usar el comando UNLOAD para exportar las columnas sin PII hacia Amazon S3 en formato Apache Parquet. Otorgar acceso entre cuentas a ese bucket de S3 para la cuenta de analistas de datos. Cargar los datos en un nuevo clúster de Redshift en la cuenta de analistas de datos",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Crear un nuevo clúster de Redshift en la cuenta de analistas de datos. Crear un job de AWS Glue entre cuentas que cargue únicamente las columnas sin PII desde el clúster original de Redshift hacia el clúster recién creado",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Usar el comando UNLOAD para exportar las columnas sin PII hacia Amazon S3 en formato Apache Parquet. Otorgar acceso entre cuentas a ese bucket de S3 para la cuenta de analistas de datos. Crear un nuevo clúster de Redshift en la cuenta de analistas de datos y usar Amazon Redshift Spectrum para acceder a los datos",
+              "desc": ""
+            }
+          ],
+          "correct": "A",
+          "explanation": "Redshift data sharing permite compartir datos en vivo entre clústeres, incluso entre cuentas de AWS distintas, sin replicarlos; usando AWS Lake Formation para administrar ese datashare entre cuentas y exponer solo las columnas sin PII, el nuevo clúster de la cuenta de analistas accede a datos siempre actualizados sin que exista una copia física ni haya que exponer la información sensible, lo que minimiza el esfuerzo operativo. Las opciones que usan UNLOAD para exportar a S3 en Parquet, ya sea para cargar los datos en un nuevo clúster o para consultarlos con Redshift Spectrum, generan una copia de los datos que solo refleja un momento puntual, por lo que hay que repetir el proceso de exportación cada vez que los datos cambien, y además hay que gestionar el acceso entre cuentas al bucket de S3. Construir un job de AWS Glue entre cuentas para ingerir periódicamente las columnas sin PII en el nuevo clúster tiene el mismo problema: los datos quedan replicados y desactualizados, y el job debe mantenerse y ejecutarse de forma recurrente. El datashare administrado por Lake Formation evita toda esa replicación y mantenimiento adicional."
+        },
+        {
+          "id": "de033",
+          "text": "Una constructora opera su sistema de gestión de cuadrillas y personal en Amazon Elastic Kubernetes Service (Amazon EKS). El sistema está formado por decenas de microservicios que se ejecutan como cientos de pods en múltiples clústeres y grupos de nodos administrados. La empresa quiere mejorar el monitoreo y la depuración, y necesita más visibilidad sobre los microservicios. Un ingeniero de datos debe diseñar una solución que permita ver en un solo lugar centralizado las métricas de bajo nivel y los datos de los logs. La empresa quiere visualizar los resultados de las consultas casi en tiempo real.\n\n¿Qué solución cumplirá estos requisitos?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Usar Amazon CloudWatch Container Insights para recopilar en CloudWatch las métricas y los logs de los microservicios. Crear un filtro de suscripción de Amazon Data Firehose para enviar los logs a un stream de entrega. Conectar ese stream a Amazon OpenSearch Service",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Usar Amazon CloudWatch Container Insights para recopilar en CloudWatch las métricas y los logs de los microservicios. Crear un filtro de suscripción de AWS Lambda. Reenviar los logs desde Lambda hacia Amazon DynamoDB",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Usar Amazon Kinesis Agent para transmitir los logs de los microservicios hacia un stream de datos de Amazon Kinesis Data Streams. Conectar una función de AWS Lambda para reenviar los logs hacia Amazon DynamoDB",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Usar Amazon Kinesis Agent para transmitir los logs de los microservicios hacia un stream de entrega de Amazon Data Firehose. Conectar ese stream a Amazon OpenSearch Service",
+              "desc": ""
+            }
+          ],
+          "correct": "A",
+          "explanation": "CloudWatch Container Insights recopila métricas de bajo nivel a nivel de clúster, pod y contenedor, además de los logs de rendimiento y de la aplicación, y al enviar esos logs mediante un filtro de suscripción de Data Firehose hacia OpenSearch Service se logra indexarlos para poder consultarlos y visualizarlos casi en tiempo real, cubriendo tanto las métricas como los logs en un único lugar centralizado. Reenviar esos mismos logs de CloudWatch hacia DynamoDB mediante una función Lambda sí centraliza los datos, pero DynamoDB no ofrece capacidades nativas de visualización de métricas ni de exploración de logs, así que no resuelve la parte de visibilidad. Usar Kinesis Agent para transmitir los logs, ya sea hacia Kinesis Data Streams con una Lambda que los reenvíe a DynamoDB o directamente hacia un stream de Data Firehose conectado a OpenSearch Service, deja fuera las métricas de bajo nivel de los contenedores y clústeres, porque Kinesis Agent solo transmite logs de una carpeta específica y no capta las métricas que expone CloudWatch Container Insights."
+        },
+        {
+          "id": "de034",
+          "text": "Un estudio de producción audiovisual quiere migrar una carga de trabajo intensiva en datos hacia una función de AWS Lambda. La carga de trabajo actual hace referencia a un volumen de datos montado de 250 GB con material de referencia para el renderizado. La empresa quiere minimizar al máximo los cambios de código durante la refactorización hacia Lambda.\n\n¿Qué solución cumplirá estos requisitos?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Configurar un sistema de archivos de Amazon Elastic File System (Amazon EFS) y un punto de acceso. Subir los datos de referencia al sistema de archivos. Configurar la función Lambda para leer y escribir desde el punto de acceso",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Desplegar un clúster, dominio y endpoint de Amazon OpenSearch Service. Subir los datos de referencia al dominio con Logstash. Configurar la función Lambda para leer y escribir desde el endpoint",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Crear un bucket de Amazon S3. Subir los datos de referencia al bucket. Configurar la función Lambda para leer y escribir mediante la API de S3",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Subir los datos de referencia al directorio /tmp de Lambda. Configurar la función Lambda para leer y escribir desde /tmp",
+              "desc": ""
+            }
+          ],
+          "correct": "A",
+          "explanation": "Amazon EFS es un sistema de archivos compartido que se monta mediante el protocolo NFS, tanto en instancias EC2 como en funciones Lambda, y admite volúmenes de más de 250 GB; como la carga de trabajo original ya accede a los datos mediante un volumen montado, montar un sistema de archivos EFS con un punto de acceso permite reutilizar prácticamente la misma lógica de acceso a archivos, minimizando los cambios de código. Desplegar un clúster de OpenSearch Service y cargar los datos con Logstash es una solución pensada para búsqueda y análisis de eventos, no para servir como volumen de datos de referencia, y añade una complejidad de integración innecesaria. Migrar los datos a un bucket de S3 obligaría a reescribir el acceso a archivos para usar la API de S3 con el SDK de AWS, lo que contradice el requisito de minimizar los cambios de código. Y el directorio /tmp de Lambda ofrece como máximo 10 GB de almacenamiento efímero por invocación, muy por debajo de los 250 GB necesarios, y además no permite compartir datos entre invocaciones ni cargarlos de antemano fuera de una ejecución de la función."
+        },
+        {
+          "id": "de035",
+          "text": "La autoridad de transporte público de una ciudad ingiere, transforma y almacena datos de telemetría de su red de autobuses y trenes en una tabla de Amazon DynamoDB. Un ingeniero de datos debe diseñar una solución para analizar esos datos. Los datos de los últimos 90 días deben poder consultarse desde la tabla y mostrarse en una página web propia para el análisis diario. Los datos de telemetría más antiguos deben archivarse en un data lake de Amazon S3 durante 3 años antes de eliminarse. Durante ese período de 3 años, la empresa consultará los datos ocasionalmente mediante Amazon Athena.\n\n¿Qué combinación de pasos cumplirá estos requisitos de la forma MÁS rentable? (Selecciona TRES)",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Crear un stream de DynamoDB. Configurar una función de AWS Lambda como consumidora del stream, con un filtro de origen de eventos de Lambda para los elementos eliminados por el sistema. Programar la función para enviar esos elementos eliminados a un bucket del data lake con la clase de almacenamiento S3 Standard-Infrequent Access (S3 Standard-IA)",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Habilitar TTL en la tabla de DynamoDB para eliminar los datos después de 90 días",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Configurar una política de ciclo de vida de Amazon S3 para eliminar los datos después de 3 años",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Crear un stream de DynamoDB. Configurar una función de AWS Lambda como consumidora del stream, con un filtro de origen de eventos de Lambda para los elementos recién ingeridos. Programar la función para enviar esos elementos nuevos a un bucket del data lake con la clase de almacenamiento S3 Standard-Infrequent Access (S3 Standard-IA)",
+              "desc": ""
+            },
+            {
+              "letter": "E",
+              "title": "Seleccionar la clase de tabla DynamoDB Standard-Infrequent Access (DynamoDB Standard-IA)",
+              "desc": ""
+            },
+            {
+              "letter": "F",
+              "title": "Configurar una política de ciclo de vida de Amazon S3 para transicionar los datos a Amazon S3 Glacier Deep Archive después de 90 días y eliminarlos después de 3 años",
+              "desc": ""
+            }
+          ],
+          "correct": [
+            "A",
+            "B",
+            "C"
+          ],
+          "explanation": "La combinación más rentable usa un stream de DynamoDB filtrado por eliminaciones del sistema para capturar únicamente los elementos que TTL borra de la tabla y enviarlos al data lake en S3 Standard-IA (la clase adecuada para datos poco accedidos pero de larga vida), habilitar TTL en la tabla para que los datos se eliminen automáticamente de DynamoDB pasados los 90 días de uso diario, y aplicar una política de ciclo de vida de S3 que borre los datos archivados al cumplirse los 3 años. Filtrar el stream por elementos recién ingeridos en lugar de eliminados duplicaría en S3 los datos de los primeros 90 días, que ya están disponibles y en uso en DynamoDB, generando un costo de almacenamiento innecesario. Elegir la clase de tabla DynamoDB Standard-IA no encaja porque esa clase está pensada para datos de acceso infrecuente, mientras que aquí los datos se consultan a diario durante los primeros 90 días. Y transicionar los datos archivados a S3 Glacier Deep Archive reduciría aún más el costo de almacenamiento, pero obligaría a restaurar los objetos antes de poder consultarlos con Athena, lo que no encaja con el requisito de consultarlos ocasionalmente de forma directa durante los 3 años."
+        },
+        {
+          "id": "de036",
+          "text": "Una viña opera un clúster de Amazon Redshift en AWS. Una auditoría reciente del clúster descubrió que las credenciales de la base de datos que usa la aplicación no se han rotado desde que se creó el clúster. Un ingeniero de datos debe configurar el almacenamiento seguro y la rotación automática de esas credenciales.\n\n¿Qué solución cumplirá estos requisitos?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Almacenar las credenciales como un secure string en AWS Systems Manager Parameter Store. Configurar en Parameter Store una programación de rotación para rotar las credenciales de la base de datos de forma periódica",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Crear una política de IAM personalizada. Asociar la política a un rol de IAM. Configurar el clúster de Redshift para que genere credenciales temporales de base de datos basadas en IAM para cada aplicación",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Almacenar las credenciales de la base de datos en AWS Secrets Manager. Crear una programación de rotación para las credenciales. Escribir una función de rotación para rotar las credenciales de la base de datos de forma periódica",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Crear una programación en Amazon EventBridge. Configurar un evento programado de EventBridge. Conectar cada aplicación al bus de eventos para que rote las credenciales de la base de datos cuando llegue la alerta del evento",
+              "desc": ""
+            }
+          ],
+          "correct": "C",
+          "explanation": "AWS Secrets Manager permite almacenar de forma segura las credenciales de la base de datos y, además, definir una programación de rotación respaldada por una función de rotación (Secrets Manager provee una función de AWS Lambda de plantilla para Redshift que solo hay que completar) que actualiza periódicamente la contraseña tanto en el secreto como en el clúster, sin exponer nunca la credencial a la aplicación fuera del secreto. Parameter Store sí permite guardar la credencial como secure string, pero no incluye ninguna capacidad nativa para rotarla automáticamente; esa rotación habría que construirla aparte. Generar credenciales temporales basadas en IAM elimina la necesidad de una contraseña fija, pero exige rediseñar la aplicación para que se autentique usando un rol de IAM y solicite las credenciales temporales, lo cual es un cambio de arquitectura mayor al que pide el escenario. Y programar un evento de EventBridge que avise a cada aplicación para que rote la credencial sigue dejando la contraseña almacenada dentro de la propia aplicación, que es precisamente la forma insegura de manejarla que se quiere evitar."
+        },
+        {
+          "id": "de037",
+          "text": "Una cadena global de centros comerciales está desarrollando una solución para capturar las lecturas de los sensores de los equipos de climatización y mantenimiento de sus edificios, y almacenarlas en Amazon DynamoDB. Los centros comerciales están ubicados en varias regiones. Cada centro comercial tiene múltiples equipos, y cada equipo tiene varios sensores que generan una lectura nueva cada 10 minutos. Un ingeniero de datos quiere usar una clave compuesta en la tabla, donde la clave de partición sea BUILDING_ID (el identificador del centro comercial) y la clave de ordenamiento sea DATETIMESTAMP.\n\nDurante las pruebas de la prueba de concepto, el ingeniero de datos nota patrones de acceso a los datos desbalanceados.\n\n¿Qué solución resolverá los patrones de acceso desbalanceados?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Crear una nueva tabla de DynamoDB con una clave de partición diferente, como BUILDING_NAME, para balancear el throughput",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Crear una nueva tabla de DynamoDB con una clave de partición más estrecha (de mayor cardinalidad), como SENSOR_ID, para balancear el throughput",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Crear una nueva tabla de DynamoDB con una clave de partición más amplia (de menor cardinalidad), como BUILDING_REGION, para balancear el throughput",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Crear una nueva tabla de DynamoDB con un índice secundario local (LSI) para balancear el throughput",
+              "desc": ""
+            }
+          ],
+          "correct": "B",
+          "explanation": "Con BUILDING_ID como clave de partición, todas las lecturas de todos los equipos y sensores de un mismo centro comercial caen en la misma partición, y como cada centro comercial tiene un volumen de solicitudes muy distinto, algunas particiones reciben muchas más lecturas que otras y se convierten en particiones calientes; usar una clave de mayor cardinalidad como SENSOR_ID reparte las lecturas entre muchas más particiones, ya que hay muchos más sensores que centros comerciales, logrando un acceso mucho más uniforme. Cambiar a BUILDING_NAME no soluciona nada porque tiene exactamente la misma cardinalidad y el mismo patrón de acceso que BUILDING_ID, solo cambia el nombre del atributo. Usar una clave todavía más amplia como BUILDING_REGION empeora el problema, porque agrupa aún más centros comerciales (y por tanto más tráfico) bajo un mismo valor de partición. Y agregar un índice secundario local no ayuda, porque un LSI comparte la misma clave de partición que la tabla base y consume la misma capacidad de esa partición, por lo que no resuelve el desbalance de las particiones calientes."
+        },
+        {
+          "id": "de038",
+          "text": "El servicio de parques nacionales de un país ha desplegado numerosos sensores climáticos en sus reservas naturales. Los sensores producen continuamente archivos XML de 1 KB con datos meteorológicos. Los datos de todos los sensores se agregan y se entregan a un bucket de Amazon S3 cada 15 minutos, con un prefijo con formato AAAA-MM-DD-HH-mm.\n\nLa entidad quiere usar Amazon Redshift para actualizar de forma continua un panel con los datos climáticos más recientes. Un ingeniero de datos debe diseñar una solución de ingesta que cargue los datos en Amazon Redshift.\n\n¿Qué solución cumplirá estos requisitos con el MENOR esfuerzo operativo?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Configurar un stream de entrega de Amazon Data Firehose para ingerir los archivos XML desde el bucket de S3. Configurar una función de procesamiento de AWS Lambda en el stream para convertir los archivos XML y enviar los datos a Amazon Redshift",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Crear una consulta SQL programada en Redshift que se ejecute después de que los archivos XML se entreguen al bucket de S3. Cargar los datos usando el comando SQL COPY desde el bucket de S3 con una expresión regular AAAA-MM-DD-HH-mm",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Enviar los datos de los sensores directamente a Amazon Kinesis Data Streams, particionados por AAAA-MM-DD-HH-mm. Usar una función de AWS Lambda para procesar los datos XML del stream de Kinesis e insertarlos en Amazon Redshift",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Configurar un job programado de extracción, transformación y carga (ETL) de AWS Glue que se ejecute después de que los datos se entreguen al bucket de S3. Usar las funciones \"Group small files\" y \"Job bookmarks\" para configurar el job de modo que convierta los archivos XML y envíe los datos a Amazon Redshift",
+              "desc": ""
+            }
+          ],
+          "correct": "D",
+          "explanation": "Un job de AWS Glue programado resuelve todo el flujo con un único servicio totalmente administrado: la función \"Group small files\" agrupa de forma eficiente los numerosos archivos XML de 1 KB antes de procesarlos, evitando el problema de rendimiento típico de leer muchísimos archivos pequeños, mientras que \"Job bookmarks\" recuerda qué datos ya se procesaron en ejecuciones anteriores para no reprocesarlos ni generar duplicados; el job puede transformar el XML y escribir directamente en Redshift, todo sin infraestructura que administrar. Amazon Data Firehose no puede configurarse para leer archivos ya existentes en un bucket de S3 como origen de un stream, por lo que esta arquitectura no es viable tal como está planteada. Usar el comando COPY de Redshift no funciona porque COPY no admite XML como formato de origen. Y enviar los datos directamente a Kinesis Data Streams con una función Lambda que inserte cada registro en Redshift funcionaría, pero obliga a aprovisionar y gestionar el stream y a escribir y mantener código personalizado de inserción, además de que insertar fila por fila es mucho menos eficiente que una carga masiva, por lo que añade esfuerzo operativo frente a la solución basada en Glue."
+        },
+        {
+          "id": "de039",
+          "text": "Una firma de reclutamiento ejecutivo quiere integrar su aplicación de software como servicio (SaaS) de seguimiento de candidatos con un data lake en Amazon S3 para fines de análisis. Un ingeniero de datos debe diseñar una solución que transfiera los datos desde la aplicación SaaS hacia Amazon S3. La solución debe permitir consumir esos datos mediante SQL en Amazon Athena. La empresa también quiere garantizar que los datos viajen cifrados en tránsito.\n\n¿Qué combinación de pasos cumplirá estos requisitos? (Selecciona DOS)",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Usar Amazon AppFlow para transferir los datos entre la aplicación SaaS y Amazon S3",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Usar Amazon Data Firehose para establecer una conexión e integrar los datos desde la aplicación SaaS",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Usar AWS Transfer Family para transferir los datos hacia Amazon S3 mediante FTP",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Usar un crawler de AWS Glue para poblar un AWS Glue Data Catalog con las tablas correspondientes",
+              "desc": ""
+            },
+            {
+              "letter": "E",
+              "title": "Usar AWS Step Functions para orquestar la integración y la combinación de los datos provenientes de la aplicación SaaS",
+              "desc": ""
+            }
+          ],
+          "correct": [
+            "A",
+            "D"
+          ],
+          "explanation": "Amazon AppFlow ofrece integraciones nativas con numerosas aplicaciones SaaS (como el sistema de seguimiento de candidatos de la firma) y transfiere los datos hacia Amazon S3 cifrados en tránsito mediante HTTPS, sin necesidad de desarrollar un conector personalizado; una vez que los datos están en S3, un crawler de AWS Glue descubre su esquema y crea las tablas correspondientes en el Data Catalog, lo que permite consultarlas de inmediato con SQL desde Athena. Usar Amazon Data Firehose exigiría modificar la propia aplicación SaaS para que transmita los datos activamente hacia un stream de Firehose, algo que normalmente no es posible sobre una aplicación de terceros que la empresa no controla. AWS Transfer Family sí puede mover archivos hacia S3, pero la opción propone específicamente el protocolo FTP, que transmite los datos sin cifrar; para cumplir el requisito de cifrado en tránsito haría falta usar SFTP o FTPS en su lugar. Y AWS Step Functions es un orquestador de flujos de trabajo entre servicios de AWS, pero no tiene capacidad propia para conectarse ni extraer datos de una aplicación SaaS externa, así que por sí solo no resuelve la integración."
+        },
+        {
+          "id": "de040",
+          "text": "Una firma multinacional de consultoría quiere analizar su información histórica almacenada en archivos Avro dentro de un bucket de Amazon S3. El tamaño total de los datos es de aproximadamente 60 TB y crece 4 TB cada mes. Los datos se organizan de forma jerárquica por departamento de consultoría, fecha y código de cliente. La firma quiere separar el acceso a los datos de modo que cada departamento solo pueda acceder a su propia información. Los datos solo se consultan al cierre de cada mes para generar reportes, que deben poder filtrarse por fecha y código de cliente.\n\n¿Qué solución cumplirá estos requisitos con el MENOR esfuerzo operativo?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Usar permisos de AWS Identity and Access Management (IAM) para otorgar a cada departamento acceso a los datos de S3 según el prefijo. Usar Presto sobre Amazon EMR al final del mes para consultar los datos del bucket y generar los reportes",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Crear varias tablas en el AWS Glue Data Catalog, cada una apuntando al prefijo de S3 correspondiente a un departamento, y definir un esquema de particionamiento. Configurar AWS Lake Formation y otorgar permisos a los usuarios sobre la tabla según su departamento. Usar Amazon Athena para ejecutar las consultas al final del mes",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Crear un clúster de Amazon EMR. Ejecutar un job de PySpark que ingiera los datos desde Amazon S3 hacia distintas tablas en Amazon DynamoDB. Asignar permisos de AWS Identity and Access Management (IAM) sobre las tablas de DynamoDB para cada departamento",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Crear un clúster de Amazon RDS para MySQL. Crear un job de AWS Glue e insertar los datos en distintas tablas dentro del clúster de Amazon RDS. Crear un usuario para cada departamento en el clúster de MySQL y otorgar los permisos correspondientes",
+              "desc": ""
+            }
+          ],
+          "correct": "B",
+          "explanation": "Crear en el Glue Data Catalog una tabla por departamento apuntando al prefijo de S3 correspondiente, con un esquema de particionamiento por fecha y código de cliente, y administrar el acceso por departamento con AWS Lake Formation permite consultar directamente los datos donde ya están almacenados, sin moverlos ni duplicarlos, y Amazon Athena aprovecha las particiones para filtrar eficientemente por fecha y cliente en las consultas de cierre de mes; al ser todos servicios administrados, no hay clústeres ni procesos de ingestión que operar. Usar permisos de IAM por prefijo junto con Presto sobre Amazon EMR sí puede separar el acceso y consultar los datos, pero exige aprovisionar, escalar y mantener el clúster de EMR, lo cual es esfuerzo operativo adicional que la consulta mensual no justifica. Ingerir los 60 TB hacia tablas de DynamoDB mediante un job de PySpark en EMR implica levantar el clúster, desarrollar el script de migración y luego pagar por almacenar en DynamoDB un volumen de datos para el que no es la herramienta más adecuada, además de mantener sincronizados los datos con la fuente en S3. Y migrar los datos a un clúster de Amazon RDS para MySQL no solo requiere mantener la base de datos siempre encendida, sino que 60 TB (y creciendo) está muy por encima de lo que conviene manejar en una base relacional de este tipo."
+        },
+        {
+          "id": "de041",
+          "text": "Una empresa de verificación de antecedentes quiere crear una solución para detectar información de identificación personal (PII) en sus datos. La solución debe poder identificar la PII en distintos conjuntos de datos de AWS y en varios formatos de archivo. La solución también debe aplicar técnicas de enmascaramiento de datos durante la preparación de los datos.\n\n¿Qué combinación de soluciones cumplirá estos requisitos? (Selecciona DOS)",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Usar Amazon Macie para conectarse a distintos conjuntos de datos de AWS, detectar la PII y enmascarar los datos",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Usar AWS Glue DataBrew para conectarse a distintos conjuntos de datos de AWS, detectar la PII y enmascarar los datos",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Usar AWS Lake Formation para conectarse a distintos conjuntos de datos de AWS, detectar la PII y enmascarar los datos",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Usar Amazon Comprehend para conectarse a distintos conjuntos de datos de AWS, detectar la PII y enmascarar los datos",
+              "desc": ""
+            },
+            {
+              "letter": "E",
+              "title": "Usar AWS Glue Studio para conectarse a distintos conjuntos de datos de AWS, detectar la PII y enmascarar los datos",
+              "desc": ""
+            }
+          ],
+          "correct": [
+            "B",
+            "E"
+          ],
+          "explanation": "Tanto AWS Glue DataBrew como AWS Glue Studio ofrecen transformaciones integradas para detectar y enmascarar (o redactar) PII directamente durante la preparación de los datos, y ambos admiten una variedad amplia de formatos de archivo (como CSV, JSON, Parquet, ORC o XLSX) además de poder conectarse a distintos orígenes de datos de AWS, por lo que juntos cubren tanto la detección como el enmascaramiento sin necesidad de escribir scripts personalizados. Amazon Macie sí detecta datos sensibles mediante aprendizaje automático y coincidencia de patrones, pero solo analiza datos almacenados en Amazon S3, no otros servicios de AWS, y además no ofrece ninguna capacidad de enmascaramiento, solo de detección. AWS Lake Formation administra la seguridad y el acceso a un data lake (usuarios, roles, permisos), pero no tiene capacidad propia para detectar PII ni para enmascarar datos. Y Amazon Comprehend puede detectar entidades de PII y aplicar redacción mediante procesamiento de lenguaje natural, pero está limitado a documentos de texto en inglés, lo que no cubre la variedad de datasets y formatos que pide el requisito."
+        },
+        {
+          "id": "de042",
+          "text": "Un instituto de investigación en genómica usa un clúster de Apache Hadoop on-premises para ejecutar una amplia variedad de trabajos de procesamiento por lotes. Los trabajos se ejecutan en distintos frameworks y lenguajes, como Apache Spark, Apache Hive, Presto y TensorFlow. El instituto espera un aumento significativo en la cantidad de datos genómicos que almacena y quiere migrar a AWS para tener escalabilidad de almacenamiento. El instituto quiere que los datos sean duraderos y quiere reutilizar los trabajos ya desarrollados.\n\n¿Qué solución cumplirá estos requisitos de la forma MÁS rentable?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Migrar a Amazon EMR. Almacenar todos los datos en un sistema de archivos distribuido de Hadoop (HDFS). Escalar el clúster agregando core nodes si se necesita más almacenamiento",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Migrar a Amazon EMR. Almacenar los datos activos en un sistema de archivos distribuido de Hadoop (HDFS) y los datos fríos en Amazon S3. Usar Hive para unir las tablas de Amazon S3 y de HDFS",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Migrar a Amazon Redshift. Usar instancias RA3 de Amazon Redshift junto con Amazon S3 para optimizar el costo de almacenamiento",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Migrar a Amazon EMR. Almacenar todos los datos en Amazon S3. Lanzar clústeres transitorios de EMR cuando los trabajos necesiten ejecutarse",
+              "desc": ""
+            }
+          ],
+          "correct": "D",
+          "explanation": "Almacenar todos los datos en Amazon S3 ofrece durabilidad y escalabilidad de almacenamiento independientes del clúster de cómputo, y lanzar clústeres transitorios de Amazon EMR únicamente cuando hay trabajos que ejecutar evita pagar por capacidad de cómputo ociosa; además, EMR es compatible con Spark, Hive, Presto y TensorFlow, por lo que los trabajos ya desarrollados en el clúster on-premises pueden reutilizarse prácticamente sin cambios. Guardar todos los datos en HDFS dentro de EMR (con o sin escalar agregando core nodes) es problemático porque el HDFS de un clúster de EMR es efímero: si el clúster se termina, ese almacenamiento se pierde, lo que contradice el requisito de durabilidad, y añadir core nodes solo para ganar almacenamiento resulta en pagar por cómputo que no se necesita. Repartir los datos entre HDFS (activos) y S3 (fríos) sigue exponiendo los datos activos al mismo riesgo de pérdida si el clúster se apaga o falla. Y migrar a Amazon Redshift, incluso con nodos RA3 y S3 para optimizar costos, no sirve para este caso: Redshift es un data warehouse orientado a consultas SQL, no una plataforma para ejecutar trabajos por lotes en Spark, Hive, Presto o TensorFlow."
         }
       ]
     }
