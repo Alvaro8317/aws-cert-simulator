@@ -4270,6 +4270,964 @@
           ],
           "correct": "D",
           "explanation": "Almacenar todos los datos en Amazon S3 ofrece durabilidad y escalabilidad de almacenamiento independientes del clúster de cómputo, y lanzar clústeres transitorios de Amazon EMR únicamente cuando hay trabajos que ejecutar evita pagar por capacidad de cómputo ociosa; además, EMR es compatible con Spark, Hive, Presto y TensorFlow, por lo que los trabajos ya desarrollados en el clúster on-premises pueden reutilizarse prácticamente sin cambios. Guardar todos los datos en HDFS dentro de EMR (con o sin escalar agregando core nodes) es problemático porque el HDFS de un clúster de EMR es efímero: si el clúster se termina, ese almacenamiento se pierde, lo que contradice el requisito de durabilidad, y añadir core nodes solo para ganar almacenamiento resulta en pagar por cómputo que no se necesita. Repartir los datos entre HDFS (activos) y S3 (fríos) sigue exponiendo los datos activos al mismo riesgo de pérdida si el clúster se apaga o falla. Y migrar a Amazon Redshift, incluso con nodos RA3 y S3 para optimizar costos, no sirve para este caso: Redshift es un data warehouse orientado a consultas SQL, no una plataforma para ejecutar trabajos por lotes en Spark, Hive, Presto o TensorFlow."
+        },
+        {
+          "id": "de043",
+          "text": "Una cadena de ropa deportiva almacena su historial de ventas como datos semiestructurados usando el tipo de dato SUPER en Amazon Redshift. Los analistas de datos necesitan consultar ese historial de ventas y sus datos anidados.\n\n¿Cómo deberían los analistas de datos consultar esta información con el MENOR esfuerzo?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Consultar los datos usando expresiones LIKE, SIMILAR TO o POSIX",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Consultar los datos usando funciones definidas por el usuario (UDF)",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Consultar los datos usando funciones de cadena de texto (string functions)",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Consultar los datos usando notación de punto y de corchetes",
+              "desc": ""
+            }
+          ],
+          "correct": "D",
+          "explanation": "Amazon Redshift usa el lenguaje PartiQL para navegar los datos anidados almacenados en columnas SUPER, y esa navegación se expresa de forma nativa con notación de punto (para acceder a los campos de un objeto) y de corchetes (para acceder a los elementos de un arreglo), sin que el analista tenga que escribir ni mantener código adicional. Las expresiones LIKE, SIMILAR TO o POSIX solo devuelven un valor booleano según si encuentran una coincidencia de patrón dentro de una columna de texto, pero no permiten recorrer la estructura anidada de un objeto o arreglo. Escribir funciones definidas por el usuario (UDF) en SQL, Python o Lambda sí podría navegar los datos semiestructurados, pero exige desarrollar y mantener esas funciones personalizadas, mucho más esfuerzo que usar la notación nativa de PartiQL ya integrada en Redshift. Y las funciones de cadena de texto están pensadas para manipular y parsear texto plano, no para recorrer la jerarquía de objetos y arreglos de un dato semiestructurado."
+        },
+        {
+          "id": "de044",
+          "text": "Un ingeniero de datos de una firma de estudios de mercado necesita consultar y unir con SQL datos provenientes de distintas fuentes para hacer un análisis. Los datos están en un clúster de Amazon Redshift y en un bucket de Amazon S3, en formatos JSON y Parquet.\n\n¿Qué servicio de AWS debería usarse para consultar conjuntamente ambas fuentes de datos con el MENOR esfuerzo de desarrollo?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Crear un esquema externo en el clúster de Amazon Redshift con tablas externas sobre el conjunto de datos de Amazon S3. Usar Amazon Redshift Spectrum para crear consultas SQL que unan los datos de las tablas internas y externas",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Usar AWS Glue para crear un job que cargue los datos de Amazon S3 y de Amazon Redshift en un DataFrame de Apache Spark. Procesar los datos con Spark para analizarlos y volver a cargarlos en Amazon Redshift",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Convertir los datos de S3 a un formato relacional. Cargarlos en una base de datos Amazon RDS para PostgreSQL. Usar consultas federadas en Amazon Redshift para consultar la base de Amazon RDS y crear consultas SQL que unan los datos de las tablas internas y externas",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Crear un clúster de Amazon EMR. Escribir un script de PySpark que consulte Amazon S3 y Amazon Redshift y guarde los resultados en Amazon S3. Usar la AWS CLI para enviar el script de PySpark como un step al clúster de Amazon EMR. Programar el script con un scheduler basado en una expresión cron para que se ejecute todos los días",
+              "desc": ""
+            }
+          ],
+          "correct": "A",
+          "explanation": "Amazon Redshift Spectrum es una funcionalidad nativa de Redshift que permite crear un esquema externo con tablas apuntando a los datos de S3 (en JSON o Parquet) y consultarlas con la misma sintaxis SQL y el mismo editor de consultas, uniéndolas directamente con las tablas internas del clúster; al ser una capacidad ya integrada en Redshift, es la opción que exige menos desarrollo. Usar AWS Glue para cargar ambas fuentes en un DataFrame de Spark, procesarlas y volver a cargarlas en Redshift funciona, pero implica construir y mantener el job de Glue, y cualquier cambio en el análisis obliga a modificar ese job. Convertir los datos de S3 a un formato relacional, cargarlos en una base de RDS para PostgreSQL y luego usar consultas federadas desde Redshift añade un paso completo de transformación y una base de datos adicional que mantener, solo para poder unir los datos. Y levantar un clúster de Amazon EMR, escribir un script de PySpark, enviarlo por CLI y programarlo con una expresión cron implica aprovisionar infraestructura, desarrollar el script y gestionar su programación, muchísimo más esfuerzo que activar Redshift Spectrum."
+        },
+        {
+          "id": "de045",
+          "text": "Un mercado en línea de autos usados tiene un data lake en Amazon S3. Los archivos de origen se ingieren en el data lake todos los días. El equipo de analítica de datos necesita construir un pipeline dirigido por eventos en Amazon S3 para procesar los datos entrantes. El pipeline usará una función de AWS Lambda para procesar los datos y guardarlos en otro bucket de S3. El equipo quiere asegurarse de que la función Lambda se invoque cada vez que llegue un archivo nuevo al bucket de entrada.\n\n¿Qué solución cumplirá estos requisitos? (Selecciona DOS)",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Configurar notificaciones de eventos de S3 en el prefijo de origen donde se agregan los archivos en el bucket de entrada. Agregar la función Lambda como destino de esos eventos",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Habilitar el registro de acceso al servidor (server access logging) en el bucket de entrada para entregar los logs a la función Lambda para su procesamiento",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Configurar AWS CloudTrail para registrar eventos de datos del bucket de entrada e invocar la función Lambda cuando se registre un evento",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Configurar el bucket de entrada para enviar todos los eventos de S3 hacia Amazon EventBridge. Configurar una regla de EventBridge para invocar la función Lambda cuando se agreguen archivos al bucket de S3",
+              "desc": ""
+            },
+            {
+              "letter": "E",
+              "title": "Configurar S3 Object Lambda en el bucket de entrada para invocar la función Lambda y procesar automáticamente los archivos recibidos",
+              "desc": ""
+            }
+          ],
+          "correct": [
+            "A",
+            "D"
+          ],
+          "explanation": "Las notificaciones de eventos nativas de S3 permiten configurar directamente una función Lambda como destino cuando se crea un objeto nuevo en un prefijo determinado, invocándola de forma automática en cada carga; y como alternativa (o complemento) equivalente, habilitar la entrega de eventos de S3 hacia Amazon EventBridge junto con una regla que apunte a esa misma función Lambda logra el mismo resultado, con la ventaja adicional de un filtrado de eventos más flexible. El registro de acceso al servidor (server access logging) solo genera archivos de registro con el detalle de las solicitudes hechas al bucket; no tiene ninguna capacidad para entregar esos logs a una función Lambda ni para invocarla. Configurar CloudTrail para registrar eventos de datos permite auditar operaciones como la creación o eliminación de objetos, pero CloudTrail no puede invocar directamente una función Lambda a partir de esos eventos registrados. Y S3 Object Lambda sirve para transformar sobre la marcha las respuestas de solicitudes GET, HEAD o LIST cuando alguien recupera un objeto, no para invocar una función de procesamiento cada vez que llega un archivo nuevo."
+        },
+        {
+          "id": "de046",
+          "text": "Una editorial científica quiere implementar una nueva solución de almacenamiento de datos para su negocio. La editorial ingiere datos crudos desde muchas fuentes distintas (revistas, bases de citas, repositorios de manuscritos). Un ingeniero de datos debe implementar una solución de almacenamiento que soporte datos consumidos por herramientas muy diversas, desde paneles de inteligencia de negocio (BI) hasta programación de ciencia de datos con Apache Spark. El almacenamiento debe ser duradero y rentable.\n\n¿Qué solución cumplirá estos requisitos?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Almacenar los datos en Amazon S3. Usar formatos CSV o JSON",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Almacenar los datos en Amazon S3. Usar formatos Apache Parquet u ORC",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Almacenar los datos de acceso frecuente en Amazon Redshift y los datos de acceso infrecuente en Amazon S3. Consultar los datos usando Amazon Redshift Spectrum",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Almacenar los datos en Amazon RDS. Usar un despliegue de una sola zona de disponibilidad (Single-AZ) para reducir el costo",
+              "desc": ""
+            }
+          ],
+          "correct": "B",
+          "explanation": "Almacenar los datos en Amazon S3 usando formatos columnares como Apache Parquet u ORC combina la durabilidad y el bajo costo de S3 con formatos comprimidos y eficientes que son compatibles con todo el ecosistema que necesita la editorial: Amazon Athena y Amazon QuickSight pueden leerlos directamente para los paneles de BI, y al ser los formatos nativos del ecosistema Hadoop, Apache Spark los procesa de forma eficiente para la programación de ciencia de datos. Guardar los mismos datos en S3 pero en CSV o JSON mantiene la durabilidad y el bajo costo de almacenamiento base, pero al no estar comprimidos ni ser columnares, las consultas y el procesamiento son menos eficientes y terminan costando más en el conjunto. Repartir los datos entre Amazon Redshift (frecuentes) y S3 (infrecuentes) consultados con Redshift Spectrum obliga a mantener un clúster de Redshift en funcionamiento, lo que no es la opción más rentable, y Redshift no es la herramienta más adecuada para dar soporte directo a un rango tan amplio de herramientas de ciencia de datos como Spark. Y Amazon RDS está pensado para datos estructurados en un modelo relacional, no para datos crudos de fuentes variadas, y un despliegue de una sola zona de disponibilidad no cumple con el requisito de durabilidad, ya que la caída de esa única zona dejaría los datos inaccesibles o en riesgo de pérdida."
+        },
+        {
+          "id": "de047",
+          "text": "Un ingeniero de datos recién llegado a una cadena de tiendas de muebles es asignado para trabajar con AWS Lake Formation. El ingeniero de datos debe administrar las tablas dentro de la base de datos de ventas. Al intentar crear una nueva base de datos, el ingeniero de datos recibe el siguiente error de seguridad: NotAuthorized.\n\n¿Qué permiso o política necesita el ingeniero de datos para resolver el problema?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "El permiso de administrador del data lake (data lake administrator)",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "El permiso de creador de bases de datos (database creator)",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "El permiso de creador de tablas (table creator)",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "La política administrada de IAM AdministratorAccess",
+              "desc": ""
+            }
+          ],
+          "correct": "B",
+          "explanation": "El permiso de creador de bases de datos (database creator) es justamente el que habilita a un principal para crear bases de datos nuevas en el Data Catalog de Lake Formation, y al crearlas obtiene automáticamente todos los permisos sobre esa base de datos y sobre las tablas que cree dentro de ella, además de poder conceder permisos de creación de tablas a otros usuarios de la misma cuenta; es exactamente el nivel de acceso que necesita el ingeniero de datos para su tarea. Otorgar el permiso de administrador del data lake resolvería el error, pero le daría control total sobre todo el data lake (permisos de ubicación de datos y capacidad de conceder o revocar acceso sobre cualquier recurso del catálogo), mucho más de lo necesario y en contra del principio de mínimo privilegio. El permiso de creador de tablas no sirve aquí porque solo otorga permisos sobre las tablas que el usuario cree, no incluye la capacidad de crear la base de datos en sí. Y la política administrada de IAM AdministratorAccess no otorga automáticamente permisos dentro de Lake Formation: los permisos sobre los objetos del catálogo se administran de forma independiente en Lake Formation, así que un usuario con esa política de IAM puede seguir recibiendo el error NotAuthorized si Lake Formation no le ha concedido el permiso correspondiente."
+        },
+        {
+          "id": "de048",
+          "text": "Una firma contable almacena datos en un bucket de Amazon S3. La firma está adoptando una nueva política de ciclo de vida y retención de datos, definida así:\n\nLos datos consultados con frecuencia deben estar disponibles de inmediato, sin importar su antigüedad.\nLos datos que no se consulten en 90 días deben almacenarse al menor costo posible.\nLos datos con más de 10 años de antigüedad deben eliminarse.\n\nUn ingeniero de datos debe configurar una solución que garantice que los datos se almacenen de forma rentable conforme a esta política de ciclo de vida y retención.\n\n¿Qué solución cumplirá estos requisitos?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Almacenar los datos nuevos en un clúster de Amazon Redshift. Descargar (unload) los datos más antiguos hacia la clase de almacenamiento S3 Standard. Crear una regla de ciclo de vida que migre los datos a la clase S3 Glacier Deep Archive después de 3 años. Configurar una regla de ciclo de vida que elimine los datos después de 10 años",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Almacenar los datos nuevos en una base de datos de Amazon RDS. Crear snapshots de la base de datos y transferirlos a la clase de almacenamiento S3 Standard. Crear una regla de ciclo de vida que migre los snapshots a la clase S3 Glacier Flexible Retrieval después de 3 años. Configurar una regla de ciclo de vida que elimine los datos después de 10 años",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Almacenar los datos nuevos en la clase de almacenamiento S3 Intelligent-Tiering con el nivel Archive Access habilitado. Consultar los datos directamente en Amazon S3 con Amazon Athena. Configurar una regla de ciclo de vida que elimine los datos después de 10 años",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Almacenar los datos nuevos en la clase de almacenamiento S3 Standard-Infrequent Access. Consultar los datos directamente en Amazon S3 con Amazon Athena. Crear una regla de ciclo de vida que migre los datos a la clase S3 Glacier Flexible Retrieval después de 90 días. Configurar una regla de ciclo de vida que elimine los datos después de 10 años",
+              "desc": ""
+            }
+          ],
+          "correct": "C",
+          "explanation": "S3 Intelligent-Tiering está diseñada justamente para un patrón de acceso desconocido o variable como el de este escenario, donde no se sabe de antemano qué datos se seguirán consultando con frecuencia: mueve automáticamente cada objeto entre los niveles de acceso frecuente e infrecuente según su uso real, y con el nivel Archive Access activado, los objetos que no se consultan en 90 días pasan a un nivel de archivo de muy bajo costo sin que nadie tenga que definir ese umbral manualmente; los datos siguen siendo consultables directamente con Athena, y una regla de ciclo de vida se encarga de eliminarlos a los 10 años. Migrar los datos nuevos a Amazon Redshift y descargar los antiguos a S3 mantiene un clúster de Redshift funcionando para datos que solo se consultan ocasionalmente, lo cual no es rentable, y además Glacier Deep Archive puede tardar hasta 12 horas o más en restaurar un objeto, mucho más de lo que exige la disponibilidad inmediata de los datos consultados con frecuencia. Guardar los datos en Amazon RDS y transferir snapshots a S3 tampoco es viable: no es posible migrar snapshots de RDS directamente a una clase de almacenamiento Glacier, hace falta un paso intermedio. Y usar S3 Standard-IA con una migración fija a Glacier Flexible Retrieval a los 90 días asume que ningún dato seguirá consultándose con frecuencia después de ese plazo, cuando el requisito dice explícitamente que los datos consultados con frecuencia deben seguir disponibles de inmediato sin importar su antigüedad."
+        },
+        {
+          "id": "de049",
+          "text": "Un ingeniero de datos de una fábrica de bebidas debe crear una solución para mover datos entre Amazon S3 y una base de datos independiente (standalone) de Amazon Redshift. Los datos deben cargarse en Amazon Redshift para su análisis y, después, deben transferirse de vuelta a Amazon S3 con fines de archivado.\n\n¿Qué solución cumplirá estos requisitos?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Usar AWS DataSync para transferir los datos entre Amazon S3 y Amazon Redshift",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Usar el comando COPY de Amazon Redshift para cargar los datos desde Amazon S3 hacia Amazon Redshift. Usar el comando UNLOAD para enviar los datos hacia Amazon S3",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Usar Amazon S3 Transfer Acceleration para transferir los datos entre Amazon S3 y Amazon Redshift",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Usar Amazon Redshift Spectrum para cargar los datos desde Amazon S3 hacia Amazon Redshift. Usar el comando UNLOAD para enviar los datos hacia Amazon S3",
+              "desc": ""
+            }
+          ],
+          "correct": "B",
+          "explanation": "El comando COPY de Amazon Redshift está optimizado para cargar grandes volúmenes de datos desde Amazon S3 hacia las tablas de Redshift en paralelo, y el comando UNLOAD hace el camino inverso, exportando eficientemente los resultados de una consulta desde Redshift hacia S3; juntos cubren exactamente el ciclo de ida y vuelta que pide el escenario, usando capacidades nativas del propio motor de Redshift. AWS DataSync está pensado para transferir datos entre servicios de almacenamiento de archivos u objetos, como Amazon EFS, Amazon FSx o Amazon S3, pero no tiene la capacidad de mover datos hacia o desde una base de datos de Amazon Redshift. Amazon S3 Transfer Acceleration acelera las transferencias de datos entre un cliente (por ejemplo, una aplicación web o móvil) y un bucket de S3 a través de largas distancias, pero no aplica a un flujo de datos entre S3 y Redshift. Y Amazon Redshift Spectrum permite consultar datos que permanecen en S3 sin cargarlos previamente en el clúster, pero requiere un clúster de Redshift aprovisionado al que conectarse para ejecutar las consultas; al tratarse de una base de datos independiente (standalone), Redshift Spectrum no está disponible en este escenario."
+        },
+        {
+          "id": "de050",
+          "text": "Una empresa de hospedaje de mascotas usa Amazon Redshift como su data warehouse. La empresa guarda los datos en tres tablas separadas:\n\nUna tabla de dueños de mascotas llamada Owner.\nUna tabla de información de mascotas llamada Pets.\nUna tabla de instrucciones de cuidado llamada Care.\n\nLa tabla Owner es pequeña y sus datos casi no cambian. Las tablas Pets y Care son grandes y sus datos cambian con frecuencia. Las tablas Pets y Care se unen por PetID, y las tablas Pets y Owner se unen por OwnerID.\n\nLa empresa ejecuta muchas consultas que necesitan datos de las tres tablas. Un ingeniero de datos debe configurar manualmente los distribution styles para optimizar el rendimiento de las uniones (joins), manteniendo al mismo tiempo el almacenamiento de datos lo más bajo posible.\n\n¿Qué solución cumplirá estos requisitos?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Usar un distribution style EVEN para la tabla Owner. Usar un distribution style ALL para las tablas Pets y Care",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Usar un distribution style KEY para la tabla Owner. Usar un distribution style ALL para las tablas Pets y Care",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Usar un distribution style ALL para la tabla Owner. Usar un distribution style EVEN para las tablas Pets y Care",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Usar un distribution style ALL para la tabla Owner. Usar un distribution style KEY para las tablas Pets y Care",
+              "desc": ""
+            }
+          ],
+          "correct": "D",
+          "explanation": "Como la tabla Owner es pequeña y casi no cambia, un distribution style ALL la replica completa en todos los nodos con un incremento mínimo de almacenamiento, garantizando que sus filas estén disponibles localmente para resolver el join con Pets sin redistribuir datos; y como Pets y Care son tablas grandes que siempre se unen entre sí por PetID, un distribution style KEY sobre esa columna asegura que las filas relacionadas de ambas tablas queden físicamente almacenadas en el mismo nodo, optimizando el join sin necesidad de copiar las tablas completas a cada nodo. Usar EVEN en la tabla Owner reparte sus filas de forma aleatoria entre los nodos, obligando a Redshift a mover datos para resolver el join con Pets, lo que no optimiza el rendimiento. Aplicar ALL a las tablas Pets y Care (ya sea combinado con EVEN o con KEY en Owner) replicaría por completo dos tablas grandes y de crecimiento frecuente en cada nodo, disparando el uso de almacenamiento, justo lo contrario de lo que pide el requisito. Y usar EVEN en Pets y Care distribuye sus filas de forma aleatoria e independiente entre sí, por lo que las filas relacionadas por PetID probablemente terminan en nodos distintos, obligando a redistribuir datos en cada join entre ambas tablas."
+        },
+        {
+          "id": "de051",
+          "text": "Una agencia municipal de monitoreo ambiental quiere analizar cada semana la evolución de la calidad del aire en su ciudad. La agencia construyó un pipeline de datos serverless en AWS que entrega los resultados a un panel de Amazon QuickSight. Sin embargo, los datos del panel no se están actualizando automáticamente cada semana. Un ingeniero de datos descubre que el pipeline de datos no se está ejecutando de forma periódica y debe orquestar y programar un framework que resuelva el problema.\n\n¿Qué solución cumplirá estos requisitos con el MENOR esfuerzo operativo?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Usar Amazon Managed Workflows for Apache Airflow (MWAA) para la orquestación y la programación semanal",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Usar AWS CodePipeline para la orquestación. Usar Amazon EventBridge Scheduler para la programación semanal",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Usar Amazon S3 para configurar un evento de S3 que invoque una función de AWS Lambda, y programar un job de AWS Glue cada semana",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Usar AWS Step Functions para la orquestación. Usar Amazon EventBridge Scheduler para la programación semanal",
+              "desc": ""
+            }
+          ],
+          "correct": "D",
+          "explanation": "AWS Step Functions es un servicio serverless de orquestación de flujos de trabajo que permite coordinar los pasos del pipeline sin escribir código de infraestructura, y Amazon EventBridge Scheduler puede programar la ejecución de ese flujo de trabajo cada semana de forma nativa; al ser ambos servicios totalmente administrados y serverless, esta combinación resuelve el problema con el mínimo esfuerzo operativo. Usar Amazon MWAA también permitiría orquestar y programar el pipeline, pero exige aprovisionar y mantener un entorno completo (bucket de S3, red de VPC, el propio entorno de Airflow) y escribir los DAGs con cada tarea y sus dependencias, mucho más esfuerzo que activar Step Functions. AWS CodePipeline está diseñado para automatizar flujos de integración y entrega continua (CI/CD) de software, no para orquestar pipelines de datos, así que no encaja con este caso aunque se combine con EventBridge Scheduler. Y configurar un evento de S3 que invoque una Lambda junto con un job de Glue programado por separado no orquesta nada: ambos pasos se ejecutarían de forma independiente, sin garantizar que el job de Glue arranque después de que la función Lambda termine, y además mezcla una arquitectura dirigida por eventos con la necesidad de una ejecución programada semanalmente."
+        },
+        {
+          "id": "de052",
+          "text": "Una plataforma de investigación jurídica necesita un motor de búsqueda interno eficiente para generar resultados relevantes al buscar entre 2 PB de sentencias y expedientes históricos. Un ingeniero de datos está preparando un dominio de Amazon OpenSearch Service para alojar un índice grande de esos documentos. Se espera que el motor de búsqueda se use las 24 horas del día, los 7 días de la semana. El ingeniero de datos debe elegir una solución de almacenamiento del índice optimizada tanto en rendimiento como en costo.\n\n¿Qué solución de almacenamiento cumplirá estos requisitos?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Agregar y habilitar nodos de datos UltraWarm en el dominio para almacenar el índice",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Almacenar el índice en nodos de datos hot (hot data nodes) del dominio",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Habilitar el almacenamiento cold (cold storage) en el dominio para guardar el índice",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Usar Index State Management (ISM) para mover el índice entre clases de almacenamiento según una programación",
+              "desc": ""
+            }
+          ],
+          "correct": "A",
+          "explanation": "UltraWarm es un nivel de almacenamiento de OpenSearch Service pensado exactamente para este punto intermedio: reduce el costo frente al almacenamiento hot al usar Amazon S3 como respaldo, escala hasta varios petabytes, y mantiene una experiencia de búsqueda ágil gracias al uso de caché, por lo que equilibra bien rendimiento y costo para un índice de 2 PB consultado de forma constante. Usar únicamente nodos de datos hot ofrece el mejor rendimiento posible, pero también es la opción de almacenamiento más costosa, ya que requiere volúmenes de Amazon EBS adjuntos a los nodos del clúster para todo el índice, sin optimizar el costo. Habilitar el almacenamiento cold sí es la opción más económica, porque guarda los datos en Amazon S3, pero a cambio del rendimiento más bajo, inadecuado para un motor de búsqueda que debe responder de forma interactiva las 24 horas. Y usar Index State Management para mover el índice entre clases de almacenamiento según una programación tiene sentido cuando los datos se vuelven menos relevantes con el tiempo (por ejemplo, archivar registros antiguos), pero aquí el índice se consulta de manera constante por usuarios de todo el mundo, sin un patrón previsible de partes calientes y frías que justifique mover datos entre niveles según un calendario."
+        },
+        {
+          "id": "de053",
+          "text": "Un ingeniero de datos de una empresa de pruebas genealógicas de ADN necesita construir un data lake para descubrir, limpiar y garantizar la consistencia del esquema de los datos que llegan en formato JSON desde los distintos kits de prueba.\n\n¿Qué solución cumplirá estos requisitos con el MENOR esfuerzo operativo?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Usar AWS Glue Data Quality para descubrir automáticamente los datos. Usar funciones de AWS Lambda para limpiar los datos. Usar AWS Glue DynamicFrame para mantener la consistencia del esquema",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Usar AWS Glue Data Quality para descubrir automáticamente los datos. Usar Amazon EMR Serverless para limpiar los datos. Usar AWS Glue Schema Registry para mantener la consistencia del esquema",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Usar crawlers de AWS Glue para descubrir automáticamente los datos y poblar el AWS Glue Data Catalog. Usar AWS Glue DataBrew para limpiar los datos. Usar AWS Glue Schema Registry para mantener la consistencia del esquema",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Usar crawlers de AWS Glue para descubrir automáticamente los datos y poblar el AWS Glue Data Catalog. Usar AWS Glue DataBrew para limpiar los datos. Usar AWS Glue DynamicFrame para mantener la consistencia del esquema",
+              "desc": ""
+            }
+          ],
+          "correct": "C",
+          "explanation": "Los crawlers de AWS Glue están hechos justamente para descubrir automáticamente los datos e inferir su esquema, poblando el Data Catalog sin trabajo manual; AWS Glue DataBrew ofrece una interfaz visual con transformaciones integradas para limpiar los datos sin escribir código; y AWS Glue Schema Registry está diseñado específicamente para descubrir, versionar y controlar los esquemas de formatos como JSON, Avro y Protocol Buffers, garantizando su consistencia a medida que los kits de prueba evolucionan. AWS Glue Data Quality sirve para definir y evaluar reglas de calidad sobre datos ya catalogados, pero no tiene capacidad de descubrimiento de esquema como un crawler; usar funciones Lambda para limpiar los datos, o levantar jobs personalizados en Amazon EMR Serverless, exige desarrollar y mantener ese código a mano en lugar de aprovechar una herramienta visual ya lista como DataBrew. Y AWS Glue DynamicFrame es simplemente una estructura de datos similar a una tabla que se usa dentro de los jobs de Glue para transformaciones funcionales o tipo SQL, pero no ofrece ninguna capacidad de registro o control de versiones de esquema, por lo que no sirve para mantener la consistencia del esquema a largo plazo."
+        },
+        {
+          "id": "de054",
+          "text": "Una startup fintech construye su infraestructura sobre AWS. La empresa almacena principalmente sus datos en Amazon S3 y usa Amazon Athena para consultarlos. Recientemente implementó Amazon EMR para procesar datos con Apache Spark y bibliotecas de machine learning.\n\nA medida que la startup crece y sus datos se vuelven más complejos, sigue incorporando más servicios de AWS. Además de Amazon S3, parte de los datos se almacena en un sistema de archivos distribuido de Hadoop (HDFS). La empresa no tiene un catálogo de datos común: parte de los datos está catalogada en el AWS Glue Data Catalog, y otra parte en el metastore de Apache Hive. Un equipo de ingeniería de datos debe diseñar una solución para organizar los datos, priorizando la durabilidad de los datos.\n\n¿Qué solución cumplirá estos requisitos con el MENOR esfuerzo de migración?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Crear una fuente de datos unificada moviendo todos los datos a HDFS. Migrar las consultas de Athena a Presto en Amazon EMR. Seguir usando las herramientas de Amazon EMR para procesar los datos",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Crear una fuente de datos unificada moviendo todos los datos a Amazon S3. Configurar Amazon EMR para usar el Data Catalog. Registrar todos los datos en el Data Catalog. Migrar las consultas de Athena a Spark SQL. Seguir usando las herramientas de Amazon EMR para procesar los datos",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Crear una fuente de datos unificada moviendo todos los datos a HDFS. Migrar las consultas de Athena a Spark SQL. Seguir usando las herramientas de Amazon EMR para procesar los datos",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Crear una fuente de datos unificada moviendo todos los datos a Amazon S3. Configurar Amazon EMR para usar el Data Catalog. Registrar todos los datos en el Data Catalog. Seguir usando Athena y las herramientas de Amazon EMR para procesar los datos",
+              "desc": ""
+            }
+          ],
+          "correct": "D",
+          "explanation": "Unificar todos los datos en Amazon S3 aprovecha su altísima durabilidad como capa de almacenamiento del data lake, y como Amazon EMR puede leer y escribir directamente en S3 mediante EMRFS, no hace falta rehacer ninguna canalización de procesamiento; registrar todos los datos en el Glue Data Catalog reemplaza tanto el metastore de Hive como el catálogo parcial existente con un catálogo único, compatible de forma nativa con Hive, Presto, Spark y Athena, por lo que tanto Athena como las herramientas de EMR pueden seguir usándose sin ningún cambio en el lenguaje de las consultas. Migrar todos los datos a HDFS, en cualquiera de sus variantes, va en contra del requisito de durabilidad porque el HDFS de un clúster de EMR es efímero y desaparece si el clúster se termina. Y las dos opciones que migran las consultas de Athena hacia Spark SQL agregan esfuerzo de migración innecesario, ya que Spark SQL no comparte la misma base que PrestoSQL (a diferencia de Athena, que sí está basado en Presto), por lo que las consultas existentes tendrían que reescribirse."
+        },
+        {
+          "id": "de055",
+          "text": "Por motivos de cumplimiento normativo, una agencia de cobranza de deudas necesita eliminar registros de su data lake en Amazon S3 una vez que alcanzan un límite específico de retención.\n\n¿Qué solución cumplirá este requisito con el MENOR esfuerzo operativo?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Configurar las tablas usando el formato de tabla Apache Iceberg. Usar Amazon Athena para eliminar los registros",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Configurar las tablas usando el formato de tabla Apache Iceberg. Usar una tabla externa con un clúster aprovisionado de Amazon Redshift para eliminar los registros",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Configurar las tablas usando el formato de tabla Apache Hudi. Usar Amazon Athena para eliminar los registros",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Configurar las tablas usando el formato de tabla Delta Lake. Usar una tabla externa con Amazon Redshift Serverless para eliminar los registros",
+              "desc": ""
+            }
+          ],
+          "correct": "A",
+          "explanation": "Apache Iceberg es un formato de tabla abierto que admite operaciones de eliminación a nivel de registro, y Amazon Athena tiene soporte nativo para ejecutar sentencias DELETE sobre tablas Iceberg; al ser Athena un servicio serverless, la agencia puede eliminar los registros vencidos con una simple consulta SQL, sin administrar ninguna infraestructura de análisis. Usar Iceberg pero eliminar los registros desde un clúster aprovisionado de Amazon Redshift no funciona, porque Redshift Spectrum accede a las tablas Iceberg en modo de solo lectura y no admite operaciones de eliminación. Configurar las tablas con Apache Hudi (que sí admite eliminaciones a nivel de registro) y usar Athena tampoco cumple el requisito, porque Athena puede consultar tablas Hudi, pero no puede escribir en ellas ni ejecutar eliminaciones sobre ellas. Y usar el formato Delta Lake con una tabla externa en Amazon Redshift Serverless tiene el mismo problema que la opción de Redshift con Iceberg: Redshift Spectrum solo lee las tablas Delta Lake, sin capacidad de eliminar registros."
+        },
+        {
+          "id": "de056",
+          "text": "Una empresa de análisis de imágenes satelitales había configurado AWS Glue DataBrew para conectarse a recursos dentro de una VPC. La empresa decidió trasladar el uso de DataBrew a una cuenta nueva de AWS, que administrará un nuevo equipo de ingeniería de datos, y dará de baja todo el uso de DataBrew en la cuenta actual. Como parte de este proceso, un ingeniero de datos necesita eliminar el grupo de seguridad de AWS existente que había permitido la conectividad de DataBrew hacia la VPC.\n\n¿Qué combinación de pasos cumplirá este requisito? (Selecciona DOS)",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Eliminar y reemplazar cualquier recurso de la VPC al que esté asociado el grupo de seguridad",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Especificar un período de espera de eliminación del mínimo requerido de 7 días",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Eliminar cualquier regla de otros grupos de seguridad de la VPC que haga referencia a este grupo de seguridad",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Desasociar el grupo de seguridad de cualquier recurso de la VPC",
+              "desc": ""
+            },
+            {
+              "letter": "E",
+              "title": "Eliminar todas las reglas del propio grupo de seguridad",
+              "desc": ""
+            }
+          ],
+          "correct": [
+            "C",
+            "D"
+          ],
+          "explanation": "Un grupo de seguridad no se puede eliminar mientras siga asociado a algún recurso de la VPC (como una instancia o una interfaz de red), así que primero hay que desasociarlo de todos ellos; y si además otro grupo de seguridad de la misma VPC lo referencia dentro de alguna de sus reglas, esa referencia debe eliminarse antes de poder borrar el grupo, porque AWS no permite eliminar un grupo de seguridad al que otro sigue haciendo referencia. Eliminar y reemplazar los recursos de la VPC asociados al grupo es innecesariamente destructivo: basta con desasociar el grupo de seguridad de esos recursos, no hace falta eliminarlos. No existe ningún período de espera configurable para eliminar un grupo de seguridad; esa opción no corresponde a ningún mecanismo real de AWS. Y eliminar todas las reglas dentro del propio grupo de seguridad no es un paso necesario: un grupo de seguridad con reglas puede eliminarse sin problema siempre que ya no esté asociado a ningún recurso ni referenciado desde otro grupo."
+        },
+        {
+          "id": "de057",
+          "text": "Una plataforma de venta de boletos para eventos en vivo tiene una tabla de transacciones en una base de datos Amazon RDS para PostgreSQL. Las transacciones de venta se agregan a la tabla a lo largo de todo el día. Un ingeniero de datos necesita crear un proceso que cargue cada noche los datos de ventas nuevos de esa tabla hacia Amazon S3 con fines de generación de reportes.\n\n¿Qué solución cumplirá estos requisitos con el MENOR esfuerzo operativo?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Configurar una tarea de AWS Database Migration Service (AWS DMS) para una carga completa (full load). Seleccionar la tabla de la base de datos RDS para PostgreSQL como origen y Amazon S3 como destino. Usar Amazon EventBridge para programar esta tarea cada noche",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Crear una función de AWS Lambda que use la operación de la API StartExportTask de Amazon RDS para exportar un snapshot de la base de datos RDS para PostgreSQL hacia un bucket de S3. Usar Amazon EventBridge para programar la función cada noche",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Crear un job de AWS Glue que se conecte a la base de datos RDS para PostgreSQL. Usar un bookmark de AWS Glue sobre el campo de fecha de transacción para leer solo los datos nuevos de la tabla y escribirlos en Amazon S3. Programar el job para que se ejecute cada noche",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Configurar una tarea de AWS Database Migration Service (AWS DMS) para replicación continua (change data capture, CDC). Seleccionar la tabla de la base de datos RDS para PostgreSQL como origen y Amazon S3 como destino",
+              "desc": ""
+            }
+          ],
+          "correct": "C",
+          "explanation": "Un job de AWS Glue que se conecte a la tabla de RDS y use un bookmark sobre el campo de fecha de transacción recuerda hasta dónde llegó la última ejecución y en cada corrida nocturna procesa únicamente las filas agregadas desde entonces, escribiéndolas en S3; al ser un servicio serverless programado una vez al día, esta solución cumple exactamente el requisito con el mínimo esfuerzo operativo. Una tarea de AWS DMS configurada como carga completa (full load) volvería a exportar toda la tabla cada noche en lugar de solo las transacciones nuevas, lo que no cumple el requisito. Usar una función Lambda con la API StartExportTask para exportar un snapshot tiene el mismo problema: esa operación exporta la tabla completa desde el snapshot, no un subconjunto incremental de datos nuevos. Y configurar una tarea de AWS DMS de replicación continua (CDC) sí captura solo los cambios, pero para eso la tarea debe permanecer corriendo de forma constante, lo cual añade esfuerzo operativo innecesario cuando el requisito es simplemente una carga programada una vez por noche, no una replicación casi en tiempo real."
+        },
+        {
+          "id": "de058",
+          "text": "Una empresa de máquinas expendedoras conectadas tiene una aplicación IoT que sube 5 MB de datos hacia AWS cada 30 segundos desde cada máquina. Después de subir los datos, estos se eliminan automáticamente del dispositivo. Los datos deben transformarse y almacenarse en un bucket de Amazon S3. La transformación es simple y toma solo unos segundos. Además, debe guardarse una copia de los datos sin transformar en un segundo bucket de S3 para un procesamiento alternativo posterior. Si por alguna razón la transformación falla, se necesita poder reintentar la acción.\n\n¿Qué solución cumplirá estos requisitos?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Configurar Amazon Data Firehose para capturar los datos entrantes. Configurar el stream de entrega de Firehose para invocar una función de AWS Lambda que realice la transformación y guarde los datos en el primer bucket de S3. Configurar el stream de entrega de Firehose para transferir directamente los datos sin transformar hacia el segundo bucket de S3",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Configurar Amazon Kinesis Data Streams para capturar los datos entrantes. Configurar una función de AWS Lambda como consumidora del stream para realizar la transformación y guardar los datos en el primer bucket de S3. Configurar Amazon Data Firehose como un segundo consumidor para transferir los datos sin transformar hacia el segundo bucket de S3",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Configurar Amazon Kinesis Data Streams para capturar los datos entrantes. Configurar una función de AWS Lambda como consumidora del stream para realizar la transformación y guardar los datos en el primer bucket de S3. Configurar Kinesis Data Streams para transferir directamente los datos sin transformar hacia el segundo bucket de S3",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Configurar Amazon Data Firehose para capturar los datos entrantes. Configurar el stream de entrega de Firehose para invocar una función de AWS Lambda que realice la transformación y guarde los datos en el primer bucket de S3. Configurar un stream de datos de Amazon Kinesis para tomar los datos sin transformar desde Firehose y transferirlos hacia el segundo bucket de S3",
+              "desc": ""
+            }
+          ],
+          "correct": "B",
+          "explanation": "Amazon Kinesis Data Streams captura los datos entrantes casi en tiempo real y, a diferencia de Firehose, ofrece capacidad de reintento cuando falla el procesamiento de un registro; una función Lambda como consumidora del stream aplica la transformación rápida y guarda el resultado en el primer bucket de S3, mientras que Amazon Data Firehose puede configurarse como un segundo consumidor independiente del mismo stream para entregar los datos sin transformar directamente al segundo bucket, ya que Firehose sí sabe transferir datos directamente a S3. Usar Firehose como punto de entrada no cumple el requisito de reintento, porque Firehose no ofrece esa capacidad de reintento ante errores de procesamiento. Capturar los datos con Kinesis Data Streams y luego intentar que el propio stream transfiera los datos sin transformar directamente a S3 no es posible: Kinesis Data Streams no tiene la capacidad de escribir directamente en un bucket de S3, para eso necesita un consumidor como Lambda o Firehose. Y la combinación de Firehose como entrada seguido de un stream de Kinesis Data Streams para reenviar los datos sin transformar acumula los dos problemas anteriores: Firehose sigue sin ofrecer reintentos, y Kinesis Data Streams sigue sin poder escribir directamente en S3."
+        },
+        {
+          "id": "de059",
+          "text": "Una firma de gestión patrimonial exporta los datos de sus operaciones de venta de productos financieros desde sus sistemas operacionales hacia Amazon S3. La firma usa esos datos para hacer un análisis mensual de las tendencias de ingresos por ventas. Los datos se ingieren en Amazon S3 en formato Apache Parquet y están particionados por fecha. Un ingeniero de datos debe diseñar una solución que permita a los analistas de datos analizar la información; los analistas usarán los datos para publicar las tendencias mensuales.\n\n¿Qué solución cumplirá estos requisitos con el MENOR esfuerzo operativo?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Crear un clúster de Amazon EMR con Trino instalado, con los permisos necesarios para acceder a los datos de S3. Dar a los analistas de datos acceso al clúster de EMR para consultar los datos con Trino",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Crear un clúster de Amazon Redshift. Crear un esquema externo y tablas externas. Dar a los analistas de datos acceso al clúster de Redshift. Usar Amazon Redshift Spectrum para consultar los datos",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Crear tablas y vistas de Amazon Athena para que los analistas de datos accedan y consulten los datos. Dar a los analistas de datos acceso a Athena para consultar los datos",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Crear un clúster de Amazon Redshift e ingerir los datos en el clúster usando AWS Glue. Dar a los analistas de datos acceso al clúster de Redshift para consultar los datos",
+              "desc": ""
+            }
+          ],
+          "correct": "C",
+          "explanation": "Amazon Athena puede consultar directamente los datos en Parquet almacenados en S3 sin necesidad de ingerirlos en ningún otro sistema, y al ser un servicio serverless no requiere aprovisionar ni dimensionar ninguna infraestructura para el proceso mensual; crear tablas y vistas en Athena permite además exponer a los analistas subconjuntos ya preparados de los datos, o combinaciones de varias tablas, listos para el análisis de tendencias. Levantar un clúster de Amazon EMR con Trino instalado sí permitiría consultar los datos de forma interactiva, pero exige aprovisionar, configurar y mantener ese clúster, esfuerzo que Athena evita por completo. Crear un clúster de Amazon Redshift con un esquema externo para usar Redshift Spectrum también implica aprovisionar y configurar un clúster de Redshift antes de poder definir las tablas externas. Y crear un clúster de Redshift e ingerir los datos con un job de AWS Glue añade, además del clúster, todo un pipeline de ingesta que hay que construir y mantener, cuando los analistas solo necesitan consultar los datos que ya están en S3."
+        },
+        {
+          "id": "de060",
+          "text": "Un contratista de defensa usa AWS Glue para sus procesos de extracción, transformación y carga (ETL) y buckets de Amazon S3 para almacenar los datos. Los jobs de AWS Glue y los buckets de S3 están en la misma región de AWS. Actualmente, los jobs de AWS Glue acceden a los buckets de S3 a través de internet público, pero la empresa quiere configurar una conexión privada entre los jobs de AWS Glue y los buckets de S3.\n\n¿Qué combinación de pasos cumplirá estos requisitos de la forma MÁS rentable? (Selecciona DOS)",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Crear un endpoint de interfaz de S3 para enrutar el tráfico hacia S3 por una red privada usando AWS PrivateLink",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Crear una conexión de red (network connection) en AWS Glue y especificar la VPC y la subred",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Crear una política de bucket de S3 que habilite a AWS Glue para acceder al bucket usando la VPC",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Crear un endpoint de interfaz de VPC de AWS Glue para permitir el acceso privado a AWS Glue",
+              "desc": ""
+            },
+            {
+              "letter": "E",
+              "title": "Crear un endpoint de gateway de S3 para enrutar el tráfico hacia S3 por una red privada",
+              "desc": ""
+            }
+          ],
+          "correct": [
+            "B",
+            "E"
+          ],
+          "explanation": "Los jobs de AWS Glue no se ejecutan dentro de una VPC por defecto, así que primero hace falta crear una conexión de red en Glue que especifique la VPC y la subred, con lo cual Glue crea las interfaces de red necesarias para comunicarse dentro de esa VPC; y para que el tráfico hacia S3 desde esa VPC viaje por la red privada de AWS en lugar de por internet público, un endpoint de gateway de S3 es la opción indicada, ya que además no tiene ningún costo adicional por su uso, a diferencia de otros tipos de endpoint. Un endpoint de interfaz de S3 mediante AWS PrivateLink también establecería una conexión privada, pero tiene un costo por hora y por gigabyte procesado; como los jobs de Glue y los buckets están en la misma región, un endpoint de gateway logra el mismo resultado sin ese costo adicional. Crear una política de bucket de S3 no es necesaria en este escenario: no hay ninguna política de denegación previa que haya que ajustar, y una política de bucket por sí sola no establece ninguna ruta de red privada. Y un endpoint de interfaz de VPC de AWS Glue sirve para acceder a las API de control de AWS Glue desde dentro de una VPC, no para que un job de Glue en ejecución se conecte de forma privada a Amazon S3."
+        },
+        {
+          "id": "de061",
+          "text": "Un ingeniero de datos de una empresa de tecnología publicitaria usa un job de AWS Glue para leer muchísimos archivos JSON pequeños de registros de clics e impresiones desde Amazon S3, y luego transformarlos para consultas analíticas. Actualmente, el job genera como salida muchos archivos pequeños en Amazon S3. El ingeniero de datos quiere que el job produzca particiones más grandes, sin aumentar de forma significativa el tiempo de ejecución del job.\n\n¿Qué solución cumplirá estos requisitos?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Configurar el particionamiento de carga de trabajo (workload partitioning) en el job de AWS Glue usando el parámetro boundedSize",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Configurar el job de AWS Glue para que use un tipo de worker más grande con más DPU",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Establecer el parámetro groupSize del job de AWS Glue en un valor más alto",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Realizar un repartition en el job de AWS Glue antes de escribir en Amazon S3",
+              "desc": ""
+            }
+          ],
+          "correct": "C",
+          "explanation": "El parámetro groupSize permite agrupar, durante la lectura desde S3, muchos archivos pequeños en grupos de un tamaño objetivo (en bytes) antes de procesarlos, lo que produce particiones más grandes de forma natural sin necesidad de mover datos entre particiones después; como el agrupamiento ocurre en la fase de lectura, incluso puede mejorar el rendimiento del job en lugar de alargarlo, ya que evita la sobrecarga de abrir miles de archivos pequeños por separado. El particionamiento de carga de trabajo con boundedSize controla cuántos datos procesa cada ejecución del job para evitar errores de memoria, pero no afecta el tamaño de las particiones ni de los archivos de salida. Usar un tipo de worker más grande con más DPU acelera el procesamiento general, pero no cambia en nada el tamaño de las particiones que el job genera como salida. Y hacer un repartition sí produce archivos de salida más grandes, pero esa operación implica una redistribución completa (shuffle) de los datos entre los nodos, lo que puede aumentar significativamente el tiempo de ejecución del job, justo lo que el requisito pide evitar."
+        },
+        {
+          "id": "de062",
+          "text": "Un proveedor de estadísticas deportivas creó un job de extracción, transformación y carga (ETL) con un DynamicFrame de AWS Glue. La tabla de origen en el AWS Glue Data Catalog está muy particionada (por temporada, equipo y partido) y usa índices de partición para mejorar las consultas. Para optimizar el ETL, aumentar el rendimiento de las consultas y reducir el costo, el ingeniero de datos debe listar y leer únicamente los datos necesarios en el DynamicFrame, aprovechando además los índices de partición de la tabla.\n\n¿Qué solución cumplirá estos requisitos de la forma MÁS rentable?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Usar un pushdown predicate para prefiltrar las particiones, aplicando el filtro directamente sobre los metadatos de partición",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Usar catalog partition predicates para implementar un filtrado del lado del servidor al crear el DynamicFrame",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Excluir la clase de almacenamiento S3 Glacier Deep Archive al crear el DynamicFrame",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Agrupar todos los archivos de entrada de la tabla de origen en una sola partición en memoria, y consultarlos directamente",
+              "desc": ""
+            }
+          ],
+          "correct": "B",
+          "explanation": "El filtrado del lado del servidor mediante la opción catalogPartitionPredicate aprovecha directamente los índices de partición ya definidos en el AWS Glue Data Catalog, lo que acelera el escaneo y la respuesta al consultar una tabla tan particionada, reduciendo tanto los datos escaneados como los recursos de cómputo necesarios; por eso es la opción más rentable cuando la tabla ya tiene índices de partición configurados. Usar un pushdown predicate también filtra por partición, pero lo hace después de que Glue ya listó todas las particiones del catálogo y antes de listar los archivos de esas particiones, sin aprovechar el índice de partición, lo que resulta menos eficiente en una tabla muy particionada. Excluir la clase de almacenamiento S3 Glacier Deep Archive resuelve un problema distinto (evitar errores al intentar leer objetos archivados que no se han restaurado) y tampoco usa el índice de partición del catálogo, así que sigue escaneando todos los archivos de todas las particiones. Y agrupar todos los archivos de entrada en una sola partición en memoria está pensado para leer eficientemente muchos archivos pequeños directamente desde S3, pero tampoco aprovecha el índice de partición del catálogo, por lo que el job seguiría listando y leyendo particiones que no hacen falta."
+        },
+        {
+          "id": "de063",
+          "text": "Un job de AWS Glue de una agencia de aduanas intenta leer datos de un bucket de Amazon S3 con los expedientes de importación. Sin embargo, después de unos minutos el job falla con un error de memoria insuficiente (out-of-memory).\n\n¿Qué solución resolverá el error?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Aumentar el límite de tiempo de espera (timeout) en la definición del job de AWS Glue",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Aumentar la variable MaxRetries en la definición del job de AWS Glue",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Aumentar la concurrencia máxima (maximum concurrency) en la definición del job de AWS Glue",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Definir pushdown predicates en el job de AWS Glue",
+              "desc": ""
+            }
+          ],
+          "correct": "D",
+          "explanation": "Definir pushdown predicates aplica el filtrado sobre los metadatos de partición antes de listar y leer los archivos correspondientes, lo que reduce la cantidad de archivos que el job realmente descarga y procesa; al leer menos datos, disminuye la presión sobre la memoria disponible y ayuda a resolver el error de memoria insuficiente. Aumentar el límite de tiempo de espera solo le da al job más tiempo antes de pasar al estado TIMEOUT, pero no cambia en nada la cantidad de datos que se cargan en memoria, así que el job seguiría fallando por falta de memoria, solo que quizás un poco más tarde. Aumentar MaxRetries simplemente hace que el job se reintente más veces tras fallar, pero cada reintento repetiría exactamente el mismo problema de memoria y volvería a fallar. Y aumentar la concurrencia máxima permite que se ejecuten más instancias del job en paralelo, lo cual no reduce la cantidad de datos que procesa cada ejecución individual ni resuelve el error de memoria de una ejecución concreta."
+        },
+        {
+          "id": "de064",
+          "text": "Una máquina de estados de AWS Step Functions de una fábrica de semiconductores realiza el procesamiento de datos de producción. Un nuevo requisito exige iniciar de forma asíncrona un crawler de AWS Glue, que procesará datos desde un bucket de Amazon S3. Para lograrlo, un ingeniero de datos debe modificar la definición de la máquina de estados agregando un nuevo estado de tarea (task state). El nuevo estado de tarea también debe insertarse entre dos estados ya existentes.\n\n¿Qué campos de la definición de la tarea cumplirán estos requisitos? (Selecciona TRES)",
+          "options": [
+            {
+              "letter": "A",
+              "title": "El campo Resource debería contener \"arn:aws:states:::aws-sdk:glue:startCrawler\"",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "El campo Name del estado debería establecerse como StartCrawler",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "El campo Next debería establecerse con el nombre del siguiente estado de tarea",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "El campo Type debería establecerse como Task",
+              "desc": ""
+            },
+            {
+              "letter": "E",
+              "title": "El campo End debería establecerse como false",
+              "desc": ""
+            },
+            {
+              "letter": "F",
+              "title": "El campo Parameters debería contener \"arn:aws:states:::aws-sdk:glue:startCrawler\"",
+              "desc": ""
+            }
+          ],
+          "correct": [
+            "A",
+            "C",
+            "D"
+          ],
+          "explanation": "Todo estado de tarea requiere un campo Type establecido como Task para indicar de qué tipo de estado se trata, y un campo Resource con el ARN de la integración del SDK de Step Functions correspondiente a la acción que se quiere invocar, en este caso \"arn:aws:states:::aws-sdk:glue:startCrawler\" para iniciar el crawler; y como el nuevo estado debe insertarse entre dos estados existentes (no ser el último de la máquina de estados), también necesita un campo Next que indique a qué estado transicionar una vez que termine. Establecer el campo Name como StartCrawler no es obligatorio para que la tarea funcione: el nombre del estado solo debe ser único dentro de la máquina de estados, pero su valor concreto no afecta el comportamiento. El campo End es opcional y se usa para marcar que la máquina de estados debe terminar al completar ese estado; establecerlo en false no es necesario, y si se hubiera puesto en true por error, impediría que el flujo continuara hacia el siguiente estado. Y el ARN del recurso no va en el campo Parameters: ese campo se usa para pasar la carga útil (por ejemplo, el nombre del crawler a iniciar) a la API indicada en Resource, no para repetir el ARN del propio recurso."
+        },
+        {
+          "id": "de065",
+          "text": "Un fabricante de autopartes guarda los registros de producción de cada pieza en cada etapa de su cadena de suministro. Un ingeniero de datos configura estos registros para que se guarden diariamente en Amazon S3 Standard en formato CSV. Luego usa Amazon Athena para generar una tabla de reportes a partir de esos registros de producción, y genera reportes para cada etapa de la cadena de suministro. Para mantener la eficiencia, el ingeniero de datos quiere limitar la cantidad de datos escaneados.\n\n¿Qué solución cumplirá estos requisitos de la forma MÁS rentable?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Reducir el número de columnas usando un AWS Glue Schema Registry",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Dividir manualmente los datos en varios archivos más pequeños, cercanos a 1 GB de tamaño después de la compresión",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Comprimir los archivos a formato ZIP y guardarlos en el bucket de S3",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Especificar un esquema de particionamiento usando la cláusula PARTITIONED BY en la sentencia CREATE EXTERNAL TABLE",
+              "desc": ""
+            }
+          ],
+          "correct": "D",
+          "explanation": "Particionar los datos (por ejemplo, por etapa de la cadena de suministro y por fecha) usando PARTITIONED BY al crear la tabla externa permite que cada consulta de Athena escanee solo las particiones relevantes para el reporte, en lugar de todo el histórico de registros, lo que reduce directamente los datos escaneados y, por lo tanto, el costo de cada consulta. Usar un AWS Glue Schema Registry no aplica aquí: ese servicio administra y valida esquemas para aplicaciones de streaming (como Kafka o Kinesis), pero no reduce en absoluto la cantidad de datos que Athena escanea al consultar una tabla. Dividir manualmente los archivos para acercarlos a 1 GB después de la compresión es una recomendación de carga para Amazon Redshift con el comando COPY, no una técnica que reduzca los datos escaneados por Athena. Y comprimir los archivos a formato ZIP no funciona porque Athena no admite ese formato de compresión para leer los datos de una tabla."
+        },
+        {
+          "id": "de066",
+          "text": "Una empresa de impresión bajo demanda quiere ejecutar diariamente un job de Apache Spark que calcule estadísticas de ventas y notifique a los analistas de datos. Los datos crudos están disponibles en Amazon S3. Las estadísticas deben poder consultarse mediante SQL y deben quedar persistidas en Amazon S3.\n\n¿Qué solución cumplirá estos requisitos con el MENOR esfuerzo operativo?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Usar Amazon EventBridge Scheduler para crear una ejecución diaria de un flujo de trabajo de AWS Step Functions. En el flujo, incluir una acción para crear una aplicación de Amazon EMR Serverless, una acción para iniciar la ejecución del job de Spark, una acción para eliminar la aplicación, una acción para iniciar un crawler de AWS Glue, y una acción para publicar un mensaje de Amazon Simple Notification Service (Amazon SNS)",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Programar un cron job en una instancia de Amazon EC2 optimizada para cómputo que ejecute el job de Spark. Crear un segundo cron job que ejecute un comando de la AWS CLI para iniciar un crawler de AWS Glue sobre las estadísticas. Usar un tercer cron job que ejecute un comando de la AWS CLI para notificar a los analistas de datos mediante Amazon SNS",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Usar Amazon EventBridge Scheduler para crear tres tareas diarias consecutivas: una que cargue los datos en un clúster de Amazon Redshift, otra que ejecute el job de Spark con la integración de Amazon Redshift para Apache Spark, y una final que notifique a los analistas de datos mediante Amazon SNS",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Programar un cron job en un clúster de Amazon EMR on EC2 de larga duración que ejecute el job de Spark. Configurar una acción de Amazon EventBridge para cuando el job de Spark termine, que llame a una función de AWS Lambda. La función Lambda debe ejecutar un crawler de AWS Glue sobre las estadísticas y notificar a los analistas de datos mediante Amazon SNS",
+              "desc": ""
+            }
+          ],
+          "correct": "A",
+          "explanation": "Con Amazon EventBridge Scheduler disparando diariamente un flujo de trabajo de AWS Step Functions que crea una aplicación de Amazon EMR Serverless, ejecuta el job de Spark, elimina la aplicación al terminar, ejecuta un crawler de AWS Glue para exponer las estadísticas al Data Catalog (y así poder consultarlas con SQL) y finalmente publica una notificación por Amazon SNS, toda la solución queda automatizada de punta a punta sin que el ingeniero tenga que administrar ningún servidor ni clúster permanente. Programar cron jobs sobre una instancia EC2 dedicada implica mantener esa instancia encendida la mayor parte del tiempo de forma ociosa, además de gestionar los propios cron jobs y sus posibles fallos, mucho más esfuerzo operativo que un flujo serverless orquestado. Usar Amazon Redshift para ejecutar el job de Spark agrega el costo y la administración de un clúster de Redshift, y además la integración de Redshift para Spark requiere contar con un clúster de Amazon EMR, que esta opción no incluye. Y ejecutar el job de Spark en un clúster de Amazon EMR on EC2 de larga duración obliga a mantener ese clúster funcionando permanentemente, lo cual añade esfuerzo operativo frente a crear y eliminar una aplicación de EMR Serverless solo cuando el job realmente se ejecuta."
+        },
+        {
+          "id": "de067",
+          "text": "Un mercado en línea de libros usados construyó un data lake en AWS usando Amazon S3, pero no cuenta con metadatos para clasificar los datos. Un ingeniero de datos quiere crear un proceso automatizado que organice mejor el data lake catalogando las tablas y columnas. La solución debe soportar posibles cambios de esquema en el futuro y registrar un historial de esos cambios.\n\n¿Qué solución cumplirá estos requisitos con el MENOR esfuerzo operativo?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Usar Amazon Athena para consultar y analizar los datos en Amazon S3. Usar Athena para generar automáticamente los metadatos que cataloguen las tablas y columnas en un AWS Glue Data Catalog. Usar Amazon EventBridge y AWS Lambda para programar consultas de Athena que capturen los cambios de esquema y mantengan un registro de las versiones de las tablas",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Usar AWS Step Functions para orquestar el proceso de escanear y organizar los datos en Amazon S3. Configurar Step Functions para usar Amazon EMR y crear las tablas y columnas en el AWS Glue Data Catalog. Usar mecanismos de versionado en Amazon EMR para preservar el historial de cambios de esquema",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Usar un crawler de AWS Glue para escanear los datos en Amazon S3 y crear las tablas y columnas en un AWS Glue Data Catalog. Programar el crawler para que se ejecute periódicamente e identifique cambios en el esquema, generando nuevas versiones de las tablas",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Crear una programación con Amazon EventBridge para invocar una función de AWS Lambda. Configurar la función para que escanee y clasifique los datos en Amazon S3, y para que cree las tablas y columnas en un AWS Glue Data Catalog",
+              "desc": ""
+            }
+          ],
+          "correct": "C",
+          "explanation": "Un crawler de AWS Glue está diseñado exactamente para esto: escanea los datos en S3, infiere su esquema y crea automáticamente las tablas y columnas en el Data Catalog, y al programarlo para ejecutarse periódicamente, compara cada nueva ejecución con los metadatos ya generados para detectar cambios de esquema y registrar nuevas versiones de las tablas, todo sin código personalizado que mantener. Amazon Athena está pensado para consultar datos de forma interactiva y no tiene ninguna capacidad integrada para generar o actualizar metadatos en el Data Catalog de forma automática, así que la opción que combina Athena con EventBridge y Lambda para simular ese comportamiento exige construir toda la lógica desde cero. Usar AWS Step Functions junto con Amazon EMR tampoco resuelve el catalogado: EMR está orientado al procesamiento de grandes volúmenes de datos, no a administrar metadatos, y ni Step Functions ni EMR ofrecen de forma nativa la detección de cambios de esquema ni el versionado de tablas. Y programar una función de Lambda personalizada para escanear, clasificar y catalogar los datos manualmente obliga a escribir y mantener ese código de cero, incluyendo toda la lógica para detectar cambios de esquema, mucho más esfuerzo operativo que aprovechar un crawler ya integrado en AWS Glue."
+        },
+        {
+          "id": "de068",
+          "text": "Una plataforma de crowdfunding está desarrollando una aplicación serverless de procesamiento de datos que incluye Amazon S3, AWS Lambda y Amazon DynamoDB. Los usuarios suben un archivo CSV con datos de aportes a Amazon S3, lo que invoca una función Lambda. Esta función procesa los datos del archivo CSV en varios minutos y los guarda en una tabla de DynamoDB. Los archivos de menor tamaño se procesan correctamente, pero al probar con archivos de mayor tamaño, la empresa descubre que no se procesan por completo.\n\n¿Cuál es la causa de este problema?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "El rol de ejecución de la función Lambda no tiene el permiso GetObject de S3",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "El rol de ejecución de la función Lambda no tiene el permiso PutItem de DynamoDB",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Las notificaciones de S3 hacia Lambda no se están entregando",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "La función Lambda está agotando su tiempo de espera (timeout) debido al tiempo de procesamiento que requieren los archivos más grandes",
+              "desc": ""
+            }
+          ],
+          "correct": "D",
+          "explanation": "Como los archivos pequeños se procesan por completo y los grandes se quedan a medias después de varios minutos de procesamiento, todo apunta a que la duración del procesamiento crece con el tamaño del archivo hasta superar el límite de tiempo de espera configurado en la función Lambda, que como máximo admite 15 minutos; al alcanzar ese límite, Lambda interrumpe la ejecución dejando el archivo procesado solo parcialmente. Si el rol de ejecución no tuviera el permiso GetObject de S3, la función ni siquiera podría leer el archivo, y los archivos pequeños tampoco se procesarían correctamente. Si faltara el permiso PutItem de DynamoDB, ningún registro lograría guardarse, ni siquiera los de los archivos pequeños, que sí se persisten con éxito según el escenario. Y las notificaciones de eventos de S3 hacia Lambda se entregan como mínimo una vez, por lo que un problema de entrega de notificaciones no explicaría que el procesamiento se interrumpa a la mitad específicamente en los archivos más grandes."
+        },
+        {
+          "id": "de069",
+          "text": "Una firma de arquitectura e ingeniería quiere ingerir datos desde distintos sistemas de archivos on-premises hacia un data lake. Un ingeniero de datos está construyendo el pipeline de ingesta. Los datos (planos, modelos BIM y documentos de proyecto) deben repartirse entre varios buckets de Amazon S3 dentro del data lake, casi en tiempo real.\n\n¿Qué solución cumplirá estos requisitos?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Usar S3 Batch Operations para cargar los datos en Amazon S3 y repartirlos entre varios buckets",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Usar AWS DataSync para cargar los datos en distintos buckets de S3",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Usar S3 Replication Time Control (S3 RTC) para cargar los datos en Amazon S3 y repartirlos entre varios buckets",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Usar AWS Snowball Edge para cargar los datos en distintos buckets de S3",
+              "desc": ""
+            }
+          ],
+          "correct": "B",
+          "explanation": "AWS DataSync está diseñado para mover grandes volúmenes de datos en línea entre sistemas de archivos on-premises y varios servicios de AWS, incluido Amazon S3, automatizando tareas como la programación y ejecución de las copias; admite configurar múltiples tareas de transferencia hacia distintos buckets de destino, lo que encaja con la necesidad de repartir los datos casi en tiempo real entre varios buckets del data lake. S3 Batch Operations está pensado para ejecutar operaciones masivas sobre objetos que ya están en S3 (copiar, etiquetar, modificar permisos), no para ingerir datos desde sistemas on-premises de forma continua. S3 Replication Time Control sirve para replicar de forma continua los objetos de un bucket de origen hacia un bucket de destino específico, pero replica, no reparte ni divide los datos entre múltiples buckets según su origen. Y AWS Snowball Edge es un dispositivo físico pensado para transferencias de datos offline y por lotes que requieren transporte físico del dispositivo, lo que no cumple con el requisito de ingesta casi en tiempo real."
+        },
+        {
+          "id": "de070",
+          "text": "Una organización de certificaciones profesionales almacena sus conjuntos de datos históricos de exámenes en un data warehouse externo en la nube. La organización quiere migrar rápidamente esos grandes conjuntos de datos hacia Amazon Redshift, como parte de un proyecto de consolidación para migrar sus cargas de trabajo a AWS.\n\n¿Qué combinación de pasos cumplirá estos requisitos con el MENOR esfuerzo? (Selecciona DOS)",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Convertir el esquema de origen del data warehouse externo y su script de lenguaje de definición de datos (DDL) hacia Amazon Redshift usando AWS Schema Conversion Tool (AWS SCT)",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Migrar los datos desde el data warehouse externo hacia Amazon Redshift usando el editor de consultas SQL de Amazon Athena",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Convertir el esquema de origen del data warehouse externo y su script DDL hacia Amazon Redshift usando el editor de consultas SQL de Amazon Redshift",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Usar el data warehouse externo para descargar (unload) los datos hacia Amazon S3 como archivos de texto delimitado plano. Migrar los datos desde Amazon S3 hacia Amazon Redshift usando el editor de consultas SQL de Amazon Redshift con el comando COPY",
+              "desc": ""
+            },
+            {
+              "letter": "E",
+              "title": "Migrar los datos desde el data warehouse externo hacia Amazon Redshift usando AWS Glue Studio",
+              "desc": ""
+            }
+          ],
+          "correct": [
+            "A",
+            "E"
+          ],
+          "explanation": "Al tratarse de una migración heterogénea (de un data warehouse de otro proveedor hacia Amazon Redshift), AWS Schema Conversion Tool está hecho justamente para convertir automáticamente el esquema de origen y el script DDL a un formato compatible con Redshift, dejando las tablas listas para recibir los datos; una vez convertido el esquema, AWS Glue Studio ofrece una interfaz gráfica con conectores nativos tanto para varios data warehouses externos como para Amazon Redshift, permitiendo migrar los datos sin escribir todo el proceso de ETL desde cero. Usar el editor de consultas SQL de Amazon Athena para migrar los datos directamente no resuelve las conversiones de tipos de dato que suelen requerirse entre motores distintos, algo que es difícil o casi imposible de lograr solo con SQL. Convertir el esquema y el DDL a mano con el editor de consultas de Amazon Redshift exige inspeccionar y traducir manualmente cada definición de tabla del origen, mucho más esfuerzo que dejar que SCT lo haga automáticamente. Y descargar los datos como archivos de texto plano delimitado y cargarlos con el comando COPY tiene el mismo problema de fondo: la conversión de tipos de datos entre el data warehouse de origen y Redshift sigue sin resolverse, ya que COPY solo carga los datos, no adapta las diferencias de tipos entre ambos motores."
+        },
+        {
+          "id": "de071",
+          "text": "Un ingeniero de datos de una empresa de telemática vehicular debe optimizar el rendimiento de unas consultas en Amazon Athena que incluyen muchos joins y funciones de ventana (window functions) sobre los datos de viajes de la flota. La consulta escanea 2 TB de datos en formato Parquet en Amazon S3, que contienen datos de los últimos 3 años. Sin embargo, la lógica SQL fue diseñada para analizar solamente los últimos 3 meses de datos.\n\n¿Qué combinación de pasos ayudará a optimizar la consulta? (Selecciona DOS)",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Usar SELECT * en las consultas",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Particionar los datos por año, mes y día",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Usar formatos de archivo comprimidos",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Reemplazar todos los left join por inner join",
+              "desc": ""
+            },
+            {
+              "letter": "E",
+              "title": "Cambiar el formato de archivo a CSV",
+              "desc": ""
+            }
+          ],
+          "correct": [
+            "B",
+            "C"
+          ],
+          "explanation": "Particionar los datos por año, mes y día permite que, al filtrar por los últimos 3 meses, Athena descarte de entrada las particiones de los otros dos años y nueve meses sin siquiera leerlas, reduciendo drásticamente los datos escaneados; y usar formatos de archivo comprimidos reduce aún más el volumen de bytes que Athena tiene que leer de disco para cada partición relevante, bajando tanto el tiempo de consulta como el costo. Usar SELECT * obliga a Athena a leer todas las columnas de las tablas involucradas, incluidas las que la consulta no necesita, lo que aumenta los datos escaneados en lugar de reducirlos. Reemplazar los left join por inner join no garantiza ninguna mejora de rendimiento y además puede cambiar el resultado de la consulta al descartar filas que un left join sí conservaría, arriesgando pérdida de datos relevantes para el análisis. Y cambiar el formato de archivo a CSV sería un paso atrás: CSV es un formato orientado a filas, mientras que Parquet es columnar y ya está optimizado para que Athena lea solo las columnas necesarias, así que migrar a CSV empeoraría el rendimiento en lugar de mejorarlo."
+        },
+        {
+          "id": "de072",
+          "text": "Un equipo de ingenieros de datos de una consultora boutique de análisis acaba de recibir un archivo CSV de un cliente del sector de cervecerías artesanales para hacer una demostración de análisis de datos. El equipo quiere mostrarle al cliente cómo visualizar sus datos, así que sube y revisa el archivo directamente en Amazon QuickSight. Ahí descubren que los datos no están formateados correctamente, por lo que no están listos para visualizarse en QuickSight.\n\n¿Cómo puede el equipo visualizar este tipo de datos mal formateados con el MENOR esfuerzo operativo?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Subir los datos a Amazon Managed Grafana para visualizarlos",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Crear una función de AWS Lambda de preprocesamiento que formatee correctamente los datos. Usar QuickSight para visualizarlos",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Limpiar los datos de forma manual fuera de línea. Volver a subir el archivo CSV. Usar QuickSight para visualizarlos",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Usar las funciones nativas de QuickSight para formatear y transformar los datos. Usar QuickSight para visualizarlos",
+              "desc": ""
+            }
+          ],
+          "correct": "D",
+          "explanation": "Amazon QuickSight incluye funcionalidad nativa para dar formato y transformar los datos directamente dentro de la herramienta (funciones condicionales, de texto, numéricas y de fecha, entre otras), lo que permite preparar el archivo justo antes de visualizarlo sin salir de QuickSight ni construir nada adicional, siendo la opción con menos esfuerzo operativo. Amazon Managed Grafana es una herramienta de visualización, pero no admite subir archivos directamente para analizarlos, así que no encaja con este flujo de trabajo. Crear una función de Lambda para preprocesar el archivo antes de cargarlo en QuickSight funcionaría, pero exige desarrollar y mantener código adicional cuando QuickSight ya resuelve el mismo problema con sus funciones integradas. Y limpiar los datos manualmente fuera de línea y volver a subir el archivo agrega un paso manual y repetitivo cada vez que llegue un archivo mal formateado, más esfuerzo que aprovechar las herramientas de preparación de datos que ya están dentro de QuickSight."
+        },
+        {
+          "id": "de073",
+          "text": "Un servicio postal nacional usa Amazon Athena para analizar grandes volúmenes de datos a partir de archivos .csv, almacenados en el directorio raíz de un bucket de Amazon S3. La mayoría de las consultas incluyen resúmenes por cada departamento regional del servicio postal. La entidad quiere que los trabajos de consulta terminen de ejecutarse lo más rápido posible.\n\n¿Qué estrategias reducirán el tiempo necesario para ejecutar las consultas de Athena? (Selecciona DOS)",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Particionar los datos de S3 por departamento regional",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Activar Amazon ElastiCache a través de Athena",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Usar S3 Transfer Acceleration entre Amazon S3 y Athena",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Usar formatos de datos columnares para optimizar el rendimiento de las consultas",
+              "desc": ""
+            },
+            {
+              "letter": "E",
+              "title": "Restringir el acceso a columnas específicas de una tabla mediante control de acceso a nivel de columna",
+              "desc": ""
+            }
+          ],
+          "correct": [
+            "A",
+            "D"
+          ],
+          "explanation": "Como la mayoría de las consultas filtran o agrupan por departamento regional, particionar los datos de S3 según ese campo hace que Athena lea únicamente los archivos de las particiones relevantes en lugar de escanear todo el bucket, reduciendo el tiempo de ejecución; y usar un formato de datos columnar como Parquet u ORC en lugar de CSV permite que Athena lea solo las columnas necesarias para cada consulta y aproveche la compresión propia del formato, acelerando aún más la lectura. Amazon ElastiCache es un servicio de caché en memoria independiente que no tiene ningún tipo de integración con Athena, por lo que no puede activarse a través de Athena. S3 Transfer Acceleration acelera las subidas de archivos hacia un bucket de S3 a través de largas distancias por internet, pero no interviene en absoluto en cómo Athena lee o escanea los datos ya almacenados en S3. Y restringir el acceso a columnas específicas mediante control de acceso a nivel de columna es una medida de seguridad que limita qué puede ver cada usuario, pero no reduce la cantidad de datos que Athena tiene que leer para procesar la consulta subyacente."
+        },
+        {
+          "id": "de074",
+          "text": "Un ingeniero de datos de una bolsa de valores usa Amazon Athena para ejecutar consultas sobre una tabla creada a partir de datos de operaciones bursátiles almacenados en Amazon S3. La tabla está particionada por fecha y hora. Aunque la tabla está muy particionada, las consultas leen solo un subconjunto de particiones.\n\n¿Cuál es la forma MÁS eficiente de administrar los metadatos de partición de esta tabla?",
+          "options": [
+            {
+              "letter": "A",
+              "title": "Ejecutar el comando MSCK REPAIR TABLE desde Athena cada vez que se agrega una partición nueva",
+              "desc": ""
+            },
+            {
+              "letter": "B",
+              "title": "Crear un clúster de Amazon EMR y usar Apache Hive para ejecutar el comando ALTER TABLE ADD PARTITION",
+              "desc": ""
+            },
+            {
+              "letter": "C",
+              "title": "Usar AWS Glue para configurar un crawler que se ejecute cuando se agreguen particiones nuevas",
+              "desc": ""
+            },
+            {
+              "letter": "D",
+              "title": "Configurar la proyección de particiones (partition projection) para la tabla usando Athena",
+              "desc": ""
+            }
+          ],
+          "correct": "D",
+          "explanation": "Con la proyección de particiones, el ingeniero especifica el rango de valores y el tipo de proyección para cada columna de partición (por ejemplo, fecha y hora), y Athena calcula los valores de partición mediante una operación en memoria en lugar de consultar el Data Catalog y listar de forma recursiva los prefijos en S3; esto elimina por completo la costosa búsqueda de metadatos de partición, lo que reduce drásticamente el tiempo de consulta en tablas tan particionadas como la de esta bolsa de valores, y automatiza la gestión de particiones sin trabajo manual adicional. Ejecutar MSCK REPAIR TABLE cada vez que se agrega una partición nueva obliga a Athena a listar de forma recursiva los prefijos y objetos de S3, lo que puede llegar a agotar el tiempo de espera (timeout) en tablas tan particionadas. Levantar un clúster de Amazon EMR con Hive para ejecutar ALTER TABLE ADD PARTITION funciona, pero exige aprovisionar y mantener un clúster solo para actualizar metadatos de partición, además de seguir gestionando manualmente cada partición nueva. Y configurar un crawler de AWS Glue que se ejecute al agregar particiones sigue dependiendo de que Athena haga búsquedas de metadatos de partición contra el Data Catalog en cada consulta, lo cual resulta poco práctico e ineficiente para una tabla con un volumen tan grande de particiones."
         }
       ]
     }
